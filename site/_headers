@@ -1,0 +1,5 @@
+/formulary.json
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+/release.json
+  Cache-Control: no-cache

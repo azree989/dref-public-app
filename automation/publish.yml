@@ -1,0 +1,60 @@
+name: Update DRef formulary
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      allow_large_change:
+        description: 'Allow a reviewed reduction of more than 20% in medicine count'
+        required: false
+        default: false
+        type: boolean
+  push:
+    branches: [main]
+    paths: ['site/**', 'dist/**', 'automation/**', '.github/workflows/**']
+permissions:
+  contents: write
+concurrency:
+  group: dref-production-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Read source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check publisher and formulary behaviour
+        run: node automation/checks.mjs
+      - name: Check open-medicine update behaviour
+        run: node automation/ui-checks.mjs
+      - name: Validate medicine data and compare publication
+        id: sync
+        env:
+          ALLOW_LARGE_CHANGE: ${{ inputs.allow_large_change || false }}
+        run: node automation/sync.mjs
+      - name: Verify existing Pages production target
+        if: steps.sync.outputs.changed == 'true'
+        id: project
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node automation/project.mjs
+      - name: Publish changed data and app files
+        if: steps.sync.outputs.changed == 'true'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=dref-my --branch=${{ steps.project.outputs.branch }}
+      - name: Maintain the monthly schedule checkpoint
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node automation/heartbeat.mjs

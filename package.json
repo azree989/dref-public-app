@@ -1,0 +1,1 @@
+{"name":"dref-public-app","private":true,"type":"module","scripts":{"check":"node automation/checks.mjs && node automation/ui-checks.mjs"}}
