@@ -26,8 +26,15 @@ function detailBody(e){if(e.id==='bmi')return `<h2>Calculate BMI</h2><p>BMI is s
 if(e.type==='migration')return `<div class="eyebrow">SAMPLE MONOGRAPH</div><h2>Content unavailable</h2><p>This reference has not been imported.</p><div class="notice pending" style="margin:0 0 24px">${icon('book')}<div>Dosage, indications, precautions and prescribing restrictions will come from the reviewed source material.</div></div><a class="primary" href="#/drugs/formularies/fukkm">Open formulary resource ${icon('arrow')}</a>`;
 return `<p>${escape(e.description)}</p><a class="primary" href="${escape(e.url)}" target="_blank" rel="noopener noreferrer">Open ${e.id==='dref-original'?'DRef website':'resource'} <span>↗</span></a>`;}
 function saved(mode){const favourite=mode==='favourites',ids=favourite?state.favourites:state.recent;return `${breadcrumb([{title:favourite?'Favourites':'Recently opened'}])}${pageHead(favourite?'Favourites':'Recently opened',favourite?'':'')}${ids.length?`<div class="listing">${ids.map(id=>card(entries.find(e=>e.id===id))).join('')}</div>${!favourite?'<button class="secondary" id="clear-recent" style="margin-top:20px">Clear history</button>':''}`:`<div class="panel">${empty(favourite?'No favourites yet':'No history yet',favourite?'Star a reference to find it here.':'No resources opened yet.','/search')}</div>`}`;}
-function searchView(){const params=new URLSearchParams(location.hash.split('?')[1]||'');const q=params.get('q')||'';const filter=params.get('section')||'';const found=searchEntries(q).filter(e=>!filter||e.section===filter);return `${breadcrumb([{title:'Search'}])}${pageHead(q?`Results for “${q}”`:'Search',`${found.length} ${found.length===1?'resource':'resources'} `)}<nav class="filter-bar" aria-label="Filter search results"><a class="filter ${!filter?'active':''}" href="#/search?q=${encodeURIComponent(q)}">All sections</a>${sections.map(s=>`<a class="filter ${filter===s.id?'active':''}" href="#/search?q=${encodeURIComponent(q)}&section=${s.id}">${s.title}</a>`).join('')}</nav>${found.length?`<div class="listing">${found.map(card).join('')}</div>`:`<div class="panel">${empty('No matching resources','Try a medicine name, BMI, formulary or a broader search term.','/search')}</div>`}`;}
-function about(){return `${breadcrumb([{title:'About DRef'}])}${pageHead('About DRef','Doctor’s (Drug) Reference for primary care.')}<section class="detail-panel"><p>Klinik Kesihatan Mahligai · PKD Bachok, Kelantan</p><h2>On this device</h2><p>Favourites and history stay in this browser. The formulary is available offline; photographs and tools are saved as you view them.</p><h2>Install</h2><button id="install" class="primary">Install DRef</button> <button id="reset-local" class="secondary">Clear favourites &amp; history</button><p class="muted" style="margin-top:24px">Version 1.0.2 · October 2026</p></section>`;}
+function searchView(){
+ const params=new URLSearchParams(location.hash.split('?')[1]||'');
+ const q=(params.get('q')||'').trim(),filter=params.get('section')||'',browseAll=!params.has('q');
+ const found=(browseAll||q?searchEntries(q):[]).filter(e=>!filter||e.section===filter);
+ const query=params.has('q')?'q='+encodeURIComponent(q):'';
+ const searchUrl=section=>'#/search'+(query||section?'?'+query+(query&&section?'&':'')+(section?'section='+encodeURIComponent(section):''):'');
+ return `${breadcrumb([{title:'Search'}])}${pageHead(q?`Results for “${q}”`:'Search',browseAll||q?`${found.length} ${found.length===1?'resource':'resources'}`:'')}<nav class="filter-bar" aria-label="Filter search results"><a class="filter ${!filter?'active':''}" href="${searchUrl('')}">All sections</a>${sections.map(s=>`<a class="filter ${filter===s.id?'active':''}" href="${searchUrl(s.id)}">${s.title}</a>`).join('')}</nav>${found.length?`<div class="listing">${found.map(card).join('')}</div>`:q?'<p class="muted">No matches.</p>':''}`;
+}
+function about(){return `${breadcrumb([{title:'About DRef'}])}${pageHead('About DRef','Doctor’s (Drug) Reference for primary care.')}<section class="detail-panel"><p>Klinik Kesihatan Mahligai · PKD Bachok, Kelantan</p><h2>On this device</h2><p>Favourites and history stay in this browser. The formulary is available offline; photographs and tools are saved as you view them.</p><h2>Install</h2><button id="install" class="primary">Install DRef</button> <button id="reset-local" class="secondary">Clear favourites &amp; history</button><p class="muted" style="margin-top:24px">Version 1.0.3 · October 2026</p></section>`;}
 
 function render(){disposeFormulary();disposeAlbum();disposeClinical();disposeFormulary=()=>{};disposeAlbum=()=>{};disposeClinical=()=>{};const path=(location.hash.slice(1).split('?')[0]||'/').replace(/\/$/,'')||'/';const parts=path.split('/').filter(Boolean),section=sections.find(s=>s.id===(parts[0]==='album'?'drugs':parts[0])),group=groups.find(g=>g.id===parts[1]&&g.section===section?.id),entry=entries.find(e=>e.id===parts[2]&&e.group===group?.id&&e.section===section?.id);
 document.querySelector('#mobile-dock').innerHTML=dockView(path);
@@ -50,8 +57,19 @@ if(clinicalPage)disposeClinical=mountClinical(main,clinicalPage);
 }
 let toastTimer,installPrompt;function toast(text){const el=document.querySelector('#toast');el.textContent=text;el.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('visible'),3000);}
 document.querySelector('#search-form').addEventListener('submit',e=>{e.preventDefault();location.hash='/search?q='+encodeURIComponent(document.querySelector('#search').value.trim());});
+// Clearing the global search also clears its route and visible results.
+const headerSearch=document.querySelector('#search');
+function clearGlobalSearch(){
+ if(headerSearch.value.trim()||location.hash.slice(1).split('?')[0]!=='/search')return;
+ const params=new URLSearchParams(location.hash.split('?')[1]||'');params.set('q','');
+ history.replaceState(history.state,'','#/search?'+params.toString());
+ render();headerSearch.focus({preventScroll:true});
+}
+headerSearch.addEventListener('input',clearGlobalSearch);
+headerSearch.addEventListener('search',clearGlobalSearch);
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();(document.querySelector('#form-query')||document.querySelector('#home-search')||document.querySelector('#search')).focus();}});
 document.querySelector('#install-close').addEventListener('click',()=>document.querySelector('#install-dialog').close());window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;});
 window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);main.focus({preventScroll:true});});render();if(!storageAvailable)toast('Browser storage is unavailable. Preferences will last only this session.');
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+
 
