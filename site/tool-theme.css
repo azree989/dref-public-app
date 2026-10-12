@@ -1,0 +1,41 @@
+@font-face{font-family:'IBM Plex Sans';src:url('./fonts/ibm-plex-sans-400.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('./fonts/ibm-plex-sans-500.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('./fonts/ibm-plex-sans-600.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('./fonts/ibm-plex-sans-700.ttf') format('truetype');font-weight:700;font-display:swap}
+:root{--primary:#006eaa!important;--primary-hover:#005c8c!important;--primary-700:#005c8c!important;--primary-color:#006eaa!important;--blue:#006eaa!important;--blue-d:#005c8c!important;--bg:#fff!important;--background:#fff!important;--background-color:#fff!important;--text:#253746!important;--text-color:#253746!important;--ink:#253746!important;--muted:#697d8a!important;--surface:#f6f9fc!important;--ring:#d8e5ee!important;--border:#d8e5ee!important;--border-color:#d8e5ee!important;--radius:7px!important;--font-family:'IBM Plex Sans',Arial,sans-serif!important}
+html{color-scheme:light;font-size:16px!important;background:#fff!important;overflow-x:hidden;height:auto!important}
+body{font-family:'IBM Plex Sans',Arial,sans-serif!important;font-size:16px!important;line-height:1.65!important;color:#253746!important;background:#fff!important;margin:0!important;padding:12px 4px 24px!important;min-height:0!important;height:auto!important}
+body,button,input,select,textarea,table,p,label,legend,summary,li,output,h1,h2,h3,h4,h5,h6,small,span:not(.fa):not(.fas):not(.far):not(.fab),div{font-family:'IBM Plex Sans',Arial,sans-serif!important;letter-spacing:normal!important}
+*{box-sizing:border-box}
+main,.container,.wrapper,.wrap,.content{box-shadow:none!important;border:0!important;background:#fff!important;border-radius:0!important;max-width:1000px!important;margin-left:auto!important;margin-right:auto!important}
+main,.container,.wrapper,.content{padding:16px 8px!important}
+h1,h2.card-title,.card-title{font-weight:600!important;line-height:1.35!important;color:#006eaa!important;font-size:28px!important;margin:10px 0 26px!important;text-align:left!important}
+h2{font-weight:600!important;line-height:1.45!important}h3{font-weight:500!important;line-height:1.45!important}
+.app-header{font-size:14px!important;text-align:left!important;color:#697d8a!important;padding:4px 8px!important;margin:0 auto 14px!important}
+.app-footer{font-size:13px!important;color:#697d8a!important;background:#fff!important;border:0!important;border-top:1px solid #d8e5ee!important;box-shadow:none!important;border-radius:0!important;padding:20px 8px 8px!important;margin-top:30px!important}
+.card,.panel,.input-demographics-card,.input-scan-card{box-shadow:none!important;border:1px solid #d8e5ee!important;border-radius:7px!important}
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']),select,textarea{font-size:16px!important;line-height:1.5!important;min-height:46px!important;padding:11px 13px!important;border:1px solid #bdd6e6!important;border-radius:7px!important;background:#fff!important;color:#253746!important}
+input[type='checkbox'],input[type='radio'],input[type='range']{accent-color:#0086c4}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #0086c4!important;outline-offset:3px!important}
+button,.btn{font-size:16px!important;line-height:1.45!important;border-radius:7px!important;box-shadow:none!important;min-height:44px;padding:11px 18px!important}
+button:not(.reset):not(.btn-reset):not(.btn-danger):not(.btn-trauma):not(.btn-yes):not(.btn-no):not(.reset-btn):not(.reset-button):not(.danger):not(.btn-secondary):not(.ghost-btn):not(.option):not(.choice):not([data-score]):not([id*='reset']):not([id*='Reset']),.btn-primary{background:#006eaa!important;color:#fff!important;border-color:#006eaa!important}
+button:not(.reset):not(.btn-reset):not(.btn-danger):not(.btn-trauma):not(.btn-yes):not(.btn-no):not(.reset-btn):not(.reset-button):not(.danger):not(.btn-secondary):not(.ghost-btn):not(.option):not(.choice):not([data-score]):not([id*='reset']):not([id*='Reset']):hover,.btn-primary:hover{background:#005c8c!important}
+button:disabled{opacity:.55!important;cursor:default!important}
+.btn-secondary,.ghost-btn{background:#f4f8fb!important;color:#006eaa!important;border:1px solid #bdd6e6!important}
+label,legend{line-height:1.6!important}a{color:#006eaa;text-underline-offset:3px}
+.accordion-header{font-family:'IBM Plex Sans',Arial,sans-serif!important}
+@media(max-width:600px){body{padding:8px 0 20px!important}main,.container,.wrapper,.content{padding:12px 2px!important}.card-title,h1{font-size:25px!important}.row{flex-wrap:wrap;gap:14px!important}.row>*{min-width:min(240px,100%)}button{max-width:100%}}
+@media print{body{padding:0!important}.app-footer{font-size:11px!important}button{box-shadow:none!important}}
+
+html.dref-default-accent{--accent:#006eaa!important;--accent-hover:#005c8c!important;--accent-light:#edf6fc!important}
+
+button.selected,button.active,.target-hb-button.selected{outline:2px solid #0086c4!important;outline-offset:2px!important;background:#005c8c!important;color:white!important;font-weight:600!important}
+.theme-toggle{display:none!important}
+
+header,.header,.header-container{background:#fff!important;color:#253746!important;box-shadow:none!important}
+.fa,.fas,.far{font-family:"Font Awesome 5 Free"!important}.fab{font-family:"Font Awesome 5 Brands"!important}
+html.dref-image-measurement .stage{height:540px!important;min-height:0!important}
+@media(max-width:600px){html.dref-image-measurement .stage{height:440px!important}}
+
+.dref-tool-title{font-size:28px!important;font-weight:600!important;color:#006eaa!important;line-height:1.4!important;text-align:left!important;margin:10px 0 26px!important}
+@media(max-width:600px){.dref-tool-title{font-size:25px!important}}

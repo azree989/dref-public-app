@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Acute Pharyngitis Clinical Pathway — Strep Score</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Header font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --text:#333;
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --primary:#1976d2;       /* PEFR/eGFR primary */
+      --primary-hover:#155a9c;
+      --good-bg:#d4edda;
+      --good-fg:#155724;
+      --info-bg:#cce5ff;
+      --info-fg:#004085;
+      --radius:12px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0; padding:20px;
+      font-family: Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    /* Standard header / footer */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin:4px auto 12px;
+      padding:4px 12px;
+      max-width:90%;
+    }
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 60px;
+      max-width:800px;
+      line-height:1.4;
+    }
+    @media(max-width:600px){
+      .app-header{padding:6px 16px;max-width:94%}
+      .app-footer{font-size:.85rem;padding:8px 10px}
+    }
+
+    /* Card */
+    main{
+      max-width:800px;
+      margin:16px auto;
+      background:#fff;
+      padding:22px;
+      border-radius:var(--radius);
+      box-shadow:0 2px 5px rgba(0,0,0,.08);
+    }
+    .card-title{
+      text-align:center;
+      color:var(--primary);
+      font-size:1.6rem;
+      font-weight:600;
+      margin:2px 0 12px;
+    }
+    .lead{
+      text-align:center;
+      color:#555;
+      margin:0 0 12px;
+    }
+
+    .form-group{ margin-bottom:14px; }
+    label{ display:block; margin-bottom:6px; font-weight:600; }
+    input, select{
+      width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:16px;
+    }
+
+    .btn{
+      display:inline-block;
+      background:var(--primary);
+      color:#fff;
+      padding:12px 16px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:600;
+      width:100%;
+      transition:background .2s, transform .08s;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+      margin-top:6px;
+    }
+    .btn:hover{ background:var(--primary-hover); }
+    .btn:active{ transform:translateY(1px); }
+    .inline-ref{
+  margin-top:12px; padding-top:10px; border-top:1px dashed var(--ring);
+  font-size:.9rem; color:var(--muted); text-align:center; line-height:1.45;
+}
+
+    .result{
+      margin-top:16px; padding:14px; border-radius:8px; display:none;
+    }
+    .result h3{ margin:0 0 8px; }
+    .result p{ margin:0; line-height:1.5; }
+    .score-line{ margin:8px 0 0; text-align:center; font-weight:600; }
+    .alert-symptomatic{ background:var(--info-bg); color:var(--info-fg); }
+    .alert-antibiotic{ background:var(--good-bg); color:var(--good-fg); }
+
+    .antibiotics-table{
+      width:100%; border-collapse:collapse; margin-top:12px; background:#fff;
+      border:1px solid #ddd; border-radius:6px; overflow:hidden;min-width:600px;
+    }
+    .antibiotics-table th, .antibiotics-table td{
+      border-bottom:1px solid #eee; padding:8px 10px; text-align:left; font-size:14px;
+    }
+    .antibiotics-table th{ background:#f7f7f7; font-weight:700; }
+    .antibiotics-table tr:last-child td{ border-bottom:none; }
+    .table-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:8px; }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">Strep Pharyngitis Score Calculator</h1>
+    <p class="lead">Clinical Pathways for Primary Care: Acute Pharyngitis</p>
+
+    <form id="pharyngitisForm">
+      <!-- Age -->
+      <div class="form-group">
+        <label for="age">Age (years) <span style="color:#c62828">*</span></label>
+        <input type="number" id="age" name="age" min="0" inputmode="numeric" required />
+      </div>
+
+      <!-- Cough -->
+      <div class="form-group">
+        <label for="cough">Absence of cough? <span style="color:#c62828">*</span></label>
+        <select id="cough" name="cough" required>
+          <option value="">-- Select --</option>
+          <option value="true">Yes (no cough present)</option>
+          <option value="false">No (cough present)</option>
+        </select>
+      </div>
+
+      <!-- Temperature -->
+      <div class="form-group">
+        <label for="temp">Temperature ≥ 38°C? <span style="color:#c62828">*</span></label>
+        <select id="temp" name="temp" required>
+          <option value="">-- Select --</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      <!-- Lymph nodes -->
+      <div class="form-group">
+        <label for="nodes">Tender/swollen anterior cervical nodes? <span style="color:#c62828">*</span></label>
+        <select id="nodes" name="nodes" required>
+          <option value="">-- Select --</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      <!-- Tonsils -->
+      <div class="form-group">
+        <label for="tonsils">Tonsillar exudates or swelling? <span style="color:#c62828">*</span></label>
+        <select id="tonsils" name="tonsils" required>
+          <option value="">-- Select --</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      <button type="button" class="btn" onclick="calculateScore()">Calculate</button>
+      <p id="scoreLine" class="score-line" aria-live="polite" role="status"></p>
+    </form>
+
+    <!-- Results -->
+    <div id="resultSymptomatic" class="result alert-symptomatic">
+      <h3>Recommended Management</h3>
+      <p>Score &lt; 3: Symptomatic treatment (e.g., antipyretic, analgesic, hydration).</p>
+    </div>
+
+    <div id="resultAntibiotic" class="result alert-antibiotic">
+      <h3>Recommended Management</h3>
+      <p>Score ≥ 3: Symptomatic treatment + Anti-microbial therapy.</p>
+
+      <h4 style="margin:12px 0 6px;">Recommended Antibiotics (Adults)</h4>
+      <div class="table-wrap">
+      <table class="antibiotics-table" aria-label="Adult antibiotic options">
+        <thead>
+          <tr>
+            <th>Antibiotic</th>
+            <th>Dosing</th>
+            <th>Duration*</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Phenoxymethylpenicillin (Pen V)</td>
+            <td>500&nbsp;mg PO q6h <em>or</em> 1&nbsp;g PO q12h</td>
+            <td>5–10 days</td>
+            <td>Preferred</td>
+          </tr>
+          <tr>
+            <td>Amoxicillin</td>
+            <td>500&nbsp;mg PO q8h</td>
+            <td>5–10 days</td>
+            <td>Preferred</td>
+          </tr>
+          <tr>
+            <td>Erythromycin Ethylsuccinate</td>
+            <td>800&nbsp;mg PO q12h</td>
+            <td>5–10 days</td>
+            <td>Alternative</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p style="margin:8px 0 0; font-size:14px;">
+        *Consider 10 days in high-prevalence settings of rheumatic fever or in patients with a history of
+        rheumatic fever/rheumatic heart disease who are aged 3–21 years.
+      </p>
+
+      <h4 style="margin:14px 0 6px;">Recommended Antibiotics (Children)</h4>
+      <div class="table-wrap">
+      <table class="antibiotics-table" aria-label="Paediatric antibiotic options">
+        <thead>
+          <tr>
+            <th>Antibiotic</th>
+            <th>Dosing</th>
+            <th>Duration</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Phenoxymethylpenicillin (Pen V)</td>
+            <td>25–50&nbsp;mg/kg/day PO q6h (max 1&nbsp;g/day)</td>
+            <td>10 days</td>
+            <td>Preferred</td>
+          </tr>
+          <tr>
+            <td>Amoxicillin</td>
+            <td>50&nbsp;mg/kg/day PO q12–24h (max 1&nbsp;g/day)</td>
+            <td>10 days</td>
+            <td>Preferred</td>
+          </tr>
+          <tr>
+            <td>Cephalexin</td>
+            <td>25–50&nbsp;mg/kg/day PO q12h (max 3&nbsp;g/day)</td>
+            <td>10 days</td>
+            <td>Alternative</td>
+          </tr>
+          <tr>
+            <td>Erythromycin Ethylsuccinate</td>
+            <td>40–50&nbsp;mg/kg/day PO q12h (max 4&nbsp;g/day)</td>
+            <td>14 days</td>
+            <td>Alternative</td>
+          </tr>
+        </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="inline-ref">
+  Reference: National Antimicrobial Guideline, 4th Edition (2024) —
+  Clinical Pathways for Primary Care: Acute Pharyngitis.
+</div>
+  </main>
+
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.<br/>
+  </div>
+
+  <script>
+    function calculateScore() {
+      // Retrieve form values
+      const age = document.getElementById('age').value.trim();
+      const cough = document.getElementById('cough').value;
+      const temp = document.getElementById('temp').value;
+      const nodes = document.getElementById('nodes').value;
+      const tonsils = document.getElementById('tonsils').value;
+
+      // Ensure all fields are filled
+      if (!age || !cough || !temp || !nodes || !tonsils) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      let totalScore = 0;
+
+      // Absence of cough (+1 if cough = true)
+      if (cough === "true") totalScore += 1;
+
+      // Temperature ≥ 38°C (+1 if temp = true)
+      if (temp === "true") totalScore += 1;
+
+      // Tender/swollen anterior cervical nodes (+1 if nodes = true)
+      if (nodes === "true") totalScore += 1;
+
+      // Tonsillar exudates or swelling (+1 if tonsils = true)
+      if (tonsils === "true") totalScore += 1;
+
+      // Age points: 3–14 = +1, 15–44 = 0, ≥45 = −1
+      const numericAge = parseInt(age, 10);
+      if (numericAge >= 3 && numericAge <= 14) {
+        totalScore += 1;
+      } else if (numericAge >= 45) {
+        totalScore -= 1;
+      }
+      document.getElementById('scoreLine').textContent = `Calculated Score: ${totalScore}`;
+      // Display result
+      const symptomaticDiv = document.getElementById('resultSymptomatic');
+      const antibioticDiv = document.getElementById('resultAntibiotic');
+
+      symptomaticDiv.style.display = "none";
+      antibioticDiv.style.display = "none";
+
+      if (totalScore >= 3) {
+        antibioticDiv.style.display = "block";
+      } else {
+        symptomaticDiv.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

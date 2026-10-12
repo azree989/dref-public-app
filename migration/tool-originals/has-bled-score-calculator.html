@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HAS-BLED Score Calculator — AF Bleeding Risk (DRef)</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Quick HAS-BLED score calculator for atrial fibrillation. Estimates bleeding risk and highlights modifiable factors to support safer anticoagulation decisions." />
+  <meta name="keywords" content="HAS-BLED, bleeding risk, atrial fibrillation, anticoagulation, CHA2DS2-VASc companion, DRef" />
+  <meta name="robots" content="index,follow" />
+  <meta name="language" content="en-MY" />
+  <link rel="canonical" href="https://www.dref.my/tools/has-bled" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DRef — Doctor’s Reference" />
+  <meta property="og:title" content="HAS-BLED Score Calculator — AF Bleeding Risk" />
+  <meta property="og:description" content="Estimate bleeding risk in AF and identify modifiable factors before/while anticoagulating." />
+  <meta property="og:url" content="https://www.dref.my/tools/has-bled" />
+  <meta property="og:locale" content="en_MY" />
+  <meta property="og:locale:alternate" content="ms_MY" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="HAS-BLED Score Calculator — AF Bleeding Risk" />
+  <meta name="twitter:description" content="Quick bleeding risk calculator with modifiable factor prompts." />
+
+  <!-- Structured Data: MedicalWebPage + MedicalRiskEstimator -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "HAS-BLED Score Calculator — AF Bleeding Risk",
+    "description": "Calculate HAS-BLED to estimate bleeding risk in atrial fibrillation and identify modifiable risk factors.",
+    "inLanguage": "en-MY",
+    "about": [
+      { "@type": "MedicalCondition", "name": "Atrial fibrillation" },
+      { "@type": "MedicalCondition", "name": "Bleeding" }
+    ],
+    "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url": "https://www.dref.my",
+      "address": { "@type": "PostalAddress", "addressLocality": "Bachok", "addressRegion": "Kelantan", "addressCountry": "MY" }
+    },
+    "mainEntity": {
+      "@type": "MedicalRiskEstimator",
+      "name": "HAS-BLED",
+      "estimatesRiskOf": { "@type": "MedicalCondition", "name": "Major bleeding" },
+      "guideline": { "@type": "MedicalGuideline", "name": "HAS-BLED risk assessment for patients with AF on anticoagulation" },
+      "url": "https://www.dref.my/tools/has-bled"
+    },
+    "url": "https://www.dref.my/tools/has-bled"
+  }
+  </script>
+
+  <!-- Header/Footer font (shared across apps) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --radius:12px;
+      --blue:#1976d2;    /* PEFR blue */
+      --blue-d:#125aa0;
+      --red:#e53935;     /* PEFR red */
+      --red-d:#b71c1c;
+    }
+
+    /* Base */
+    body{ font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f9; color:#333; }
+
+    /* Standard header (same as other apps) */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin-top:16px;
+      margin-bottom:12px;
+      padding:4px 12px;
+      max-width:90%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* Card */
+    main{
+      max-width:800px;
+      margin:0 auto 24px;
+      background:#fff;
+      padding:24px;
+      border-radius:var(--radius);
+      box-shadow:0 2px 5px rgba(0,0,0,.08);
+    }
+
+    /* Title style aligned with eGFR/PEFR */
+    .card-title{
+      text-align:center;
+      color:var(--blue);
+      font-size:1.8rem;
+      font-weight:700;
+      margin:6px 0 14px;
+    }
+
+    .lead{ max-width:820px; margin:0 auto 18px; padding:0 8px; color:#555; text-align:center; }
+    h2{ font-size:1.125rem; margin:18px 0 10px; color:#214a48; }
+
+    .form-check{ display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
+    .form-check input{ width:20px; height:20px; margin-top:2px; }
+    .hint{ font-size:12px; color:#666; margin-left:30px; margin-top:-6px; margin-bottom:8px; }
+
+    .button-container{ display:flex; gap:12px; margin-top:16px; }
+    .btn{ padding:12px 16px; border:none; border-radius:8px; color:#fff; font-size:16px; font-weight:600; cursor:pointer; flex:1; }
+    .btn-primary{ background:var(--blue); }
+    .btn-primary:hover{ background:var(--blue-d); }
+    .btn-danger{ background:var(--red); }
+    .btn-danger:hover{ background:var(--red-d); }
+
+    .output{ margin-top:20px; padding:15px; text-align:center; font-size:18px; font-weight:bold; border-radius:8px; display:none; }
+    .low-risk{ background:#e8f5e9; border:1px solid #c8e6c9; color:#1b5e20; }
+    .high-risk{ background:#ffebee; border:1px solid #e57373; color:#b71c1c; }
+
+    .info{ margin-top:20px; padding:15px; background:#f9f9f9; border:1px solid #ddd; border-radius:8px; font-size:14px; color:#555; }
+    .links{ text-align:center; margin-top:8px; font-size:14px; }
+
+    /* Standard footer (same as other apps) */
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 18px;
+      max-width:800px;
+      line-height:1.4;
+    }
+
+    @media (max-width:600px){
+      .app-header{ padding:6px 16px; max-width:94%; }
+      main{ padding:18px; }
+      .app-footer{ font-size:.85rem; padding:8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Standard header -->
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">HAS-BLED Score Calculator</h1>
+
+    <h2 id="inputs">Inputs</h2>
+    <form id="hasbledForm" aria-labelledby="inputs">
+      <div class="form-check">
+        <input type="checkbox" id="hypertension" />
+        <label for="hypertension">Hypertension (uncontrolled; systolic &gt; 160 mmHg) — <strong>1 point</strong></label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="renal" />
+        <label for="renal">Abnormal Renal Function — <strong>1 point</strong></label>
+      </div>
+      <div class="hint">Dialysis, kidney transplant, or serum creatinine ≥ 200 µmol/L (~2.3 mg/dL).</div>
+
+      <div class="form-check">
+        <input type="checkbox" id="liver" />
+        <label for="liver">Abnormal Liver Function — <strong>1 point</strong></label>
+      </div>
+      <div class="hint">Cirrhosis, or bilirubin &gt; 2× ULN with AST/ALT/ALP &gt; 3× ULN.</div>
+
+      <div class="form-check">
+        <input type="checkbox" id="stroke" />
+        <label for="stroke">Prior Stroke — <strong>1 point</strong></label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="bleeding" />
+        <label for="bleeding">History of Bleeding or Predisposition — <strong>1 point</strong></label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="labileINR" />
+        <label for="labileINR">Labile INRs (if on VKA) — <strong>1 point</strong></label>
+      </div>
+      <div class="hint">Time in therapeutic range (TTR) &lt; 60%.</div>
+
+      <div class="form-check">
+        <input type="checkbox" id="elderly" />
+        <label for="elderly">Elderly (Age &gt; 65 years) — <strong>1 point</strong></label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="drugs" />
+        <label for="drugs">Drugs predisposing to bleeding — <strong>1 point</strong></label>
+      </div>
+      <div class="hint">Concomitant antiplatelets or NSAIDs (consider gastroprotection if needed).</div>
+
+      <div class="form-check">
+        <input type="checkbox" id="alcohol" />
+        <label for="alcohol">Alcohol use — <strong>1 point</strong></label>
+      </div>
+      <div class="hint">≥ 8 drinks/week or excess intake.</div>
+
+      <div class="button-container">
+        <button type="button" class="btn btn-primary" onclick="calculateHASBLED()" aria-label="Calculate HAS-BLED score">Calculate Score</button>
+        <button type="button" class="btn btn-danger" onclick="resetForm()" aria-label="Reset form">Reset</button>
+      </div>
+    </form>
+
+    <h2 id="resultHeading" style="margin-top:20px;">Result</h2>
+    <div id="result" class="output" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="info" aria-labelledby="resultHeading">
+      <strong>Interpretation (guide):</strong>
+      <ul>
+        <li><strong>0–2:</strong> Lower bleeding risk.</li>
+        <li><strong>≥3:</strong> Higher bleeding risk — mitigate modifiable factors and follow up more closely.</li>
+      </ul>
+      <p class="links">
+        Also see: <a href="https://www.dref.my/clinical-tools_1/cha2ds2-vasc-score-calculator">CHA₂DS₂-VASc (stroke risk)</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- Standard footer -->
+  <div class="app-footer">Any calculations must be rechecked and should not be used alone to guide patient care.</div>
+
+  <script>
+    function calculateHASBLED() {
+      const ids = ["hypertension","renal","liver","stroke","bleeding","labileINR","elderly","drugs","alcohol"];
+      let score = 0;
+      ids.forEach(id => { if (document.getElementById(id).checked) score += 1; });
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = `HAS-BLED Score: ${score}`;
+      resultDiv.style.display = "block";
+      resultDiv.className = "output " + (score >= 3 ? "high-risk" : "low-risk");
+    }
+
+    function resetForm() {
+      document.querySelectorAll("#hasbledForm input[type='checkbox']").forEach(cb => cb.checked = false);
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "none";
+      resultDiv.className = "output";
+      resultDiv.textContent = "";
+    }
+  </script>
+</body>
+</html>

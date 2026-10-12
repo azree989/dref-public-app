@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>M-CHAT Screening Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #005b96;
+      --background: #f5f7fa;
+      --card: #fff;
+      --text: #222;
+      --radius: 10px;
+      --shadow: 0 2px 10px rgba(0,0,0,0.04);
+      --gap: 1rem;
+      
+    }
+    html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+    body {
+      font-family: 'Poppins',sans-serif;
+      background: var(--background);
+      color: var(--text);
+      margin: 0;
+    }
+    .container{
+      max-width: 700px;
+      margin: auto;
+      padding: 2vw 1vw 3vw;
+    
+    }  .card {
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  background: var(--card);
+  padding: var(--gap);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+
+    header {
+      background: var(--card);
+      padding: var(--gap);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--gap);
+    }
+    h1 { font-size: 1.3rem; color: var(--primary); margin: 0; font-weight: 600;}
+    .language-select {font-size: .97em;}
+    .language-select select {border-radius: 5px; border: 1px solid #ddd; padding: .2em .7em;}
+    .patient-info,
+    #result, 
+    #report {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: var(--gap);
+      padding: var(--gap);
+     
+}
+.lang.ms.lang-active,
+.lang.en.lang-active {
+  display: inline;
+}
+     .card-title {
+     font-size: 1.1rem;
+     font-weight: 600;
+     margin-bottom: 0.5rem;
+     color: var(--primary);
+     grid-column: 1 / -1; /* span all 3 columns */
+     }
+     .optional-note {
+  font-weight: normal;
+  font-size: 0.9em;
+  color: #888;
+  margin-left: 0.5em;
+}
+
+    .patient-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+    .patient-info label {font-size:.93em;display:flex;flex-direction:column;margin-bottom: 0.8em;}
+    .patient-info input {margin-top:.3em;padding:.4em;border:1px solid #ddd;border-radius:4px;}
+    .patient-info input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.age-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.group-label {
+  grid-column: 1 / -1;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.3em;
+}
+
+.age-fields {
+  display: contents; /* Use grid flow directly */
+}
+
+.age-fields label {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+    .question label {font-weight:500;}
+    .options {display:flex;gap:1.5em;margin-top:.5em;flex-wrap:wrap;}
+    .options label {font-weight:400;cursor:pointer;}
+    .options input {margin-right:.3em;}
+    button {
+      background: var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:var(--radius);
+      padding:.7em 1.5em;
+      font-size:1em;
+      cursor:pointer;
+      margin-top:.8em;
+      transition: background .15s;
+    }
+    .questions-wrapper {
+  max-width: 700px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.question {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--gap);
+}
+    button:hover {background:#04416d;}
+    #result, #report {display:none;}
+    #pdfBtn {background:#26a844;margin-top:1em;display:none;}
+    .wrong-bg {background-color:#ffe6e6 !important;}
+    .wrong-text {color:#c00 !important;}
+    footer {text-align:center;font-size:.92em;color:#888;margin-top:2em;}
+    @media (max-width:700px){.patient-info{grid-template-columns:1fr;}}
+    @media (max-width:480px){
+      .container{padding:1vw;}
+      header{flex-direction:column;align-items:stretch;}
+      button{width:100%;}
+      .options{flex-direction:column;}
+    }
+    /* Language hiding */
+    .lang {display:none;}
+    .en-mode .lang.en, .ms-mode .lang.ms {display:inline;}
+    
+  </style>
+</head>
+<body class="ms-mode">
+<div class="container">
+  <header class="card">
+
+    <h1>
+      <span class="lang en">M-CHAT Screening Tool</span>
+      <span class="lang ms">Alat Saringan M-CHAT</span>
+    </h1>
+    <div class="language-select">
+      <label>
+        <span class="lang en">Language</span>
+        <span class="lang ms">Bahasa</span>:
+        <select id="langToggle">
+          <option value="en">English</option>
+          <option value="ms" selected>Melayu</option>
+        </select>
+      </label>
+    </div>
+  </header>
+  <form id="mchatForm" autocomplete="off">
+    <div class="patient-info card">
+       <h2 class="card-title lang en">
+  Patient's Demography
+  <span class="optional-note">(Optional)</span>
+</h2>
+<h2 class="card-title lang ms">
+  Maklumat Pesakit
+  <span class="optional-note">(Pilihan)</span>
+</h2>
+
+<!-- Left column -->
+<label style="grid-column: 1 / -1;">
+  <span class="lang en">Child's Name</span>
+  <span class="lang ms">Nama Kanak-kanak</span>
+  <input id="patientName" />
+</label>
+
+<div class="age-group" style="grid-column: 1 / -1;">
+  <div class="group-label">
+    <span class="lang en">Age</span>
+    <span class="lang ms">Umur</span>
+  </div>
+  <div class="age-fields">
+    <label>
+      <span class="lang en">Year</span>
+      <span class="lang ms">Tahun</span>
+      <input type="number" id="patientAge" min="0" />
+    </label>
+    <label>
+      <span class="lang en">Month</span>
+      <span class="lang ms">Bulan</span>
+      <input type="number" id="patientMonth" min="0" max="11" />
+    </label>
+  </div>
+</div>
+
+<label style="grid-column: 1 / -1;">
+  <span class="lang en">ID No</span>
+  <span class="lang ms">No ID</span>
+  <input id="patientIC" />
+</label>
+
+<label style="grid-column: 1 / -1;">
+  <span class="lang en">Date of Screening</span>
+  <span class="lang ms">Tarikh Saringan</span>
+  <input type="date" id="screenDate" />
+</label>
+</div>
+    
+    <!-- QUESTIONS (copy-paste your Qs, to save space I show 1 as example, add all 23 as needed) -->
+    <div class="questions-wrapper card">
+    <div class="question" data-q="1">
+      <label>
+        <span class="lang ms">1. Adakah anak anda seronok apabila ditimang, dibuai atau dihenjut atas kaki / paha dan sebagainya?</span>
+        <span class="lang en">1. Does your child enjoy being swung, bounced on your knee, etc?</span>
+      </label>
+      <div class="options">
+        <label><input type="radio" name="q1" value="yes" required><span class="lang en">Yes</span><span class="lang ms">Ya</span></label>
+        <label><input type="radio" name="q1" value="no"><span class="lang en">No</span><span class="lang ms">Tidak</span></label>
+      </div>
+    </div>
+    <!-- Repeat for all 23 questions ... -->
+    <!-- Question 2 -->
+      <div class="question" data-q="2">
+        <label>
+          <span class="lang ms">
+            2. Adakah anak anda menunjukkan minat terhadap kanak-kanak lain? (contohnya bergaul, bermain, berkawan)
+          </span>
+          <span class="lang en">
+            2. Does your child take an interest in other children?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q2" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q2" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question" data-q="3">
+        <label>
+          <span class="lang ms">  
+            3. Adakah anak anda suka memanjat, contohnya tangga, kerusi, meja dan lain-lain?  
+          </span>  
+          <span class="lang en">  
+            3. Does your child like climbing on things, such as up stairs?  
+          </span>  
+        </label>  
+        <div class="options">  
+          <label>  
+            <input type="radio" name="q3" value="yes" required>  
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>  
+          </label>  
+          <label>  
+            <input type="radio" name="q3" value="no">  
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>  
+          </label>  
+        </div>  
+      </div>
+
+      <!-- Question 4 -->
+      <div class="question" data-q="4">
+        <label>
+          <span class="lang ms">
+            4. Adakah anak anda seronok bermain “cak-cak” atau main sorok-sorok?
+          </span>
+          <span class="lang en">
+            4. Does your child enjoy peek-a-boo or hide-and-seek?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q4" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q4" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="question" data-q="5">
+        <label>
+          <span class="lang ms">
+            5. Adakah anak anda pernah bermain-main olok-olok / berlakon, contohnya menelefon, bermain anak patung atau bermain masak-masak dan sebagainya?
+          </span>
+          <span class="lang en">
+            5. Does your child ever pretend for example to talk on the phone or take care of dolls or pretend other things?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q5" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q5" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="question" data-q="6">
+        <label>
+          <span class="lang ms">
+            6. Adakah anak anda pernah menunjuk menggunakan jari telunjuk untuk meminta sesuatu?
+          </span>
+          <span class="lang en">
+            6. Does your child ever use his/her index finger to point, to ask for something?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q6" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q6" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 7 -->
+      <div class="question" data-q="7">
+        <label>
+          <span class="lang ms">
+            7. Adakah anak anda pernah menunjuk / menggunakan jari telunjuk terhadap sesuatu yang menarik minatnya?
+          </span>
+          <span class="lang en">
+            7. Does your child ever use his/her index finger to indicate interest in something?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q7" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q7" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 8 -->
+      <div class="question" data-q="8">
+        <label>
+          <span class="lang ms">
+            8. Bolehkah anak anda bermain dengan alat permainan yang kecil dengan betul, selain dari memasukkannya ke dalam mulut, membelek-belek atau menjatuhkan permainan itu? (contohnya kiub, kereta kecil, dan lain-lain)
+          </span>
+          <span class="lang en">
+            8. Can your child play properly with small toys without just mouthing, fiddling or dropping them?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q8" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q8" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 9 -->
+      <div class="question" data-q="9">
+        <label>
+          <span class="lang ms">
+            9. Pernahkah anak anda membawa objek / benda dan menunjukkannya kepada anda?
+          </span>
+          <span class="lang en">
+            9. Does your child ever bring objects over to you (parent) to show you something?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q9" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q9" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 10 -->
+      <div class="question" data-q="10">
+        <label>
+          <span class="lang ms">
+            10. Adakah anak anda bertentang mata dengan anda lebih daripada dua saat?
+          </span>
+          <span class="lang en">
+            10. Does your child look you in the eye for more than a second or two?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q10" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q10" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 11 -->
+      <div class="question" data-q="11">
+        <label>
+          <span class="lang ms">
+            11. Pernahkah anak anda kelihatan seperti sangat sensitif / terganggu terhadap bunyi bising? (contohnya menutup telinga?)
+          </span>
+          <span class="lang en">
+            11. Does your child ever seem oversensitive to noise? (e.g. plugging ears)
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q11" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q11" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 12 -->
+      <div class="question" data-q="12">
+        <label>
+          <span class="lang ms">
+            12. Adakah anak anda senyum bila melihat anda atau membalas senyuman anda?
+          </span>
+          <span class="lang en">
+            12. Does your child smile in response to your face or your smile?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q12" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q12" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 13 -->
+      <div class="question" data-q="13">
+        <label>
+          <span class="lang ms">
+            13. Adakah anak anda meniru perlakuan anda (contohnya meniru mimik muka anda dan sebagainya)?
+          </span>
+          <span class="lang en">
+            13. Does your child imitate you? (e.g. if you make a face will your child imitate it?)
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q13" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q13" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 14 -->
+      <div class="question" data-q="14">
+        <label>
+          <span class="lang ms">
+            14. Adakah anak anda bertindak balas apabila namanya dipanggil?
+          </span>
+          <span class="lang en">
+            14. Does your child respond to his/her name when you call?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q14" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q14" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 15 -->
+      <div class="question" data-q="15">
+        <label>
+          <span class="lang ms">
+            15. Sekiranya anda menunjukkan pada alat permainan yang jauh dari anda, adakah anak anda akan melihat keadaan alat permainan tersebut?
+          </span>
+          <span class="lang en">
+            15. If you point at a toy across the room, does your child look at it?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q15" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q15" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 16 -->
+      <div class="question" data-q="16">
+        <label>
+          <span class="lang ms">
+            16. Bolehkah anak anda berjalan?
+          </span>
+          <span class="lang en">
+            16. Does your child walk?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q16" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q16" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 17 -->
+      <div class="question" data-q="17">
+        <label>
+          <span class="lang ms">
+            17. Adakah anak anda akan melihat pada benda yang sedang anda lihat?
+          </span>
+          <span class="lang en">
+            17. Does your child look at things you are looking at?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q17" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q17" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 18 -->
+      <div class="question" data-q="18">
+        <label>
+          <span class="lang ms">
+            18. Adakah anak anda membuat pergerakan jari yang ganjil / pelik dekat mukanya?
+          </span>
+          <span class="lang en">
+            18. Does your child make unusual finger movements near his/her face?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q18" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q18" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 19 -->
+      <div class="question" data-q="19">
+        <label>
+          <span class="lang ms">
+            19. Adakah anak anda cuba menarik perhatian anda terhadap aktiviti yang dilakukannya?
+          </span>
+          <span class="lang en">
+            19. Does your child try to attract your attention to his/her own activity?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q19" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q19" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 20 -->
+      <div class="question" data-q="20">
+        <label>
+          <span class="lang ms">
+            20. Pernahkah anda terfikir bahawa anak anda ada masalah pendengaran?
+          </span>
+          <span class="lang en">
+            20. Have you ever wondered if your child is deaf?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q20" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q20" value="no">  
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 21 -->
+      <div class="question" data-q="21">
+        <label>
+          <span class="lang ms">
+            21. Adakah anak anda dapat memahami percakapan orang?
+          </span>
+          <span class="lang en">
+            21. Does your child understand what people say?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q21" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q21" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 22 -->
+      <div class="question" data-q="22">
+        <label>
+          <span class="lang ms">
+            22. Adakah anak anda kadang-kala kelihatan termenung atau merayau / berjalan tanpa tujuan?
+          </span>
+          <span class="lang en">
+            22. Does your child sometimes stare at nothing or wander with no purpose?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q22" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q22" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 23 -->
+      <div class="question" data-q="23">
+        <label>
+          <span class="lang ms">
+            23. Adakah anak anda memandang ke muka anda untuk melihat reaksi / tindakbalas anda apabila ia menghadapi sesuatu yang baru atau luar biasa?
+          </span>
+          <span class="lang en">
+            23. Does your child look at your face to check your reaction when faced with something unfamiliar?
+          </span>
+        </label>
+        <div class="options">
+          <label>
+            <input type="radio" name="q23" value="yes" required>
+            <span class="lang en">Yes</span><span class="lang ms">Ya</span>
+          </label>
+          <label>
+            <input type="radio" name="q23" value="no">
+            <span class="lang en">No</span><span class="lang ms">Tidak</span>
+          </label>
+        </div>
+      </div>
+</div>
+    <button type="submit"><span class="lang en">Check Score</span><span class="lang ms">Semak Keputusan</span></button>
+    <button type="button" id="resetBtn"><span class="lang en">Reset</span><span class="lang ms">Set Semula</span></button>
+  </form>
+
+  <div id="result"></div>
+  <div id="report">
+    <h2><span class="lang en">M-CHAT Screening Report</span><span class="lang ms">Laporan Saringan M-CHAT</span></h2>
+    <p><strong><span class="lang en">Patient Name</span><span class="lang ms">Nama Pesakit</span>:</strong> <span id="rName"></span></p>
+    <p><strong><span class="lang en">Age</span><span class="lang ms">Umur</span>:</strong> <span id="rAge"></span></p>
+    <p><strong><span class="lang en">No. IC</span><span class="lang ms">No. KP</span>:</strong> <span id="rIC"></span></p>
+    <p><strong><span class="lang en">Date of Screening</span><span class="lang ms">Tarikh Saringan</span>:</strong> <span id="rDate"></span></p>
+    <hr>
+    <div id="rResults"></div>
+  </div>
+  <button id="pdfBtn"><span class="lang en">Generate PDF</span><span class="lang ms">Jana PDF</span></button>
+  <footer><em>Reference: Management of Autism Spectrum Disorder in Children and Adolescents MOH 2014</em></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+(function(){
+  // Language switching
+  var langSel = document.getElementById('langToggle');
+  langSel.onchange = function(){document.body.className = this.value+'-mode';};
+  // Set today's date
+  document.getElementById('screenDate').valueAsDate = new Date();
+
+  // M-CHAT scoring
+  var answerKey = {
+    1:'no',2:'no',3:'no',4:'no',5:'no',
+    6:'no',7:'no',8:'no',9:'no',10:'no',
+    11:'yes',12:'no',13:'no',14:'no',15:'no',
+    16:'no',17:'no',18:'yes',19:'no',20:'yes',
+    21:'no',22:'yes',23:'no'
+  };
+  var critical = [2,7,9,13,14,15];
+
+  // FORM SUBMIT
+  document.getElementById('mchatForm').onsubmit = function(e){
+    e.preventDefault();
+    // clear highlight
+    Array.prototype.forEach.call(this.querySelectorAll('label'), function(l){
+      l.classList.remove('wrong-bg');
+    });
+
+    var totalFails=0, criticalFails=0, critList=[];
+    for(var q=1;q<=23;q++){
+      var qs = this.querySelector('[data-q="'+q+'"]');
+      if(!qs) continue;
+      var selected = qs.querySelector('input[name="q'+q+'"]:checked');
+      if(selected && selected.value===answerKey[q]){
+        totalFails++;
+        selected.parentNode.classList.add('wrong-bg');
+        if(critical.indexOf(q)>-1){criticalFails++;critList.push(q);}
+      }
+    }
+    var resultBox = document.getElementById('result');
+    resultBox.style.display = 'block';
+    resultBox.innerHTML =
+      '<p><strong>Total failed:</strong> '+totalFails+'</p>'+
+      '<p><strong>Critical failed:</strong> '+criticalFails+(critList.length?' (Q '+critList.join(', ')+')':'')+'</p>'+
+      '<p><strong>Recommendation:</strong> '+
+        ((criticalFails>=2||totalFails>=3)
+         ? '<span style="color:#c00">Refer for further evaluation</span>'
+         : '<span style="color:#26a844">No referral needed at this time</span>')
+      +'</p>';
+    // Report
+    document.getElementById('rName').textContent = document.getElementById('patientName').value;
+    var y = +document.getElementById('patientAge').value||0;
+var m = +document.getElementById('patientMonth').value||0;
+document.getElementById('rAge').textContent = y + ' yr' + (m? ', '+m+' mo':'' );
+    document.getElementById('rIC').textContent   = document.getElementById('patientIC').value;
+    document.getElementById('rDate').textContent = document.getElementById('screenDate').value;
+    document.getElementById('rResults').innerHTML = resultBox.innerHTML;
+    document.getElementById('report').style.display = 'block';
+    document.getElementById('pdfBtn').style.display = 'inline-block';
+    resultBox.scrollIntoView({behavior:'smooth'});
+  };
+  // RESET
+  document.getElementById('resetBtn').onclick=function(){
+    document.getElementById('mchatForm').reset();
+    document.getElementById('result').style.display='none';
+    document.getElementById('report').style.display='none';
+    document.getElementById('pdfBtn').style.display='none';
+    Array.prototype.forEach.call(document.querySelectorAll('label'),function(l){
+      l.classList.remove('wrong-bg');
+    });
+  };
+  // PDF
+  document.getElementById('pdfBtn').onclick=function(){
+    var opt = {
+      margin:.5,filename:(document.getElementById('patientName').value||'report')+'.pdf',
+      image:{type:'jpeg',quality:.97},
+      html2canvas:{scale:2},
+      jsPDF:{unit:'in',format:'letter',orientation:'portrait'}
+    };
+    html2pdf().set(opt).from(document.getElementById('report')).save();
+  };
+})();
+</script>
+</body>
+</html>

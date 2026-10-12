@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- === SEO: Meta, Canonical, Social Cards, Structured Data === -->
+  <meta name="description" content="DRef (Doctor’s Reference) Congenital Hypothyroidism pathway for JKN Kelantan: cTSH newborn screening, repeat TFT timelines (Day 3–5, Day 10–14, ≥Day 14), and actions for prolonged jaundice.">
+  <meta name="keywords" content="Doctor’s Reference, DRef, congenital hypothyroidism pathway, cTSH, TSH, T4, TFT, newborn screening, prolonged jaundice, JKN Kelantan, Malaysia, Klinik Kesihatan">
+  <meta name="author" content="DRef — Doctor’s Reference">
+  <meta name="robots" content="index,follow">
+  <meta name="language" content="en-MY">
+
+  <!-- Helpful for full-page embeds: open links outside iframe -->
+  <base target="_top">
+
+  <!-- Canonical (set to the exact live URL of THIS tool) -->
+  <link rel="canonical" href="https://www.dref.my/tools/congenital-hypothyroidism-pathway">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DRef — Doctor’s Reference">
+  <meta property="og:title" content="Congenital Hypothyroidism Pathway — DRef">
+  <meta property="og:description" content="cTSH screening + repeat TFT decision steps (Day 3–5, Day 10–14, ≥Day 14) for JKN Kelantan.">
+  <meta property="og:url" content="https://www.dref.my/tools/congenital-hypothyroidism-pathway">
+  <!-- <meta property="og:image" content="https://www.dref.my/assets/ch-pathway-card.png"> -->
+  <meta property="og:locale" content="en_MY">
+  <meta property="og:locale:alternate" content="ms_MY">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Congenital Hypothyroidism Pathway — DRef">
+  <meta name="twitter:description" content="Interactive accordion: cTSH, repeat TFT Day 3–5, Day 10–14, and ≥Day 14 pathways.">
+  <!-- <meta name="twitter:image" content="https://www.dref.my/assets/ch-pathway-card.png"> -->
+
+  <!-- Structured Data (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "Congenital Hypothyroidism Pathway — DRef",
+    "description": "Clinical pathway for congenital hypothyroidism (CH): newborn cTSH screening and repeat TFT timelines with actions for prolonged jaundice.",
+    "about": [
+      { "@type": "MedicalCondition", "name": "Congenital hypothyroidism" },
+      { "@type": "MedicalTest", "name": "Thyroid-stimulating hormone (TSH)" },
+      { "@type": "MedicalTest", "name": "Thyroxine (T4)" }
+    ],
+    "audience": { "@type": "MedicalAudience", "audienceType": "Clinician" },
+    "inLanguage": "en-MY",
+    "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url": "https://www.dref.my",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bachok",
+        "addressRegion": "Kelantan",
+        "addressCountry": "MY"
+      }
+    },
+    "url": "https://www.dref.my/tools/congenital-hypothyroidism-pathway"
+  }
+  </script>
+
+  <title>Congenital Hypothyroidism Pathway</title>
+
+  <!-- UI Fonts / Icons -->
+  
+  <link href="../vendor/fontawesome/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color:#4A90E2;
+      --secondary-color:#50E3C2;
+      --background-color:#f4f6f8;
+      --text-color:#333;
+      --border-color:#ddd;
+      --footer-color:#777;
+      --transition-speed:0.3s;
+      --accordion-bg:#fff;
+      --accordion-hover-bg:#e6f0ff;
+      --accordion-active-bg:#d0e6ff;
+      --dark-bg:#2c2c2c;
+      --dark-text:#f4f6f8;
+      --dark-accordion-bg:#3c3c3c;
+      --dark-accordion-hover-bg:#555555;
+      --dark-accordion-active-bg:#444444;
+
+      /* Standard header/footer tokens */
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --radius:10px;
+    }
+
+    /* Tagline header — sits plainly on the page */
+    .app-header{
+      position: static;
+      background: none;
+      border: 0;
+      box-shadow: none;
+      font-family: "Josefin Sans", sans-serif;
+      color: var(--muted);
+      text-align: center;
+      font-size: .95rem;
+      font-weight: 400;
+      letter-spacing: .03em;
+      margin-top: 16px;      /* space from top edge */
+      margin-bottom: 12px;   /* space before main card */
+      padding: 4px 12px;     /* keeps text off screen edges */
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Standard disclaimer footer */
+    .app-footer{
+      text-align: center;
+      font-size: .9rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--ring);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      margin: 16px auto 12px;
+      max-width: 800px;   /* match your .container width */
+      line-height: 1.4;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width:600px){
+      .app-header{ padding:6px 16px; max-width:94%; }
+      .app-footer{ font-size:.85rem; padding:8px 10px; }
+    }
+
+    /* Reset and Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+
+    body.dark-mode {
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--accordion-bg);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    body.dark-mode .container {
+      background-color: var(--dark-accordion-bg);
+      box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    p.intro {
+      text-align: center;
+      font-size: 1.1em;
+      margin-bottom: 30px;
+    }
+
+    /* Theme Toggle Switch */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-right: 10px;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: background-color var(--transition-speed);
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: transform var(--transition-speed);
+      border-radius: 50%;
+    }
+
+    input:checked + .slider { background-color: var(--primary-color); }
+    input:checked + .slider:before { transform: translateX(26px); }
+
+    /* Accordion Styles */
+    .accordion { border-top: 1px solid var(--border-color); }
+    .accordion-item { border-bottom: 1px solid var(--border-color); }
+
+    .accordion-header {
+      padding: 15px 20px;
+      cursor: pointer;
+      background-color: var(--accordion-bg);
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      position: relative;
+    }
+
+    body.dark-mode .accordion-header { background-color: var(--dark-accordion-bg); }
+    .accordion-header:hover { background-color: var(--accordion-hover-bg); }
+    body.dark-mode .accordion-header:hover { background-color: var(--dark-accordion-hover-bg); }
+
+    .accordion-header.active {
+      background-color: var(--accordion-active-bg);
+      color: var(--primary-color);
+    }
+    body.dark-mode .accordion-header.active {
+      background-color: var(--dark-accordion-active-bg);
+      color: var(--secondary-color);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-speed), padding var(--transition-speed);
+      background-color: #fafafa;
+    }
+    body.dark-mode .accordion-content { background-color: #444444; }
+
+    .accordion-content iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      opacity: 0;
+      transition: opacity var(--transition-speed);
+    }
+    .accordion-content iframe.loaded { opacity: 1; }
+
+    .accordion-content p {
+      padding: 20px;
+      text-align: center;
+      color: var(--footer-color);
+    }
+
+    /* Chevron Icon Rotation */
+    .accordion-header::after {
+      content: '\f0da'; /* Font Awesome chevron-down */
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      transition: transform var(--transition-speed);
+      font-size: 1em;
+      margin-left: 10px;
+    }
+    .accordion-header.active::after { transform: rotate(180deg); }
+
+    /* Tooltip Styles */
+    .tooltip {
+      visibility: hidden;
+      background-color: var(--text-color);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity var(--transition-speed);
+      white-space: nowrap;
+      font-size: 0.8em;
+    }
+    .accordion-header:hover .tooltip { visibility: visible; opacity: 1; }
+
+    /* Better tooltip contrast in dark mode */
+    body.dark-mode .tooltip {
+      background-color: var(--dark-text);
+      color: #000;
+    }
+
+    /* Focus Styles for Accessibility */
+    .accordion-header:focus { outline: 2px solid var(--primary-color); }
+
+    /* Bottom reference note (your existing .footer) */
+    .footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: var(--footer-color);
+      text-align: center;
+    }
+  </style>
+<meta name="dref-tool" content="jkn-kelantan-congenital-hypothyroidism-guide"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+
+  <!-- Standard tagline -->
+  <div class="app-header" role="banner" aria-label="Site tagline">
+    app crafted by our medical doctors, for better patient care
+  </div>
+
+  <div class="container">
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle" aria-label="Toggle Dark Mode">
+        <span class="slider round"></span>
+      </label>
+      <span>Dark Mode</span>
+    </div>
+
+    <h1>JKN Kelantan Congenital Hypothyroidism Guide</h1>
+    <p class="intro">Select the pathway below to view the relevant algorithm.</p>
+
+    <div class="accordion" id="accordion">
+      <!-- Item 1 -->
+      <div class="accordion-item">
+        <div
+          class="accordion-header"
+          id="header1"
+          tabindex="0"
+          aria-expanded="false"
+          aria-controls="content1"
+          onclick="toggleAccordion(this, 'content1')"
+          onkeypress="handleKeyPress(event, this)"
+        >
+          Cord TSH (cTSH)
+          <span class="tooltip">TSH test performed immediately after birth.</span>
+        </div>
+        <div class="accordion-content" id="content1" aria-labelledby="header1">
+          <iframe src="" title="Cord TSH (cTSH) PDF"></iframe>
+          <p>Select a pathway to view the algorithm.</p>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="accordion-item">
+        <div
+          class="accordion-header"
+          id="header2"
+          tabindex="0"
+          aria-expanded="false"
+          aria-controls="content2"
+          onclick="toggleAccordion(this, 'content2')"
+          onkeypress="handleKeyPress(event, this)"
+        >
+          Repeated venous TFT at Day 3 to Day 5 of Life (after 72 hours of life)
+          <span class="tooltip">TSH test repeated 3–5 days after birth.</span>
+        </div>
+        <div class="accordion-content" id="content2" aria-labelledby="header2">
+          <iframe src="" title="Repeated venous TFT at Day 3 to Day 5 of Life PDF"></iframe>
+          <p>Select a pathway to view the algorithm.</p>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="accordion-item">
+        <div
+          class="accordion-header"
+          id="header3"
+          tabindex="0"
+          aria-expanded="false"
+          aria-controls="content3"
+          onclick="toggleAccordion(this, 'content3')"
+          onkeypress="handleKeyPress(event, this)"
+        >
+          Repeated TFT at Day 10 to Day 14 of Life
+          <span class="tooltip">TSH test repeated 10–14 days after birth.</span>
+        </div>
+        <div class="accordion-content" id="content3" aria-labelledby="header3">
+          <iframe src="" title="Repeated TFT at Day 10 to Day 14 of Life PDF"></iframe>
+          <p>Select a pathway to view the algorithm.</p>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="accordion-item">
+        <div
+          class="accordion-header"
+          id="header4"
+          tabindex="0"
+          aria-expanded="false"
+          aria-controls="content4"
+          onclick="toggleAccordion(this, 'content4')"
+          onkeypress="handleKeyPress(event, this)"
+        >
+          Repeated TFT in 2 weeks / Day 14 onwards (Prolonged Jaundice Work-up)
+          <span class="tooltip">TSH test if jaundice persists beyond 14 days.</span>
+        </div>
+        <div class="accordion-content" id="content4" aria-labelledby="header4">
+          <iframe src="" title="Repeated TFT in 2 weeks / Day 14 onwards (Prolonged Jaundice Work-up) PDF"></iframe>
+          <p>Select a pathway to view the algorithm.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Reference: Congenital Hypothyroidism Management by Dr. Rashdan Zaki bin Mohamed (Paediatrician &amp; Paediatric Endocrinologist HRPZII)</p>
+    </div>
+  </div>
+
+  <!-- Standard disclaimer footer (placed OUTSIDE the main card) -->
+  <div class="app-footer" role="contentinfo" aria-label="Medical disclaimer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+
+  <script>
+    // PDF Links with Simplified Keys
+    const links = {
+      "content1": "https://drive.google.com/file/d/1I0yOzZSfMd8RzPMZyOuuRXFthJiKVpus/preview",
+      "content2": "https://drive.google.com/file/d/188JhLm8egHCKzyRQO21L2sC5kkDb2b-D/preview",
+      "content3": "https://drive.google.com/file/d/1eeeZMbAox-YU_aTLJp3qGVpKUfZTwc2h/preview",
+      "content4": "https://drive.google.com/file/d/1wTzALroeDj2eaNwtHZn-6VPGywDlnLau/preview"
+    };
+
+    function toggleAccordion(header, contentId) {
+      const isActive = header.classList.contains('active');
+      const allHeaders = document.querySelectorAll('.accordion-header');
+      const allContents = document.querySelectorAll('.accordion-content');
+
+      // Close all accordion items
+      allHeaders.forEach(h => {
+        h.classList.remove('active');
+        h.setAttribute('aria-expanded', 'false');
+      });
+      allContents.forEach(c => {
+        c.style.maxHeight = null;
+        const ifr = c.querySelector('iframe');
+        if (ifr) {
+          ifr.src = "";
+          ifr.classList.remove('loaded');
+        }
+      });
+
+      if (!isActive) {
+        // Open the clicked accordion
+        header.classList.add('active');
+        header.setAttribute('aria-expanded', 'true');
+        const content = document.getElementById(contentId);
+        content.style.maxHeight = content.scrollHeight + "px";
+
+        // Set iframe source for lazy loading
+        const iframe = content.querySelector('iframe');
+        if (iframe) {
+          iframe.src = links[contentId];
+          iframe.onload = () => { iframe.classList.add('loaded'); };
+        }
+      }
+    }
+
+    // Handle keyboard navigation (Enter and Space keys)
+    function handleKeyPress(event, header) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        const contentId = header.getAttribute('aria-controls');
+        toggleAccordion(header, contentId);
+      }
+    }
+
+    // Dark Mode Toggle
+    const toggle = document.getElementById('darkModeToggle');
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-mode', toggle.checked);
+    });
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

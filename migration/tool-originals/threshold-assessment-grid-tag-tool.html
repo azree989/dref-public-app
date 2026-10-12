@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<title>Threshold Assessment Grid (TAG)</title>
+
+<!-- ---------- GLOBAL STYLES & TOKENS ---------- -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+  :root{
+    --primary:#0066cc;
+    --alert:#d63031;
+    --easy:#28a745;
+    --moderate:#f0ad4e;
+    --severe:#d9534f;
+    --ink:#22303c;
+    --muted:#5f6b7a;
+    --bg:#f5f8fc;
+    --radius:12px;
+    --shadow:0 3px 8px rgba(0,0,0,.06);
+    --trans:.18s;
+  }
+
+  body{margin:0;background:var(--bg);font-family:'Poppins',sans-serif;font-size:.9rem;color:var(--ink);}
+  main{max-width:1120px;margin:auto;padding:1rem;}
+
+  /* ---------- TITLE ---------- */
+  .tag-title{
+    margin:0 0 1.6rem;
+    text-align:center;
+    font-size:1.4rem;
+    font-weight:700;
+    letter-spacing:.5px;
+    line-height:1.35;
+  }
+  @media(min-width:600px){.tag-title{font-size:1.7rem;}}
+
+  /* ---------- SINGLE COLLAPSIBLE ---------- */
+  details.collapse{
+    background:#fff;
+    border:1px solid #ccd4db;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    margin-bottom:1.6rem;
+    overflow:hidden;
+  }
+  details.collapse summary{
+    padding:.9rem 1rem;
+    cursor:pointer;
+    font-weight:600;
+    color:var(--primary);
+    list-style:none;
+    user-select:none;
+    text-align:center;
+  }
+  details.collapse summary::marker,
+  details.collapse summary::-webkit-details-marker{display:none;}
+  details.collapse[open] summary{background:var(--primary);color:#fff;}
+  details.collapse .content{padding:1rem 1.2rem 1.4rem;line-height:1.5;}
+  details.collapse ol{margin-left:1.2rem;margin-top:.4rem;}
+  details.collapse li{margin-bottom:.5rem;}
+
+  /* ---------- TAG GRID ---------- */
+  .grid{display:grid;gap:1.2rem;}
+  @media(min-width:700px){.grid{grid-template-columns:repeat(2,1fr);} }
+
+  .card{
+    background:#fff;
+    border:0;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:1.1rem;
+    display:flex;
+    flex-direction:column;
+    gap:.8rem;
+  }
+  .card.missing{border:2px solid var(--alert);background:#fff5f5;}
+
+  .section-label{font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.1rem;color:var(--muted);}
+  .card h3{margin:0;font-size:1rem;font-weight:600;color:var(--primary);}
+
+  /* OPTION CHIPS */
+  .options{display:grid;gap:.65rem;}
+  @media(min-width:420px){.options{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}}
+
+  label.option{
+    display:flex;flex-direction:column;gap:.35rem;cursor:pointer;
+    border:2px solid #cdd4db;border-radius:8px;padding:.7rem .65rem;
+    transition:border var(--trans),background var(--trans);
+  }
+  label.option:hover{border-color:var(--primary);}
+  label.option input{display:none;}
+
+  .chip-title{font-weight:600;font-size:.85rem;}
+  .chip-desc{font-size:.78rem;color:var(--muted);line-height:1.28;}
+
+  /* SELECTED CHIP */
+  label.option input:checked + .content{
+    border-color:var(--primary);
+    border-width:3px;
+    background:rgba(0,102,204,.28);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
+  }
+  label.option input:checked + .content .chip-title{
+    color:#00356e;font-weight:700;letter-spacing:.35px;text-shadow:0 0 1px rgba(0,0,0,.25);
+  }
+
+  /* BUTTONS */
+  .actions{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:1.4rem;}
+  .btn{
+    flex:1 1 180px;padding:.68rem;border:none;border-radius:9999px;font-size:.9rem;font-weight:600;
+    cursor:pointer;transition:filter var(--trans);}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-reset{background:#e1e6eb;color:#333;}
+  .btn:hover{filter:brightness(.92);}
+
+  /* RESULT PILL */
+  #result{margin-top:1.3rem;text-align:center;}
+  .pill{
+    display:inline-block;padding:.7rem 2.1rem;border-radius:9999px;color:#fff;
+    font-size:1.15rem;font-weight:800;letter-spacing:.3px;
+  }
+  .easy{background:var(--easy);}
+  .moderate{background:var(--moderate);}
+  .severe{background:var(--severe);}
+  .error{color:var(--alert);}
+
+  /* FOOTER */
+  .tag-footer{margin:2rem 0 1rem;text-align:center;font-size:.8rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<main>
+
+  <!-- TITLE -->
+  <h1 class="tag-title">
+    PENILAIAN KETERUKAN MASALAH KESIHATAN MENTAL<br>
+    ‘THRESHOLD ASSESSMENT GRID’ (TAG) TOOL
+  </h1>
+
+  <!-- SINGLE COLLAPSIBLE: MAKLUMAT ASAS -->
+  <details class="collapse">
+    <summary>Pengenalan</summary>
+    <div class="content">
+      <strong>Pengenalan</strong><br>
+      Ada pelbagai cara untuk menilai masalah kesihatan mental pesakit. Umumnya beberapa
+      aspek sering dinilai seperti simptom-simptom keupayaan pesakit berdikari,
+      tingkahlaku berisiko (misalnya cuba membunuh diri, ganas), sokongan sosial
+      dan tekanan psikologi. Satu cara mudah menilai segala aspek berikut ialah
+      dengan menggunakan satu sistem penilaian yang dinamakan
+      “Threshold Assessment Grid” (TAG) atau “Skala Penilaian Berbatas” (SPB).<br><br>
+
+      <strong>Cara Penggunaan</strong>
+      <ol type="a">
+        <li>Ia boleh digunakan oleh Pakar Psikiatri, Pakar Perubatan Keluarga,
+            Pegawai Perubatan, Jururawat Psikiatri dan anggota kesihatan lain
+            (seperti Jururawat Terlatih, Penolong Pegawai Perubatan dan sebagainya)
+            yang telah dilatih.</li>
+        <li>SPB mempunyai <strong>7 aspek / domain</strong> yang meliputi
+            keselamatan (2 aspek), risiko (2 aspek), keperluan &amp; kurang upaya (3 aspek).
+            Tiap satu aspek dinilai mengikut tahap keterukkan
+            (julat dari ‘paling teruk’ ke ‘tiada’).</li>
+        <li>Satu senarai semak bagi setiap aspek / domain disediakan untuk membantu
+            penilaian ini. Senarai semak ini digunakan semasa temubual klinikal
+            dan penilaian psikososial.</li>
+        <li>Tahap yang dipilih hendaklah yang paling sesuai untuk pesakit yang dinilai.</li>
+        <li>Jangka masa / tempoh penilaian tidak ditentukan sebab sesuatu masalah itu
+            mungkin hanya berlaku kadangkala saja tetapi masih lagi menjadi tumpuan
+            perhatian.</li>
+        <li>Secara am, penilaian dibuat ke atas masalah yang dihadapi dalam tempoh
+            satu bulan kebelakangan.</li>
+        <li>Semua aspek hendaklah dinilai.</li>
+        <li><strong>Penilaian SPB.</strong>
+          <ol>
+            <li><em>Kategori mudah</em> : semua aspek / domain ‘tiada masalah’ atau
+                ‘masalah ringan’.</li>
+            <li><em>Kategori sederhana</em> : penilaian satu domain ‘sederhana’.
+                Hanya satu domain sederhana diperlukan untuk meletakkan pesakit
+                dalam kategori ini.</li>
+            <li><em>Kategori teruk</em> : penilaian satu domain teruk.
+                Hanya satu domain yang teruk diperlukan untuk meletakkan pesakit
+                ke dalam kategori ini.</li>
+          </ol>
+        </li>
+      </ol>
+    </div>
+  </details>
+
+  <!-- TAG WIDGET -->
+  <div id="tag-widget">
+    <div class="grid">
+
+      <!-- DOMAIN 1 -->
+      <div class="card" id="row1">
+        <span class="section-label">Safety</span>
+        <h3>Domain 1 · Intentional self-harm</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom1" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No concern about deliberate self-harm or suicide attempt</span></span></label>
+          <label class="option"><input type="radio" name="dom1" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Minor concern about risk of deliberate self-harm or suicidal attempt</span></span></label>
+          <label class="option"><input type="radio" name="dom1" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Definite indicators of about risk of deliberate self-harm or suicidal attempt</span></span></label>
+          <label class="option"><input type="radio" name="dom1" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> High risk to physical safety as a result of deliberate self harm or suicidal attempt</span></span></label>
+          <label class="option"><input type="radio" name="dom1" value="4"><span class="content"><span class="chip-title">Very Severe</span><span class="chip-desc"> Immediate risk to physical safety as a result of deliberate self harm or suicidal attempt</span></span></label>
+        </div>
+      </div>
+
+      <!-- DOMAIN 2 -->
+      <div class="card" id="row2">
+        <span class="section-label">Safety</span>
+        <h3>Domain 2 · Unintentional self-harm</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom2" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No concern about unintentional risk to physical safety</span></span></label>
+          <label class="option"><input type="radio" name="dom2" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Minor concern about unintentional risk to physical safety</span></span></label>
+          <label class="option"><input type="radio" name="dom2" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Definite indicators unintentional risk to physical safety</span></span></label>
+          <label class="option"><input type="radio" name="dom2" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> High risk due to physical safety as a result of self-neglect, unsafe behaviour or inability to maintain a safe environment</span></span></label>
+          </div>
+      </div>
+
+      <!-- DOMAIN 3 -->
+      <div class="card" id="row3">
+        <span class="section-label">Risk</span>
+        <h3>Domain 3 · Risk from others</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom3" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No concern about risk of abuse or exploitation from other individual or society</span></span></label>
+          <label class="option"><input type="radio" name="dom3" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Minor concern about risk of abuse or exploitation from other individual or society</span></span></label>
+          <label class="option"><input type="radio" name="dom3" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Definite risk of abuse or exploitation from other individual or society</span></span></label>
+          <label class="option"><input type="radio" name="dom3" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> Positive evidence of abuse or exploitation from other individual or society</span></span></label>
+        </div>
+      </div>
+
+      <!-- DOMAIN 4 -->
+      <div class="card" id="row4">
+        <span class="section-label">Risk</span>
+        <h3>Domain 4 · Risk to others</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom4" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No concern about risk to physical safety or property of others</span></span></label>
+          <label class="option"><input type="radio" name="dom4" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Anti-social behaviour</span></span></label>
+          <label class="option"><input type="radio" name="dom4" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Risk to property and/or minor risk to physical safety of others</span></span></label>
+          <label class="option"><input type="radio" name="dom4" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> High risk to physical safety of others as a result of dangerous behaviour</span></span></label>
+          <label class="option"><input type="radio" name="dom4" value="4"><span class="content"><span class="chip-title">Very Severe</span><span class="chip-desc"> Immediate risk to physical safety of others as a result of dangerous behaviour</span></span></label>
+        </div>
+      </div>
+
+      <!-- DOMAIN 5 -->
+      <div class="card" id="row5">
+        <span class="section-label">Needs & Disabilities</span>
+        <h3>Domain 5 · Survival</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom5" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No concern about basic amenities, resources or living skills</span></span></label>
+          <label class="option"><input type="radio" name="dom5" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Minor concern about basic amenities, resources or living skills</span></span></label>
+          <label class="option"><input type="radio" name="dom5" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Marked lack of basic amenities, resources or living skills</span></span></label>
+          <label class="option"><input type="radio" name="dom5" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> Serious lack of basic amenities, resources or living skills</span></span></label>
+          <label class="option"><input type="radio" name="dom5" value="4"><span class="content"><span class="chip-title">Very Severe</span><span class="chip-desc"> Life-threatening lack of basic amenities, resources or living skills</span></span></label>
+        </div>
+      </div>
+
+      <!-- DOMAIN 6 -->
+      <div class="card" id="row6">
+        <span class="section-label">Needs & Disabilities</span>
+        <h3>Domain 6 · Psychological</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom6" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No disabling or distressing problems with thinking, feeling, or behaviour</span></span></label>
+          <label class="option"><input type="radio" name="dom6" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Minor disabling or distressing problems with thinking, feeling, or behaviour</span></span></label>
+          <label class="option"><input type="radio" name="dom6" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Disabling or distressing problems with thinking, feeling, or behaviour</span></span></label>
+          <label class="option"><input type="radio" name="dom6" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> Very disabling or distressing problems with thinking, feeling, or behaviour</span></span></label>
+        </div>
+      </div>
+
+      <!-- DOMAIN 7 -->
+      <div class="card" id="row7">
+        <span class="section-label">Needs & Disabilities</span>
+        <h3>Domain 7 · Social</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="dom7" value="0"><span class="content"><span class="chip-title">None</span><span class="chip-desc"> No disabling problems with activities or in relation to other people</span></span></label>
+          <label class="option"><input type="radio" name="dom7" value="1"><span class="content"><span class="chip-title">Mild</span><span class="chip-desc"> Minor disabling problems with activities or in relation to other people</span></span></label>
+          <label class="option"><input type="radio" name="dom7" value="2"><span class="content"><span class="chip-title">Moderate</span><span class="chip-desc"> Disabling problems with activities or in relation to other people</span></span></label>
+          <label class="option"><input type="radio" name="dom7" value="3"><span class="content"><span class="chip-title">Severe</span><span class="chip-desc"> Very disabling problems with activities or in relation to other people</span></span></label>
+        </div>
+      </div>
+
+    </div><!-- /.grid -->
+
+    <!-- ACTIONS / RESULT -->
+    <div class="actions">
+      <button class="btn btn-primary" onclick="computeCategory()">Penilaian Kategori</button>
+      <button class="btn btn-reset"   onclick="resetForm()">Reset</button>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="tag-footer">
+    Reference: <em>Garis Panduan Pelaksanaan Perkhidmatan Rawatan Kesihatan Mental
+    Di Klinik Kesihatan, Edisi Kedua 2009</em>
+  </footer>
+</main>
+
+<!-- ---------- SCRIPT: scoring & reset ---------- -->
+<script>
+function computeCategory(){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('missing'));
+  const res=document.getElementById('result');res.textContent='';res.className='';
+  const scores=[];let missing=false;
+
+  for(let i=1;i<=7;i++){
+    const sel=document.querySelector(`input[name="dom${i}"]:checked`);
+    if(!sel){document.getElementById(`row${i}`).classList.add('missing');missing=true;}
+    else{scores.push(+sel.value);}
+  }
+
+  if(missing){res.textContent='Sila lengkapkan semua domain';res.classList.add('error');return;}
+
+  const cat=scores.some(s=>s>=3)?'Teruk':scores.some(s=>s===2)?'Sederhana':'Mudah';
+  res.innerHTML=`<span class="pill ${cat==='Teruk'?'severe':cat==='Sederhana'?'moderate':'easy'}">${cat}</span>`;
+}
+function resetForm(){
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('missing'));
+  document.getElementById('result').textContent='';
+}
+document.querySelectorAll('.options input[type=radio]').forEach(r=>{
+  r.addEventListener('change',()=>r.closest('.card').classList.remove('missing'));
+});
+</script>
+</body>
+</html>

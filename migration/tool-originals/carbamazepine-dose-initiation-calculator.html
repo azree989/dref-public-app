@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carbamazepine Dose Initiation Calculator</title>
+
+  <!-- Include Google Font: Poppins -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f1f3f5;
+      color: #333;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1558b0;
+      margin-bottom: 20px;
+    }
+
+    /* Flex layout for the two cards */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      flex: 1 1 400px; /* grow/shrink, min‐width ~400px */
+      box-sizing: border-box;
+    }
+
+    .card label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card select,
+    .card input {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+
+    .card input[readonly] {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    .btn {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    .result {
+      margin-top: 20px;
+      background-color: #e9f7ef;
+      border: 1px solid #c3e6cb;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #155724;
+      display: none;
+    }
+
+    /* On narrow/mobile screens (≤600px), stack the two cards vertically */
+    @media (max-width: 600px) {
+      .cards {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Carbamazepine Dose Initiation Calculator</h2>
+
+    <div class="cards">
+      <!-- LEFT CARD: Patient‐specific inputs -->
+      <div class="card">
+        <label for="patientType">Patient Type</label>
+        <select id="patientType">
+          <option value="Adult">Adult</option>
+          <option value="Pediatric">Pediatric</option>
+        </select>
+
+        <label for="therapyType">Therapy Type</label>
+        <select id="therapyType">
+          <option value="Monotherapy">Monotherapy</option>
+          <option value="Polytherapy">Polytherapy</option>
+        </select>
+
+        <label for="bodyWeight">Body Weight (kg)</label>
+        <input
+          type="number"
+          id="bodyWeight"
+          placeholder="e.g. 70"
+          min="0"
+          step="any"
+        />
+      </div>
+
+      <!-- RIGHT CARD: Pharmacokinetic parameters & calculation -->
+      <div class="card">
+        <label for="clearance">Clearance (CL, L/kg/hr)</label>
+        <input type="text" id="clearance" readonly />
+
+        <label for="targetCss">Target Css (mg/L)</label>
+        <input
+          type="number"
+          id="targetCss"
+          placeholder="e.g. 8"
+          min="0"
+          step="any"
+        />
+
+        <label for="interval">Dosing Interval (hr)</label>
+        <input
+          type="number"
+          id="interval"
+          placeholder="e.g. 12"
+          min="0"
+          step="any"
+        />
+
+        <label for="saltFactor">Salt Factor (S)</label>
+        <input
+          type="number"
+          id="saltFactor"
+          value="1.0"
+          min="0"
+          step="any"
+        />
+
+        <label for="bioavailability">Bioavailability (F)</label>
+        <input
+          type="number"
+          id="bioavailability"
+          value="0.9"
+          min="0"
+          max="1"
+          step="any"
+        />
+
+        <div class="buttons">
+          <button class="btn btn-primary" id="calculateBtn">
+            Calculate
+          </button>
+          <button class="btn btn-secondary" id="resetBtn">
+            Reset
+          </button>
+        </div>
+
+        <div class="result" id="resultBox">
+          Maintenance Dose: <span id="mdResult">0</span> mg
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Grab references to DOM elements
+    const patientTypeEl = document.getElementById('patientType');
+    const therapyTypeEl = document.getElementById('therapyType');
+    const clearanceEl = document.getElementById('clearance');
+    const bodyWeightEl = document.getElementById('bodyWeight');
+    const targetCssEl = document.getElementById('targetCss');
+    const intervalEl = document.getElementById('interval');
+    const saltFactorEl = document.getElementById('saltFactor');
+    const bioavailabilityEl = document.getElementById('bioavailability');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultBox = document.getElementById('resultBox');
+    const mdResult = document.getElementById('mdResult');
+
+    // Function to update the CL field based on patient & therapy
+    function updateClearance() {
+      const patient = patientTypeEl.value;
+      const therapy = therapyTypeEl.value;
+      let clLperKgHr = '';
+
+      if (therapy === 'Monotherapy') {
+        if (patient === 'Pediatric') {
+          clLperKgHr = 0.11; // Pediatric monotherapy
+        } else {
+          clLperKgHr = 0.064; // Adult monotherapy
+        }
+      } else {
+        // Polytherapy
+        // (we assume the same 0.10 L/kg/hr for adult & pediatric polytherapy)
+        clLperKgHr = 0.10;
+      }
+
+      clearanceEl.value = clLperKgHr.toFixed(3);
+    }
+
+    // Whenever patientType or therapyType changes, recalc clearance
+    patientTypeEl.addEventListener('change', updateClearance);
+    therapyTypeEl.addEventListener('change', updateClearance);
+
+    // Initialize clearance on page load
+    updateClearance();
+
+    // Calculation logic
+    calculateBtn.addEventListener('click', () => {
+      const clLperKgHr = parseFloat(clearanceEl.value);
+      const bw = parseFloat(bodyWeightEl.value);
+      const cssTarget = parseFloat(targetCssEl.value);
+      const interval = parseFloat(intervalEl.value);
+      const saltF = parseFloat(saltFactorEl.value);
+      const bioF = parseFloat(bioavailabilityEl.value);
+
+      // Basic validation
+      if (
+        isNaN(clLperKgHr) ||
+        isNaN(bw) ||
+        isNaN(cssTarget) ||
+        isNaN(interval) ||
+        isNaN(saltF) ||
+        isNaN(bioF) ||
+        bw <= 0 ||
+        cssTarget <= 0 ||
+        interval <= 0 ||
+        saltF <= 0 ||
+        bioF <= 0
+      ) {
+        alert('Please fill in all fields with valid numbers.');
+        return;
+      }
+
+      // Convert clearance to L/hour: CL (L/kg/hr) × body weight (kg)
+      const clLperHr = clLperKgHr * bw; // L/hr
+
+      // Maintenance dose (mg) = [CL (L/hr) × Css_target (mg/L) × Interval (hr)] / (S × F)
+      const mdMg =
+        (clLperHr * cssTarget * interval) / (saltF * bioF);
+
+      // Display result
+      mdResult.textContent = mdMg.toFixed(0); // Round to nearest mg
+      resultBox.style.display = 'block';
+    });
+
+    // Reset logic
+    resetBtn.addEventListener('click', () => {
+      // Reset all inputs to default/blank
+      patientTypeEl.value = 'Adult';
+      therapyTypeEl.value = 'Monotherapy';
+      bodyWeightEl.value = '';
+      targetCssEl.value = '';
+      intervalEl.value = '';
+      saltFactorEl.value = '1.0';
+      bioavailabilityEl.value = '0.9';
+      updateClearance();
+      resultBox.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

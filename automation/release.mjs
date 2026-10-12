@@ -12,7 +12,7 @@ export function releaseFingerprint(directory){
  walk(directory);return hash.digest('hex');
 }
 export function writeRelease(directory){
- const result={schemaVersion:1,version:'0.9',fingerprint:releaseFingerprint(directory)};
+ const result={schemaVersion:1,version:'1.0',fingerprint:releaseFingerprint(directory)};
  fs.writeFileSync(path.join(directory,'release.json'),JSON.stringify(result)+'\n');return result;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)writeRelease(path.resolve(process.argv[2]||'site'));

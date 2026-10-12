@@ -1,0 +1,795 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidelines on Radiological Examinations for Primary Healthcare Doctors</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Material Symbols Outlined -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #007BFF; /* Blue */
+            --secondary-color: #6c757d; /* Grey */
+            --accent-color: #28a745; /* Green */
+            --background-color: #f4f4f4;
+            --card-background: #fff;
+            --text-color: #333;
+            --header-height: 60px;
+            --max-button-container-width: 500px; /* Fixed width for buttons container */
+            --shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: auto;
+           
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            position: flex;
+            top: 0;
+            width: 100%;
+            height: var(--header-height);
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        h2 {
+            color: var(--text-color);
+            font-size: 1.4em;
+            font-weight: 600;
+            margin: 10px 0 15px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-top: 30px;
+        }
+
+
+        /* Main Content Styles */
+       .main-content {
+    flex: 1;
+    margin-top: 0;            /* ✨ No fixed top margin */
+    padding: 10px;            /* ✨ Compact on mobile */
+    display: flex;
+    justify-content: center;
+}
+
+
+        /* Front Page Styles */
+       .front-page {
+    background-color: var(--card-background);
+    box-shadow: var(--shadow);
+    border-radius: 12px;
+    padding: 5vh 20px; /* ✨ relative top/bottom padding */
+    max-width: 800px;
+    margin: 5vh auto; /* ✨ vertical margin fits screen */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+        .front-page-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: var(--max-button-container-width);
+        }
+
+        .front-page-buttons button {
+            flex: 1 1 40%;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            color: #fff;
+            min-width: 150px;
+        }
+
+        .front-button-general {
+            background-color: var(--primary-color);
+        }
+        .front-button-general:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .front-button-children {
+            background-color: var(--accent-color);
+        }
+        .front-button-children:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Hide sections initially */
+        .section {
+            display: none;
+            position: relative;
+            flex: 3;
+            padding: 20px;
+        }
+
+        /* Back Button Styles */
+        .back-button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.2em;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .back-button .material-symbols-outlined {
+            font-size: 1.5em;
+        }
+
+        /* Search Bar Styles */
+        .search-container {
+            position: relative;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 1em;
+        }
+
+        /* Cards */
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .card {
+            background-color: var(--card-background);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 250px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+            position: relative;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background-color: #e9f5ff; /* Light blue background on hover */
+        }
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .card-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .card-buttons {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+            position: relative;
+            text-decoration: none; /* Ensure buttons styled as links have no underline */
+            display: inline-block;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-trauma {
+            background-color: #dc3545; /* Red */
+            color: #fff;
+        }
+        .btn-trauma:hover {
+            background-color: #c82333;
+        }
+
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Footer Styles */
+        footer {
+            padding: 5px 20px;
+            background-color: #B8B8B8;
+            color: #fff;
+            text-align: center;
+            font-size: 0.7em;
+            line-height: 1;
+        }
+        
+
+        /* Accordion Styles */
+        .accordion {
+  border-bottom: 1px solid #ddd;
+}
+
+.accordion-header {
+  background: none;
+  color: var(--primary-color);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 12px 0;
+  font-size: 1em;
+  display: flex;
+  margin-left: 0;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: left !important;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  word-break: normal;
+  white-space: normal;
+  transition: max-height 0.3s ease-in-out;
+  font-size: 0.95em;        /* ✅ Slightly smaller font */
+  line-height: 1.4;         /* ✅ More compact spacing */
+  text-align: justify;      /* ✅ Align both left and right */
+  color: var(--text-color);
+  padding-left: 0;
+  padding-right: 0;
+}
+.accordion-content ol,
+.accordion-content ul {
+  padding-left: 20px;
+  margin: 0;
+}
+.accordion {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+
+.accordion.active .accordion-content {
+  max-height: 2000px;
+  padding: 10px 0 20px 0;
+}
+
+.accordion .material-symbols-outlined {
+  transition: transform 0.3s;
+  font-size: 1.5em;
+}
+
+.accordion.active .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+
+                /* Responsive Styles */
+        @media (max-width: 1000px) {
+    .accordion-container {
+  width: 100%;
+  max-width: 700px;      /* ✅ Set a max width for readability */
+  margin: 0 auto;     /* ✅ Center it horizontally */
+  padding: 0 16px;       /* ✅ Add side padding */
+  box-sizing: border-box;
+}
+
+        }
+        @media (max-width: 800px) {
+            /* Additional responsive styles if needed */
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+        @media (max-width: 480px) {
+            .cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card {
+                width: 90%;
+            }
+            .btn {
+                width: 100%;
+                padding: 15px;
+            }
+            .search-container {
+                width: 90%;
+            }
+            .front-page-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            @media (max-width: 480px) {
+  .front-page {
+    padding: 4vh 12px;
+    margin: 3vh auto;
+  }
+
+  .front-page-buttons button {
+    padding: 12px;
+    font-size: 1em;
+  }
+
+  .header-title {
+    font-size: 1.4em;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+}
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Front Page and Sections -->
+        <main class="container">
+            <!-- Front Page -->
+            <div id="frontPage" class="front-page">
+
+                <h1 class="header-title" style="color:#007BFF; font-size:1.8em; margin-bottom:10px;">
+                Radiological Guide for Primary Healthcare Doctors
+                </h1>
+                <h2>Select X-ray Type</h2>
+                <div class="front-page-buttons">
+                    <button class="front-button-general" id="generalBtn">General</button>
+                    <button class="front-button-children" id="childrenBtn">Children</button>
+                </div>
+
+                <!-- Important Guidelines Accordion -->
+                <aside class="accordion-container" style="margin-top: 30px;">
+
+                  
+                    <!-- Accordion 1 -->
+                   <div class="accordion">
+  <div class="accordion-header">
+    <span>Using the Guidelines</span>
+    <span class="material-symbols-outlined">expand_more</span>
+  </div>
+  <div class="accordion-content">
+                            <ol>
+                                <li><strong>Indicated:</strong> Indicated. This guideline is used to indicate the most appropriate investigation for that
+                                    clinical situation and may differ from the investigation requested by the clinician.</li>
+                                <li><strong>Six-week rule:</strong> These are situations where experience shows that the clinical problem
+                                    usually resolves with time; we therefore suggest deferring the study for six or eight
+                                    weeks and only performing if the symptoms continue. Acute back or neck pain are
+                                    common examples.</li>
+                                <li><strong>Not indicated routinely:</strong> This emphasizes that while no guidelines are absolute, the
+                                    request should only be carried out if the clinician gives strong arguments for it. An example
+                                    would be a patient with backache in whom there were findings to suggest something
+                                    other than degenerative disease.</li>
+                                <li><strong>Not indicated:</strong> Examinations in this group are for those where the supposed rationale
+                                    for the study is untenable. A cervical spine radiograph may be requested in patients
+                                    with suspected vertebrobasilar insufficiency ‘to show degenerative changes’. All
+                                    patients in this age group have degenerative changes and it is impossible to know
+                                    whether or not they affect the vertebral arteries.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Accordion 2 -->
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <span style="text-align: center;">Protection of Women of Reproductive Age and Pregnant Women</span>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="accordion-content">
+                            <ul>
+                                <li>Radiation exposure to lower abdomen and pelvis for women of childbearing age should
+                                    be kept to a minimum. During pregnancy radiation to these regions should only be
+                                    done if the examination cannot be postponed.</li>
+                                <li>Ask women of reproductive age if they could be pregnant.</li>
+                                <li>Consider any women of reproductive age whose period is overdue to be pregnant.</li>
+                                <li>The prime responsibility for declaring that the patient is pregnant lies with the referring clinician.</li>
+                                <li>The first four weeks following the last menstrual period (LMP) are not considered as
+                                    a critical period for radiation exposure as organogenesis is unlikely to be occurring in the
+                                    embryo.</li>
+                                <li>Majority of routine examinations, except those falling into the ‘high dose to the pelvis,
+                                    category, the 28 days rule should be applied.</li>
+                                <li>For non-urgent examinations involving high doses to the uterus in patients who are at
+                                    risk of pregnancy but not yet overdue, delay the examination until the first 10 days of
+                                    their next menstrual cycle. High dose examinations include computed tomography of
+                                    the abdomen and pelvis and barium enema.</li>
+                                <li>Organogenesis begins soon after the time of the first missed period and continues for
+                                    the next 3-4 months. During this time the fetus is considered to be radiosensitive.</li>
+                                <li>Examination of the abdomen or pelvis should be delayed if possible to a time when
+                                    fetal sensitivity is reduced, i.e., Post - 4 weeks’ gestation (in the third trimester)</li>
+                                <li>Use non-ionizing modalities such as ultrasonography and MRI whenever possible.</li>
+                                <li>Examination of other areas (i.e., chest, skull, extremities) could be carried out with
+                                    minimal fetal exposure at any time during pregnancy.</li>
+                                <li>The use of the lead apron draped over the abdomen is more reassuring than of any
+                                    practical value.</li>
+                                <li>The risk of radiation damage to a fetus, even at the relatively high doses resulting from
+                                    abdominal or pelvic computed tomography or barium enema, is small. Inadvertent
+                                    exposure in early pregnancy will not in itself be an indication for termination or for the
+                                    use of invasive diagnostic procedures such as amniocentesis.</li>
+                                <li>Nuclear medicine studies should be avoided if possible during pregnancy.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- General Section -->
+            <section id="general" class="section">
+                <!-- Back Button -->
+                <button class="back-button" id="backFromGeneral" aria-label="Back to Front Page">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Back
+                </button>
+
+                <h2>General X-ray Examinations</h2>
+                 <div class="cards">
+                    <!-- Chest Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Chest Examination</span>
+                            <div class="card-title">Chest</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Facial Bones and Skull Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Facial Bones and Skull Examination</span>
+                            <div class="card-title">Facial Bones and Skull</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/cf3Lfjh.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/xXBx6bg.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Cervical Spine Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Cervical Spine Examination</span>
+                            <div class="card-title">Cervical Spine</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/CDdT5Ue.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Thoracic Spine Card (No Trauma) -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Thoracic Spine Examination</span>
+                            <div class="card-title">Thoracic Spine</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Lumbar Spine Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Lumbar Spine Examination</span>
+                            <div class="card-title">Lumbar Spine</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Pelvis/Hip/Sacrum Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Pelvis/Hip/Sacrum Examination</span>
+                            <div class="card-title">Pelvis/Hip/Sacrum</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Knees Card (No Trauma) -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Knees Examination</span>
+                            <div class="card-title">Knees</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Ankle and Feet Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Ankle and Feet Examination</span>
+                            <div class="card-title">Ankle and Feet</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                    <!-- Skeletal Survey Card (No Trauma) -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Skeletal Survey Examination</span>
+                            <div class="card-title">Skeletal Survey</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                        </div>
+                    </div>
+                    <!-- Plain Abdomen Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Plain Abdomen Examination</span>
+                            <div class="card-title">Plain Abdomen</div>
+                        </div>
+                        <div class="card-buttons">
+                            <button class="btn btn-primary" onclick="showImageModal('https://i.imgur.com/rDOWDMk.png')">View Guidelines</button>
+                            <button class="btn btn-trauma" onclick="showImageModal('https://i.imgur.com/S30YSZh.png')">Trauma</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Children Section -->
+            <section id="children" class="section">
+                <!-- Back Button -->
+                <button class="back-button" id="backFromChildren" aria-label="Back to Front Page">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Back
+                </button>
+
+                <h2>Children X-ray Examinations</h2>
+                
+                <div class="cards">
+                    <!-- Children Chest Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Children Chest Examination</span>
+                            <div class="card-title">Chest</div>
+                        </div>
+                        <div class="card-buttons">
+                            <a class="btn btn-primary" href="guidelines.html?type=children-chest" aria-label="View Children Chest Guidelines">View Guidelines</a>
+                        </div>
+                    </div>
+                    <!-- Children Abdomen Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Children Abdomen Examination</span>
+                            <div class="card-title">Abdomen</div>
+                        </div>
+                        <div class="card-buttons">
+                            <a class="btn btn-primary" href="guidelines.html?type=children-abdomen" aria-label="View Children Abdomen Guidelines">View Guidelines</a>
+                        </div>
+                    </div>
+                    <!-- Children Spine Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Children Spine Examination</span>
+                            <div class="card-title">Spine</div>
+                        </div>
+                        <div class="card-buttons">
+                            <a class="btn btn-primary" href="guidelines.html?type=children-spine" aria-label="View Children Spine Guidelines">View Guidelines</a>
+                        </div>
+                    </div>
+                    <!-- Children Limbs and Joints Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Children Limbs and Joints Examination</span>
+                            <div class="card-title">Limbs and Joints</div>
+                        </div>
+                        <div class="card-buttons">
+                            <a class="btn btn-primary" href="guidelines.html?type=children-limbs-joints" aria-label="View Children Limbs and Joints Guidelines">View Guidelines</a>
+                        </div>
+                    </div>
+                    <!-- Children Skulls and Sinuses Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="sr-only">Children Skulls and Sinuses Examination</span>
+                            <div class="card-title">Skulls and Sinuses</div>
+                        </div>
+                        <div class="card-buttons">
+                            <a class="btn btn-primary" href="guidelines.html?type=children-skulls-sinuses" aria-label="View Children Skulls and Sinuses Guidelines">View Guidelines</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Updated Modal Container -->
+<div id="imageModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.85);
+    z-index:10000;
+    overflow:auto;  /* ✨ Enables scrolling */
+    padding: 40px 10px;
+    box-sizing: border-box;
+">
+    <div style="
+        position:relative;
+        max-width:1000px;
+        margin: 0 auto;
+        background: transparent;
+        text-align:center;
+    ">
+        <span id="closeModal" style="
+            position:absolute;
+            top:-20px;
+            right:0;
+            font-size:30px;
+            color:white;
+            cursor:pointer;
+        ">&times;</span>
+        <img id="modalImage" src="" alt="Guideline Image" style="
+            max-width:100%;
+            height:auto;
+            border-radius:8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        ">
+    </div>
+</div>
+
+</div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Reference: KKM Guidelines on Radiological Examinations for Primary Healthcare Doctors Terbitan Semula 2020 Edisi Ke-3</p>
+    </footer>
+
+    <!-- JavaScript for Navigation, Search, and Accordion Functionality -->
+    <script>
+        // Navigation Buttons
+        const frontPage = document.getElementById('frontPage');
+        const generalSection = document.getElementById('general');
+        const childrenSection = document.getElementById('children');
+        const generalBtn = document.getElementById('generalBtn');
+        const childrenBtn = document.getElementById('childrenBtn');
+
+        // Back Buttons
+        const backFromGeneral = document.getElementById('backFromGeneral');
+        const backFromChildren = document.getElementById('backFromChildren');
+
+        // Event Listeners for Navigation
+        generalBtn.addEventListener('click', () => {
+            frontPage.style.display = 'none';
+            generalSection.style.display = 'block';
+            childrenSection.style.display = 'none';
+            window.scrollTo(0, 0);
+        });
+
+        childrenBtn.addEventListener('click', () => {
+            frontPage.style.display = 'none';
+            childrenSection.style.display = 'block';
+            generalSection.style.display = 'none';
+            window.scrollTo(0, 0);
+        });
+
+        backFromGeneral.addEventListener('click', () => {
+            generalSection.style.display = 'none';
+            frontPage.style.display = 'flex';
+            window.scrollTo(0, 0);
+        });
+
+        backFromChildren.addEventListener('click', () => {
+            childrenSection.style.display = 'none';
+            frontPage.style.display = 'flex';
+            window.scrollTo(0, 0);
+        });
+
+        // Accordion Functionality
+        const accordions = document.querySelectorAll('.accordion');
+        accordions.forEach(accordion => {
+            const header = accordion.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                // Toggle active class on this accordion
+                accordion.classList.toggle('active');
+                // Close other accordions
+                accordions.forEach(otherAccordion => {
+                    if (otherAccordion !== accordion) {
+                        otherAccordion.classList.remove('active');
+                    }
+                });
+            });
+        });
+        // Modal logic
+const modal = document.getElementById("imageModal");
+const modalImage = document.getElementById("modalImage");
+const closeModal = document.getElementById("closeModal");
+
+function showImageModal(imageUrl) {
+    modalImage.src = imageUrl;
+    modal.style.display = "flex";
+}
+
+closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+// Optional: Close on background click
+modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>SIQ DM Answer Count Tool — DRef</title>
+  <meta name="description" content="Clinical tool to count selected answers for SIQ Investigation diabetes patient questionnaire sections: Pengetahuan, Sikap and Amalan." />
+  <meta name="keywords" content="SIQ Investigation, diabetes care, glycaemic control, diabetes questionnaire, DRef, Pengetahuan Sikap Amalan" />
+  <meta name="robots" content="index,follow" />
+  <meta name="language" content="ms-MY" />
+  <link rel="canonical" href="https://www.dref.my/clinical-tools_1/soal-selidik-pesakit-dm" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DRef — Doctor’s Reference" />
+  <meta property="og:title" content="SIQ DM Answer Count Tool" />
+  <meta property="og:description" content="Count selected answers for SIQ Investigation diabetes patient questionnaire sections." />
+  <meta property="og:url" content="https://www.dref.my/clinical-tools_1/soal-selidik-pesakit-dm" />
+  <meta property="og:locale" content="ms_MY" />
+  <meta property="og:locale:alternate" content="en_MY" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="SIQ DM Answer Count Tool" />
+  <meta name="twitter:description" content="Count selected answers for SIQ diabetes questionnaire sections." />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "SIQ DM Answer Count Tool",
+    "description": "Clinical tool to count selected answers for SIQ Investigation diabetes patient questionnaire sections: Pengetahuan, Sikap and Amalan.",
+    "inLanguage": "ms-MY",
+    "about": [
+      { "@type": "MedicalCondition", "name": "Diabetes mellitus" },
+      { "@type": "MedicalTest", "name": "Diabetes care questionnaire" }
+    ],
+    "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url": "https://www.dref.my",
+      "address": { "@type": "PostalAddress", "addressLocality": "Bachok", "addressRegion": "Kelantan", "addressCountry": "MY" }
+    },
+    "url": "https://www.dref.my/clinical-tools_1/soal-selidik-pesakit-dm"
+  }
+  </script>
+
+  <!-- Header/Footer font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <style>
+  :root{
+    --muted:#6b7280;
+    --surface:#f7fafc;
+    --ring:#e5e7eb;
+    --radius:12px;
+    --blue:#1976d2;
+    --blue-d:#125aa0;
+    --red:#e53935;
+    --red-d:#b71c1c;
+    --green:#1b5e20;
+    --green-btn:#2e7d32;
+    --green-btn-d:#1b5e20;
+    --yellow-bg:#fff8e1;
+    --orange-bg:#fff3e0;
+    --red-bg:#ffebee;
+    --ink:#333;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    font-family:Arial, sans-serif;
+    margin:0;
+    padding:0;
+    background:#f4f4f9;
+    color:var(--ink);
+  }
+
+  .app-header{
+    font-family:"Josefin Sans",sans-serif;
+    color:var(--muted);
+    text-align:center;
+    font-size:.95rem;
+    font-weight:400;
+    letter-spacing:.03em;
+    margin-top:16px;
+    margin-bottom:12px;
+    padding:4px 12px;
+    max-width:90%;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  main{
+    max-width:800px;
+    margin:20px auto 24px;
+    background:#fff;
+    padding:24px;
+    border-radius:var(--radius);
+    box-shadow:0 2px 5px rgba(0,0,0,.08);
+  }
+
+  .card-title{
+    text-align:center;
+    color:var(--blue);
+    font-size:1.8rem;
+    font-weight:700;
+    margin:6px 0 10px;
+    line-height:1.2;
+  }
+
+  h2{
+    font-size:1.125rem;
+    margin:20px 0 10px;
+    color:#214a48;
+  }
+
+  h3{
+    font-size:1rem;
+    margin:0;
+    color:#214a48;
+  }
+
+  .lead{
+    max-width:820px;
+    margin:0 auto 18px;
+    padding:0 8px;
+    color:#555;
+    text-align:center;
+    line-height:1.5;
+  }
+
+  .reference-box,
+  .notice-box{
+    background:#f9f9f9;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:14px;
+    margin:14px 0 18px;
+    text-align:center;
+    font-size:14px;
+    color:#444;
+    line-height:1.55;
+  }
+
+  .reference-title{
+    font-weight:700;
+    color:#214a48;
+    margin-bottom:4px;
+  }
+
+  .reference-main{
+    font-size:16px;
+    font-weight:700;
+    color:#214a48;
+    margin-top:6px;
+  }
+
+  .small-muted{
+    font-size:13px;
+    color:#6b7280;
+  }
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+
+  .form-group{
+    margin-bottom:14px;
+  }
+
+  label.field-label{
+    display:block;
+    font-weight:600;
+    margin-bottom:6px;
+    color:#333;
+    font-size:15px;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"],
+  select{
+    width:100%;
+    box-sizing:border-box;
+    padding:11px 12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:16px;
+    background:#fff;
+    color:#333;
+  }
+
+  input:focus,
+  select:focus{
+    outline:none;
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(25,118,210,.12);
+  }
+
+  .unit{
+    color:#6b7280;
+    font-weight:400;
+    font-size:13px;
+  }
+
+  .section-card{
+    margin-top:16px;
+    padding:15px;
+    background:#f9f9f9;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:14px;
+    color:#555;
+    line-height:1.5;
+  }
+
+  .section-card > .section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+  }
+
+  .section-card p{
+    margin:4px 0 0;
+    color:#6b7280;
+    font-size:13px;
+  }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:#eef6ff;
+    color:#125aa0;
+    border:1px solid #d8ebff;
+    border-radius:999px;
+    padding:5px 9px;
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+
+  .question-group{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    overflow:hidden;
+    margin-top:10px;
+  }
+
+  .group-title{
+    padding:11px 12px;
+    background:#fff8e1;
+    color:#333;
+    border-bottom:1px solid #ddd;
+    font-weight:700;
+  }
+
+  .question-row{
+    display:grid;
+    grid-template-columns:minmax(220px, 1fr) auto;
+    gap:12px;
+    align-items:center;
+    padding:11px 12px;
+    border-bottom:1px solid #eee;
+  }
+
+  .question-row:last-child{
+    border-bottom:none;
+  }
+
+  .qtext{
+    color:#333;
+    line-height:1.45;
+  }
+
+  .answer-options{
+    display:grid;
+    gap:8px;
+  }
+
+  .answer-options.cols-3{ grid-template-columns:repeat(3, minmax(80px, 1fr)); }
+  .answer-options.cols-4{ grid-template-columns:repeat(4, minmax(84px, 1fr)); }
+
+  .answer-options label{
+    position:relative;
+    min-height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    padding:8px 9px;
+    background:#fff;
+    color:#374151;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:700;
+    user-select:none;
+  }
+
+  .answer-options input{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .answer-options label:has(input:checked){
+    background:var(--blue);
+    color:#fff;
+    border-color:var(--blue);
+    box-shadow:0 2px 5px rgba(25,118,210,.22);
+  }
+
+
+
+  .validation-message{
+    display:none;
+    margin-top:16px;
+    padding:12px 14px;
+    background:#ffebee;
+    border:1px solid #ef9a9a;
+    border-radius:8px;
+    color:#b71c1c;
+    font-size:14px;
+    font-weight:700;
+    line-height:1.45;
+  }
+
+  .validation-message small{
+    display:block;
+    margin-top:4px;
+    font-weight:400;
+    color:#7f1d1d;
+  }
+
+  .question-row.unanswered-row{
+    background:#fff5f5;
+    border-left:4px solid var(--red);
+  }
+
+  .question-row.unanswered-row .qtext::after{
+    content:"  · Belum dijawab";
+    color:var(--red-d);
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .button-container{
+    display:flex;
+    gap:12px;
+    margin-top:18px;
+  }
+
+  .result-actions{
+    margin-top:14px;
+  }
+
+  .pre-result-actions .btn{
+    max-width:100%;
+  }
+
+  .btn{
+    padding:12px 16px;
+    border:none;
+    border-radius:8px;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    flex:1;
+  }
+
+  .btn-primary{ background:var(--blue); }
+  .btn-primary:hover{ background:var(--blue-d); }
+
+  .btn-danger{ background:var(--red); }
+  .btn-danger:hover{ background:var(--red-d); }
+
+  .btn-success{ background:var(--green-btn); }
+  .btn-success:hover{ background:var(--green-btn-d); }
+
+  .output{
+    margin-top:20px;
+    padding:15px;
+    border-radius:8px;
+    display:none;
+    line-height:1.5;
+    background:#f9f9f9;
+    border:1px solid #ddd;
+  }
+
+  .result-meta{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+    margin:8px 0 14px;
+  }
+
+  .meta-item{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    padding:9px 10px;
+    min-height:56px;
+  }
+
+  .meta-label{
+    color:#6b7280;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+
+  .meta-value{
+    margin-top:3px;
+    color:#111827;
+    font-weight:700;
+    word-break:break-word;
+  }
+
+  .summary-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+    font-size:14px;
+    overflow:hidden;
+    border-radius:8px;
+  }
+
+  .summary-table th,
+  .summary-table td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+    vertical-align:middle;
+  }
+
+  .summary-table th{
+    background:#fff3cd;
+    color:#333;
+    font-weight:700;
+  }
+
+  .summary-table td{
+    background:#fff8e1;
+    font-weight:600;
+  }
+
+  .count{
+    font-size:20px;
+    font-weight:800;
+    color:#214a48;
+  }
+
+  .source-note{
+    margin-top:14px;
+    color:#6b7280;
+    font-size:12px;
+    line-height:1.45;
+  }
+
+  .insight-box{
+    margin-top:14px;
+    padding:14px;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    color:#374151;
+    line-height:1.5;
+  }
+
+  .insight-box h3{
+    margin:0 0 10px;
+    color:#214a48;
+  }
+
+  .insight-item{
+    padding:9px 0;
+    border-top:1px solid #eef2f7;
+    font-size:14px;
+  }
+
+  .insight-item:first-of-type{
+    border-top:none;
+    padding-top:0;
+  }
+
+  .insight-label{
+    font-weight:800;
+    color:#214a48;
+  }
+
+  .insight-muted{
+    color:#6b7280;
+    font-size:12px;
+    margin-top:4px;
+  }
+
+  .footer-reference{
+    margin-top:6px;
+    font-size:.78rem;
+    color:#6b7280;
+    line-height:1.35;
+  }
+
+  .app-footer{
+    text-align:center;
+    font-size:.9rem;
+    color:var(--muted);
+    background:var(--surface);
+    border:1px solid var(--ring);
+    border-radius:10px;
+    padding:10px 12px;
+    box-shadow:0 1px 2px rgba(0,0,0,.05);
+    margin:16px auto 18px;
+    max-width:800px;
+    line-height:1.4;
+  }
+
+  @media (max-width:760px){
+    .question-row{
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .answer-options.cols-3,
+    .answer-options.cols-4{
+      grid-template-columns:1fr;
+    }
+
+    .section-card > .section-head{
+      display:block;
+    }
+
+    .pill{
+      margin-top:8px;
+    }
+  }
+
+  @media (max-width:600px){
+    .app-header{
+      padding:6px 16px;
+      max-width:94%;
+    }
+
+    main{
+      padding:18px;
+      margin:14px auto 20px;
+    }
+
+    .card-title{
+      font-size:1.55rem;
+    }
+
+    .grid-2,
+    .result-meta{
+      grid-template-columns:1fr;
+      gap:0;
+    }
+
+    .button-container{
+      flex-direction:column;
+    }
+
+    .app-footer{
+      font-size:.85rem;
+      padding:8px 10px;
+    }
+  }
+
+  @media print{
+    body{
+      background:#fff;
+      color:#000;
+    }
+
+    .app-header,
+    .lead,
+    .notice-box,
+    .section-card,
+    .button-container,
+    .app-footer{
+      display:none !important;
+    }
+
+    main{
+      max-width:none;
+      margin:0;
+      padding:0;
+      box-shadow:none;
+      border-radius:0;
+      background:#fff;
+    }
+
+    .card-title{
+      color:#000;
+      text-align:left;
+      font-size:20px;
+      margin:0 0 8px;
+      border-bottom:2px solid #000;
+      padding-bottom:8px;
+    }
+
+    .reference-box{
+      border:0;
+      background:#fff;
+      text-align:left;
+      padding:0 0 8px;
+      margin:0 0 10px;
+      font-size:12px;
+    }
+
+    #result{
+      display:block !important;
+      border:0;
+      background:#fff;
+      padding:0;
+      margin:0;
+    }
+
+    .result-meta{
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:6px;
+      page-break-inside:avoid;
+    }
+
+    .meta-item{
+      min-height:48px;
+    }
+
+    .summary-table{
+      page-break-inside:avoid;
+      font-size:12px;
+    }
+
+    .summary-table th,
+    .summary-table td{
+      padding:7px;
+    }
+
+    .summary-table th,
+    .summary-table td{
+      background:#fff !important;
+      color:#000 !important;
+    }
+
+    .count{
+      color:#000;
+      font-size:17px;
+    }
+
+    @page{ margin:14mm; }
+  }
+  </style>
+<meta name="dref-tool" content="soal-selidik-pesakit-dm"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+
+<body>
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">Quality of Diabetes Care: SOAL SELIDIK PESAKIT</h1>
+
+    <p class="lead">
+      Kegunaan untuk mengira <strong>bilangan pilihan jawapan</strong> bagi Soal Selidik DM:
+      <strong>Pengetahuan</strong>, <strong>Sikap</strong> dan <strong>Amalan</strong>.
+      Tiada skor diagnostik dibuat.
+    </p>
+
+
+    <div class="notice-box">
+      Data tidak disimpan dan tidak dihantar ke mana-mana pelayan. Medan pesakit adalah optional dan digunakan untuk cetakan / PDF sahaja.
+    </div>
+
+    <h2>Maklumat Pesakit <span class="unit">(optional)</span></h2>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="field-label" for="nama">Nama</label>
+        <input type="text" id="nama" autocomplete="name" />
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="ic">No I/C</label>
+        <input type="text" id="ic" inputmode="numeric" maxlength="12" pattern="\d{12}" placeholder="12 digit tanpa '-'" />
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="umur">Umur <span class="unit">(tahun)</span></label>
+        <input type="number" id="umur" min="0" max="130" step="1" />
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="tahunDx">Tahun Diagnosis DM</label>
+        <input type="number" id="tahunDx" min="1900" max="2100" step="1" />
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="tempohDm">Tempoh Menghidap DM</label>
+        <input type="text" id="tempohDm" placeholder="cth: 5 tahun" />
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="pendidikan">Tahap Pendidikan</label>
+        <select id="pendidikan">
+          <option value="">Pilih / kosongkan</option>
+          <option>Tiada pendidikan formal</option>
+          <option>Sekolah rendah</option>
+          <option>Sekolah menengah</option>
+          <option>Diploma / Sijil</option>
+          <option>Ijazah atau lebih tinggi</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="pekerjaan">Pekerjaan</label>
+        <input type="text" id="pekerjaan" />
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="telefon">No Telefon</label>
+        <input type="tel" id="telefon" inputmode="tel" />
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">
+        <div>
+          <h3>Seksyen 3: Soal Selidik Pengetahuan</h3>
+          <p>Pilih satu jawapan bagi setiap item.</p>
+        </div>
+        <span class="pill">Betul / Salah / Tidak tahu</span>
+      </div>
+      <div id="knowledgeSection"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">
+        <div>
+          <h3>Seksyen 4: Soal Selidik Sikap</h3>
+          <p>Pilih satu jawapan bagi setiap item.</p>
+        </div>
+        <span class="pill">Tidak setuju / Tidak pasti / Setuju</span>
+      </div>
+      <div id="attitudeSection"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">
+        <div>
+          <h3>Seksyen 5: Soal Selidik Amalan</h3>
+          <p>Pilih satu jawapan bagi setiap item.</p>
+        </div>
+        <span class="pill">Tidak pernah / Kadang-kadang / Kerapkali / Sentiasa</span>
+      </div>
+      <div id="practiceSection"></div>
+    </div>
+
+    <div id="validationMessage" class="validation-message" role="alert" aria-live="assertive"></div>
+
+    <div class="button-container pre-result-actions">
+      <button type="button" class="btn btn-primary" id="calcBtn" aria-label="Calculate answer count summary">Kira Ringkasan</button>
+    </div>
+
+    <h2 id="resultHeading" style="margin-top:20px; display:none;">Result</h2>
+    <div id="result" class="output" role="status" aria-live="polite" aria-atomic="true">
+      <h3 style="margin-bottom:4px;">Ringkasan Jawapan Soal Selidik</h3>
+      <div id="reportDate" class="small-muted"></div>
+      <div class="result-meta" id="patientSummary"></div>
+
+      <table class="summary-table" aria-label="Ringkasan kiraan jawapan">
+        <thead>
+          <tr>
+            <th>Seksyen</th>
+            <th>Pilihan Jawapan</th>
+            <th>Bilangan</th>
+          </tr>
+        </thead>
+        <tbody id="summaryRows"></tbody>
+      </table>
+
+      <div class="insight-box" id="insightBox">
+        <h3>Insight Ringkas</h3>
+        <div id="insightRows"></div>
+      </div>
+    </div>
+
+    <div class="button-container result-actions" id="resultActions" style="display:none;">
+      <button type="button" class="btn btn-success" id="printBtn" aria-label="Print or save answer count summary as PDF">Print / Save as PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset form">Reset</button>
+    </div>
+  </main>
+
+  <div class="app-footer">
+    <div>Any counts must be rechecked and should not be used alone to guide patient care.</div>
+    <div class="footer-reference">
+      Reference: SIQ INVESTIGATION — Quality of Diabetes Care at MOH Healthcare Facilities: Glycaemic Control.<br>
+      Non-Communicable Disease Section, Disease Control Division, Ministry of Health, Malaysia. 2008.
+    </div>
+  </div>
+
+  <script>
+  const OPTIONS = {
+    knowledge: ["Betul", "Salah", "Tidak tahu"],
+    attitude: ["Tidak setuju", "Tidak pasti", "Setuju"],
+    practice: ["Tidak pernah", "Kadang-kadang", "Kerapkali", "Sentiasa"]
+  };
+
+  const KNOWLEDGE_GROUPS = [
+    {
+      title: "1. Di antara tanda gula dalam darah yang tinggi bagi pesakit kencing manis adalah:",
+      items: [
+        "(a) Kerap membuang air kecil",
+        "(b) Sentiasa berasa dahaga",
+        "(c) Rambut gugur",
+        "(d) Susut/turun berat badan",
+        "(e) Perdarahan dalam air kencing",
+        "(f) Kerap bangun malam untuk buang air kecil"
+      ]
+    },
+    {
+      title: "2. Tanda-tanda yang menunjukkan bahawa gula dalam darah yang terlalu rendah:",
+      items: [
+        "(a) Berpeluh terutama pada tangan",
+        "(b) Mengantuk",
+        "(c) Cirit-birit",
+        "(d) Terasa seram sejuk"
+      ]
+    },
+    {
+      title: "3. Di antara komplikasi / kesan buruk penyakit kencing manis adalah:",
+      items: [
+        "(a) Kegagalan / kerosakan buah pinggang",
+        "(b) Kebutaan (buta mata)",
+        "(c) Kanser payu dara",
+        "(d) Penyakit kaki yang boleh menyebabkan ia dipotong",
+        "(e) Serangan sakit jantung",
+        "(f) Angin ahmar (strok / lumpuh)"
+      ]
+    }
+  ];
+
+  const ATTITUDE_ITEMS = [
+    "1. Anda perlu tahu tahap gula dalam darah anda",
+    "2. Anda boleh berusaha untuk mengawal penyakit anda",
+    "3. Anda boleh mengukur sendiri gula dalam darah di rumah",
+    "4. Anda tidak perlu mengawal pemakanan (berpantang) jika telah mengambil ubat kencing manis",
+    "5. Anda perlu melakukan senaman bagi mengekalkan kesihatan yang baik"
+  ];
+
+  const PRACTICE_ITEMS = [
+    "1. Mengambil ubat mengikut kekerapan yang ditetapkan?",
+    "2. Mengambil ubat mengikut dos yang ditetapkan?",
+    "3. Mengukur sendiri gula dalam darah di rumah?",
+    "4. Makan makanan berserat seperti sayuran?",
+    "5. Makan makanan bergoreng?",
+    "6. Menjalankan aktiviti fizikal?",
+    "7. Makan makanan bergula?",
+    "8. Minum minuman bergula?"
+  ];
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>'"]/g, function(char) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char];
+    });
+  }
+
+  function optionButtons(sectionKey, questionId) {
+    const options = OPTIONS[sectionKey];
+    const colClass = options.length === 4 ? "cols-4" : "cols-3";
+    return `<div class="answer-options ${colClass}">` +
+      options.map(option => `
+        <label>
+          <input type="radio" name="${questionId}" value="${escapeHTML(option)}" data-section="${sectionKey}">
+          <span>${escapeHTML(option)}</span>
+        </label>
+      `).join("") +
+    `</div>`;
+  }
+
+  function renderKnowledge() {
+    const container = document.getElementById("knowledgeSection");
+    let itemNo = 0;
+    container.innerHTML = KNOWLEDGE_GROUPS.map(group => {
+      const rows = group.items.map(item => {
+        itemNo += 1;
+        const id = `knowledge_${itemNo}`;
+        return `
+          <div class="question-row" data-question-name="${escapeHTML(id)}">
+            <div class="qtext">${escapeHTML(item)}</div>
+            ${optionButtons("knowledge", id)}
+          </div>`;
+      }).join("");
+      return `
+        <div class="question-group">
+          <div class="group-title">${escapeHTML(group.title)}</div>
+          ${rows}
+        </div>`;
+    }).join("");
+  }
+
+  function renderFlatSection(containerId, sectionKey, items, prefixText = "") {
+    const container = document.getElementById(containerId);
+    const intro = prefixText ? `<div class="group-title">${escapeHTML(prefixText)}</div>` : "";
+    container.innerHTML = `
+      <div class="question-group">
+        ${intro}
+        ${items.map((item, index) => `
+          <div class="question-row" data-question-name="${escapeHTML(`${sectionKey}_${index + 1}`)}">
+            <div class="qtext">${escapeHTML(item)}</div>
+            ${optionButtons(sectionKey, `${sectionKey}_${index + 1}`)}
+          </div>`).join("")}
+      </div>`;
+  }
+
+  function calculateCounts(sectionKey) {
+    const options = OPTIONS[sectionKey];
+    const counts = Object.fromEntries(options.map(option => [option, 0]));
+    const names = new Set(Array.from(document.querySelectorAll(`input[data-section="${sectionKey}"]`)).map(input => input.name));
+
+    names.forEach(name => {
+      const checked = document.querySelector(`input[name="${window.CSS && CSS.escape ? CSS.escape(name) : name}"]:checked`);
+      if (checked) counts[checked.value] += 1;
+    });
+
+    return counts;
+  }
+
+  function getQuestionNames() {
+    return Array.from(new Set(
+      Array.from(document.querySelectorAll('input[type="radio"][data-section]')).map(input => input.name)
+    ));
+  }
+
+  function clearValidation() {
+    document.querySelectorAll('.question-row.unanswered-row').forEach(row => row.classList.remove('unanswered-row'));
+    const msg = document.getElementById('validationMessage');
+    if (msg) {
+      msg.style.display = 'none';
+      msg.innerHTML = '';
+    }
+  }
+
+  function validateComplete() {
+    clearValidation();
+
+    const unansweredRows = [];
+    getQuestionNames().forEach(name => {
+      const checked = document.querySelector(`input[name="${window.CSS && CSS.escape ? CSS.escape(name) : name}"]:checked`);
+      if (!checked) {
+        const firstInput = document.querySelector(`input[name="${window.CSS && CSS.escape ? CSS.escape(name) : name}"]`);
+        const row = firstInput ? firstInput.closest('.question-row') : null;
+        if (row) {
+          row.classList.add('unanswered-row');
+          unansweredRows.push(row);
+        }
+      }
+    });
+
+    if (unansweredRows.length > 0) {
+      const msg = document.getElementById('validationMessage');
+      msg.innerHTML = `Sila lengkapkan semua soalan sebelum ringkasan dijana. Terdapat ${unansweredRows.length} soalan belum dijawab.<small>Baris yang belum dijawab telah ditanda. Pilih satu jawapan bagi setiap item.</small>`;
+      msg.style.display = 'block';
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('resultHeading').style.display = 'none';
+      document.getElementById('resultActions').style.display = 'none';
+      unansweredRows[0].scrollIntoView({ behavior:'smooth', block:'center' });
+      return false;
+    }
+
+    return true;
+  }
+
+  function val(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  function patientMeta() {
+    return [
+      ["Nama", val("nama") || "-"],
+      ["No I/C", val("ic") || "-"],
+      ["Umur", val("umur") || "-"],
+      ["Tahun Diagnosis DM", val("tahunDx") || "-"],
+      ["Tempoh Menghidap DM", val("tempohDm") || "-"],
+      ["Tahap Pendidikan", val("pendidikan") || "-"],
+      ["Pekerjaan", val("pekerjaan") || "-"],
+      ["No Telefon", val("telefon") || "-"]
+    ];
+  }
+
+  function renderPatientSummary() {
+    document.getElementById("patientSummary").innerHTML = patientMeta().map(([label, value]) => `
+      <div class="meta-item">
+        <div class="meta-label">${escapeHTML(label)}</div>
+        <div class="meta-value">${escapeHTML(value)}</div>
+      </div>
+    `).join("");
+  }
+
+  function addSummaryRows(sectionLabel, counts) {
+    return Object.entries(counts).map(([option, count]) => `
+      <tr>
+        <td><strong>${escapeHTML(sectionLabel)}</strong></td>
+        <td>${escapeHTML(option)}</td>
+        <td class="count">${count}</td>
+      </tr>
+    `).join("");
+  }
+
+  function countTotal(counts) {
+    return Object.values(counts).reduce((sum, value) => sum + Number(value || 0), 0);
+  }
+
+  function dominantAnswer(counts) {
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])[0] || ["-", 0];
+  }
+
+  function pct(count, total) {
+    if (!total) return "0%";
+    return Math.round((count / total) * 100) + "%";
+  }
+
+  function renderInsightItem(label, text, muted = "") {
+    return `
+      <div class="insight-item">
+        <span class="insight-label">${escapeHTML(label)}:</span>
+        ${text}
+        ${muted ? `<div class="insight-muted">${muted}</div>` : ""}
+      </div>`;
+  }
+
+  function renderInsights(knowledgeCounts, attitudeCounts, practiceCounts) {
+  const kTotal = countTotal(knowledgeCounts);
+  const aTotal = countTotal(attitudeCounts);
+  const pTotal = countTotal(practiceCounts);
+
+  const [kDom, kDomCount] = dominantAnswer(knowledgeCounts);
+  const [aDom, aDomCount] = dominantAnswer(attitudeCounts);
+  const [pDom, pDomCount] = dominantAnswer(practiceCounts);
+
+  const kBetul = knowledgeCounts["Betul"];
+  const kSalah = knowledgeCounts["Salah"];
+  const kTidakTahu = knowledgeCounts["Tidak tahu"];
+
+  const aTidakSetuju = attitudeCounts["Tidak setuju"];
+  const aTidakPasti = attitudeCounts["Tidak pasti"];
+  const aSetuju = attitudeCounts["Setuju"];
+
+  const pTidakPernah = practiceCounts["Tidak pernah"];
+  const pKadang = practiceCounts["Kadang-kadang"];
+  const pKerap = practiceCounts["Kerapkali"];
+  const pSentiasa = practiceCounts["Sentiasa"];
+
+  return [
+    renderInsightItem(
+      "Pengetahuan",
+      `Pola jawapan Pengetahuan: <strong>Betul</strong> ${kBetul}/${kTotal} (${pct(kBetul, kTotal)}), <strong>Salah</strong> ${kSalah}/${kTotal} (${pct(kSalah, kTotal)}), dan <strong>Tidak tahu</strong> ${kTidakTahu}/${kTotal} (${pct(kTidakTahu, kTotal)}).`,
+      `Corak paling kerap: ${kDom} (${kDomCount}/${kTotal}, ${pct(kDomCount, kTotal)}).`
+    ),
+    renderInsightItem(
+      "Sikap",
+      `Pola jawapan Sikap: <strong>Tidak setuju</strong> ${aTidakSetuju}/${aTotal} (${pct(aTidakSetuju, aTotal)}), <strong>Tidak pasti</strong> ${aTidakPasti}/${aTotal} (${pct(aTidakPasti, aTotal)}), dan <strong>Setuju</strong> ${aSetuju}/${aTotal} (${pct(aSetuju, aTotal)}).`,
+      `Corak paling kerap: ${aDom} (${aDomCount}/${aTotal}, ${pct(aDomCount, aTotal)}).`
+    ),
+    renderInsightItem(
+      "Amalan",
+      `Pola jawapan Amalan: <strong>Tidak pernah</strong> ${pTidakPernah}/${pTotal} (${pct(pTidakPernah, pTotal)}), <strong>Kadang-kadang</strong> ${pKadang}/${pTotal} (${pct(pKadang, pTotal)}), <strong>Kerapkali</strong> ${pKerap}/${pTotal} (${pct(pKerap, pTotal)}), dan <strong>Sentiasa</strong> ${pSentiasa}/${pTotal} (${pct(pSentiasa, pTotal)}).`,
+      `Corak paling kerap: ${pDom} (${pDomCount}/${pTotal}, ${pct(pDomCount, pTotal)}).`
+    )
+  ].join("");
+}
+
+  function calculateAndShow(options = {}) {
+    const shouldScroll = options.scroll !== false;
+
+    if (!validateComplete()) return false;
+
+    const knowledgeCounts = calculateCounts("knowledge");
+    const attitudeCounts = calculateCounts("attitude");
+    const practiceCounts = calculateCounts("practice");
+
+    renderPatientSummary();
+
+    document.getElementById("reportDate").textContent = "Tarikh / masa laporan: " + new Date().toLocaleString("ms-MY", {
+      year:"numeric",
+      month:"long",
+      day:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
+    document.getElementById("summaryRows").innerHTML =
+      addSummaryRows("Pengetahuan", knowledgeCounts) +
+      addSummaryRows("Sikap", attitudeCounts) +
+      addSummaryRows("Amalan", practiceCounts);
+
+    document.getElementById("insightRows").innerHTML = renderInsights(knowledgeCounts, attitudeCounts, practiceCounts);
+
+    document.getElementById("resultHeading").style.display = "block";
+    document.getElementById("result").style.display = "block";
+    document.getElementById("resultActions").style.display = "flex";
+    if (shouldScroll) document.getElementById("result").scrollIntoView({ behavior:"smooth", block:"start" });
+    return true;
+  }
+
+  function printReport() {
+  const printedAt = new Date().toLocaleString("ms-MY", {
+    year:"numeric", month:"long", day:"numeric", hour:"2-digit", minute:"2-digit"
+  });
+
+  const resultHtml = document.getElementById("result").innerHTML;
+  const printWindow = window.open("", "_blank", "width=900,height=700");
+
+  if (!printWindow) {
+    alert("Popup untuk cetakan disekat oleh browser. Sila benarkan pop-up untuk laman ini, kemudian cuba semula.");
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(`<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ringkasan Jawapan Soal Selidik Pesakit DM</title>
+  <style>
+    *{ box-sizing:border-box; }
+
+    body{
+      font-family:Arial, sans-serif;
+      margin:0;
+      padding:22px;
+      color:#111;
+      background:#fff;
+    }
+
+    .print-toolbar{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      align-items:center;
+      margin-bottom:18px;
+      padding-bottom:12px;
+      border-bottom:1px solid #ddd;
+    }
+
+    .print-toolbar button{
+      border:none;
+      border-radius:8px;
+      padding:10px 14px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      color:#fff;
+    }
+
+    .print-btn{
+      background:#2e7d32;
+    }
+
+    .close-btn{
+      background:#e53935;
+    }
+
+    h1{
+      font-size:20px;
+      margin:0 0 8px;
+      padding-bottom:8px;
+      border-bottom:2px solid #111;
+      color:#111;
+    }
+
+    h3{
+      margin:0 0 6px;
+      color:#111;
+    }
+
+    .print-subtitle{
+      color:#555;
+      font-size:12px;
+      margin-bottom:14px;
+    }
+
+    .small-muted{
+      font-size:12px;
+      color:#555;
+    }
+
+    .result-meta{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:6px;
+      margin:8px 0 14px;
+    }
+
+    .meta-item{
+      border:1px solid #ddd;
+      border-radius:6px;
+      padding:8px;
+      min-height:48px;
+      page-break-inside:avoid;
+    }
+
+    .meta-label{
+      color:#555;
+      font-size:10px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .meta-value{
+      margin-top:3px;
+      color:#111;
+      font-weight:700;
+      word-break:break-word;
+    }
+
+    .summary-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px;
+      font-size:12px;
+      page-break-inside:avoid;
+    }
+
+    .summary-table th,
+    .summary-table td{
+      border:1px solid #bbb;
+      padding:7px;
+      text-align:center;
+      vertical-align:middle;
+    }
+
+    .summary-table th{
+      background:#f2f2f2;
+      font-weight:700;
+    }
+
+    .count{
+      font-size:16px;
+      font-weight:800;
+      color:#111;
+    }
+
+    .insight-box{
+      margin-top:14px;
+      padding:10px 12px;
+      border:1px solid #ddd;
+      border-radius:6px;
+      page-break-inside:avoid;
+    }
+
+    .insight-box h3{
+      margin-bottom:8px;
+    }
+
+    .insight-item{
+      padding:7px 0;
+      border-top:1px solid #eee;
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .insight-item:first-of-type{
+      border-top:none;
+      padding-top:0;
+    }
+
+    .insight-label{
+      font-weight:800;
+    }
+
+    .insight-muted{
+      color:#555;
+      font-size:11px;
+      margin-top:3px;
+    }
+
+    .print-footer{
+      margin-top:14px;
+      padding-top:8px;
+      border-top:1px solid #ddd;
+      color:#555;
+      font-size:11px;
+      line-height:1.35;
+    }
+
+    @page{
+      margin:14mm;
+    }
+
+    @media print{
+      body{
+        padding:0;
+      }
+
+      .print-toolbar{
+        display:none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="print-toolbar">
+    <button type="button" class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    <button type="button" class="close-btn" onclick="window.close()">Close</button>
+  </div>
+
+  <h1>Quality of Diabetes Care: SOAL SELIDIK PESAKIT</h1>
+  <div class="print-subtitle">Ringkasan dijana: ${escapeHTML(printedAt)}</div>
+
+  <section>${resultHtml}</section>
+
+  <div class="print-footer">
+    Any counts must be rechecked and should not be used alone to guide patient care.<br><br>
+    Reference: SIQ INVESTIGATION — Quality of Diabetes Care at MOH Healthcare Facilities: Glycaemic Control.<br>
+    Non-Communicable Disease Section, Disease Control Division, Ministry of Health, Malaysia. 2008.
+  </div>
+</body>
+</html>`);
+  printWindow.document.close();
+}
+  function autoDuration() {
+    const dx = Number(val("tahunDx"));
+    const currentYear = new Date().getFullYear();
+    if (!dx || dx < 1900 || dx > currentYear) return;
+    const duration = Math.max(0, currentYear - dx);
+    const tempoh = document.getElementById("tempohDm");
+    if (!tempoh.value.trim()) tempoh.value = duration + " tahun";
+  }
+
+  function resetForm() {
+    document.querySelectorAll("input").forEach(input => {
+      if (input.type === "radio") input.checked = false;
+      else input.value = "";
+    });
+    document.querySelectorAll("select").forEach(select => select.value = "");
+
+    clearValidation();
+
+    const resultDiv = document.getElementById("result");
+    resultDiv.style.display = "none";
+    document.getElementById("resultHeading").style.display = "none";
+    document.getElementById("resultActions").style.display = "none";
+    document.getElementById("summaryRows").innerHTML = "";
+    document.getElementById("insightRows").innerHTML = "";
+    document.getElementById("patientSummary").innerHTML = "";
+    document.getElementById("reportDate").textContent = "";
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+
+  document.getElementById("tahunDx").addEventListener("change", autoDuration);
+  document.getElementById("calcBtn").addEventListener("click", calculateAndShow);
+  document.getElementById("printBtn").addEventListener("click", function() {
+    if (calculateAndShow({ scroll:false })) {
+      printReport();
+    }
+  });
+  document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+  renderKnowledge();
+  renderFlatSection("attitudeSection", "attitude", ATTITUDE_ITEMS);
+  renderFlatSection("practiceSection", "practice", PRACTICE_ITEMS, "Adakah anda:");
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

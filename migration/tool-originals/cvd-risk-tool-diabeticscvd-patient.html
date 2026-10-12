@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Tagline font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- === SEO: Meta, Canonical, Social Cards, Structured Data === -->
+  <meta name="description" content="DRef (Doctor’s Reference) tool to determine cardiovascular risk category and LDL-C/non-HDL targets based on Malaysia CPG Dyslipidemia 2023. Handles very high, high, and intermediate risk with diabetes-specific logic.">
+  <meta name="keywords" content="Doctor’s Reference, DRef, CVD risk, LDL-C target, non-HDL, dyslipidemia 2023, Malaysia CPG, diabetes risk, CKD, ASCVD, primary care, Klinik Kesihatan">
+  <meta name="author" content="DRef — Doctor’s Reference">
+  <meta name="robots" content="index,follow">
+  <meta name="language" content="en-MY">
+
+  <!-- Helpful for full-page embeds so links open out of the iframe -->
+  <base target="_top">
+
+  <!-- Canonical (set to the exact live URL of THIS page) -->
+  <link rel="canonical" href="https://www.dref.my/tools/cvd-risk-ldl-target">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DRef — Doctor’s Reference">
+  <meta property="og:title" content="CVD Risk & LDL-C Target Tool — DRef">
+  <meta property="og:description" content="Determine risk class and LDL-C/non-HDL goals per Malaysia CPG Dyslipidemia 2023, including diabetes pathways.">
+  <meta property="og:url" content="https://www.dref.my/tools/cvd-risk-ldl-target">
+  <!-- <meta property="og:image" content="https://www.dref.my/assets/cvd-risk-tool-card.png"> -->
+  <meta property="og:locale" content="en_MY">
+  <meta property="og:locale:alternate" content="ms_MY">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CVD Risk & LDL-C Target Tool — DRef">
+  <meta name="twitter:description" content="Quick, guideline-aligned LDL-C/non-HDL targets with very-high/high/moderate risk logic.">
+  <!-- <meta name="twitter:image" content="https://www.dref.my/assets/cvd-risk-tool-card.png"> -->
+
+  <!-- Structured Data (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "CVD Risk & LDL-C Target Tool — DRef",
+    "description": "Interactive tool for cardiovascular risk stratification and LDL-C/non-HDL targets based on Malaysia CPG Dyslipidemia 2023, including diabetes-specific criteria.",
+    "about": [
+      { "@type": "MedicalCondition", "name": "Atherosclerotic cardiovascular disease" },
+      { "@type": "MedicalCondition", "name": "Dyslipidemias" },
+      { "@type": "MedicalGuideline", "name": "Malaysia CPG Management of Dyslipidemia 2023 (6th Edition)" }
+    ],
+    "audience": { "@type": "MedicalAudience", "audienceType": "Clinician" },
+    "inLanguage": "en-MY",
+    "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url": "https://www.dref.my",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bachok",
+        "addressRegion": "Kelantan",
+        "addressCountry": "MY"
+      }
+    },
+    "url": "https://www.dref.my/tools/cvd-risk-ldl-target"
+  }
+  </script>
+
+  <title>CVD Risk & LDL-C Target Determination</title>
+
+  <style>
+    :root{
+      /* brand + ui */
+      --bg:#f4f7f9;
+      --text:#333;
+      --card:#fff;
+      --shadow:0 0 20px rgba(0,0,0,0.05);
+
+      /* buttons */
+      --primary:#3498db;
+      --primary-hover:#2980b9;
+      --back:#7f8c8d;
+      --back-hover:#59696a;
+      --reset:#e74c3c;
+      --reset-hover:#c0392b;
+
+      /* header/footer system */
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --radius:12px;
+    }
+
+    /* Tagline header (standardised) */
+    .app-header{
+      position: static;
+      background: none;
+      border: 0;
+      box-shadow: none;
+      font-family: "Josefin Sans", sans-serif;
+      color: var(--muted);
+      text-align: center;
+      font-size: .95rem;
+      font-weight: 400;
+      letter-spacing: .03em;
+      margin-top: 16px;       /* gap from top edge */
+      margin-bottom: 12px;    /* gap before main card */
+      padding: 4px 12px;      /* keep text off edges */
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Disclaimer footer (standardised) */
+    .app-footer{
+      text-align: center;
+      font-size: .9rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--ring);
+      border-radius: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      margin: 16px auto 12px;
+      max-width: 650px; /* match container width */
+      line-height: 1.4;
+    }
+
+    /* Mobile tweaks for header/footer */
+    @media (max-width:600px){
+      .app-header{ padding:6px 16px; max-width:94%; }
+      .app-footer{ font-size:.85rem; padding:8px 10px; }
+    }
+
+    /* --- Page styles --- */
+    html, body { margin:0; padding:0; }
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+      padding: 0 0 8px; /* small bottom room for footer */
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;            /* center */
+      background: var(--card);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    h1, h2, h3 { margin-top: 0; color: #2c3e50; }
+    h1 { font-size: 1.8rem; margin-bottom: .5rem; text-align: center; }
+    h2 { font-size: 1.25rem; margin-top: 1.5rem; }
+    h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 1rem; }
+
+    p, label { margin: .5rem 0; }
+
+    .intro{
+      text-align:center;
+      max-width:600px;
+      margin:0 auto 20px;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .btn-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background .2s ease;
+    }
+    button:focus-visible{ outline: 2px solid #1f6fab; outline-offset: 2px; }
+
+    .primary-btn { background: var(--primary); }
+    .primary-btn:hover { background: var(--primary-hover); }
+
+    .back-btn { background: var(--back); }
+    .back-btn:hover { background: var(--back-hover); }
+
+    .reset-btn { background: var(--reset); }
+    .reset-btn:hover { background: var(--reset-hover); }
+
+    .results {
+      padding: 15px;
+      background: #ecf0f1;
+      border-left: 5px solid var(--primary);
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .checkbox-group label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"]{
+      transform: scale(1.2);
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .reference {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Standard tagline -->
+  <div class="app-header" role="banner" aria-label="Site tagline">
+    app crafted by our medical doctors, for better patient care
+  </div>
+
+  <div class="container" role="main">
+    <h1>CVD Risk Tool (diabetics/CVD patient)</h1>
+    <!-- STEP 1 -->
+    <div id="step1" class="step active" aria-live="polite">
+      <h2>1. Does the patient have recurrent CV events within 2 years <br> despite achieving an LDL-C target of &lt;1.4 mmol/L?</h2>
+      <div class="btn-row">
+        <button type="button" class="primary-btn" onclick="handleStep1Yes()">Yes</button>
+        <button type="button" class="primary-btn" onclick="goToStep(2)">No</button>
+      </div>
+    </div>
+
+    <!-- STEP 1A -->
+    <div id="step1a" class="step">
+      <h3>Result</h3>
+      <div class="results">
+        <p><strong>Target LDL-C:</strong> &lt; 1.0 mmol/L</p>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goBackToStep1()">Back</button>
+        <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" class="step">
+      <h2>2. Does the patient have any of these <em>VERY HIGH RISK</em> criteria?</h2>
+      <p>Select all that apply (or none):</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="vhc1"> Established Cardiovascular Disease (coronary heart disease or cerebrovascular disease)</label>
+        <label><input type="checkbox" id="vhc2"> Atherosclerosis in other vascular beds</label>
+        <label><input type="checkbox" id="vhc3"> Asymptomatic significant atherosclerotic plaques</label>
+        <label><input type="checkbox" id="vhc4"> Diabetes with proteinuria or with a major risk factor (smoking, hypertension, or dyslipidemia)</label>
+        <label><input type="checkbox" id="vhc5"> Chronic kidney disease (CKD) Stage 4 &amp; 5 (eGFR &lt;30 ml/min/1.73m²)</label>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goToStep(1)">Back</button>
+        <button type="button" class="primary-btn" onclick="handleStep2()">Next</button>
+      </div>
+    </div>
+
+    <!-- STEP 2A -->
+    <div id="step2a" class="step">
+      <h3>Result</h3>
+      <div class="results">
+        <p><strong>Risk Group:</strong> Very High Risk</p>
+        <p><strong>LDL-C Target to Initiate Drug (mmol/L):</strong> &gt; 1.4</p>
+        <p><strong>LDL-C Target Level (mmol/L):</strong> ≤ 1.4 and a reduction of &gt;50% from baseline</p>
+        <p><strong>Non-HDL Target Level (mmol/L):</strong> ≤ 2.2 and a reduction of &gt;50% from baseline</p>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goToStep(2)">Back</button>
+        <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step3" class="step">
+      <h2>3. Does the patient have any of these <em>HIGH RISK</em> criteria?</h2>
+      <p>Select all that apply (or none):</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="hc1"> Chronic kidney disease (CKD) Stage 3 (eGFR ≥30 – &lt;60 ml/min/1.73m²)</label>
+        <label><input type="checkbox" id="hc2"> Diabetes without target organ damage</label>
+        <label><input type="checkbox" id="hc3"> Very high levels of individual risk factors (e.g. LDL-C &gt;4.9 mmol/L or BP ≥180/110 mmHg)</label>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goToStep(2)">Back</button>
+        <button type="button" class="primary-btn" onclick="handleStep3()">Next</button>
+      </div>
+    </div>
+
+    <!-- STEP 3A -->
+    <div id="step3a" class="step">
+      <h3>Result</h3>
+      <div class="results">
+        <p><strong>Risk Group:</strong> High Risk</p>
+        <p><strong>LDL-C Target to Initiate Drug (mmol/L):</strong> &gt; 1.8</p>
+        <p><strong>LDL-C Target Level (mmol/L):</strong> ≤ 1.8 and a reduction of &gt;50% from baseline</p>
+        <p><strong>Non-HDL Target Level (mmol/L):</strong> ≤ 2.6 and a reduction of &gt;50% from baseline</p>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goToStep(3)">Back</button>
+        <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div id="step4" class="step">
+      <h2>4. Is the patient diabetic?</h2>
+      <p>Please select the most appropriate description:</p>
+      <div class="checkbox-group" role="radiogroup" aria-label="Diabetes category">
+        <label><input type="radio" name="diabetes" value="veryHigh"> Diabetes with proteinuria or with a major risk factor (smoking, hypertension, dyslipidemia)</label>
+        <label><input type="radio" name="diabetes" value="high"> Diabetes without target organ damage</label>
+        <label><input type="radio" name="diabetes" value="moderate"> Young diabetics &lt; 50 yrs &amp; duration &lt; 10 yrs, no CV risk factors</label>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goToStep(3)">Back</button>
+        <button type="button" class="primary-btn" onclick="handleStep4()">Finish</button>
+      </div>
+    </div>
+
+    <!-- STEP 4A -->
+    <div id="step4a" class="step">
+      <h3>Result</h3>
+      <div class="results" id="diabetesResult"></div>
+      <div class="btn-row">
+        <button type="button" class="back-btn" onclick="goToStep(4)">Back</button>
+        <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Reference -->
+    <div class="reference">
+      <p><em>Reference: Malaysia CPG Management of Dyslipidemia 2023 (6th Edition)</em></p>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- Disclaimer footer OUTSIDE the card -->
+  <div class="app-footer" role="contentinfo" aria-label="Medical disclaimer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+
+<script>
+  // Track history (kept simple; mainly for back buttons you wired)
+  const stepHistory = [1];
+
+  function showStep(id){
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function goToStep(stepNumber) {
+    showStep('step' + stepNumber);
+    stepHistory.push(stepNumber);
+  }
+
+  function goBackToStep1() {
+    showStep('step1');
+    stepHistory.push(1);
+  }
+
+  function handleStep1Yes() {
+    showStep('step1a');
+    stepHistory.push('1a');
+  }
+
+  function handleStep2() {
+    const anyVeryHigh =
+      document.getElementById('vhc1').checked ||
+      document.getElementById('vhc2').checked ||
+      document.getElementById('vhc3').checked ||
+      document.getElementById('vhc4').checked ||
+      document.getElementById('vhc5').checked;
+
+    if (anyVeryHigh) {
+      showStep('step2a');
+    } else {
+      goToStep(3);
+    }
+  }
+
+  function handleStep3() {
+    const anyHigh =
+      document.getElementById('hc1').checked ||
+      document.getElementById('hc2').checked ||
+      document.getElementById('hc3').checked;
+
+    if (anyHigh) {
+      showStep('step3a');
+    } else {
+      goToStep(4);
+    }
+  }
+
+  function handleStep4() {
+    const options = document.getElementsByName('diabetes');
+    let selected = '';
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].checked) { selected = options[i].value; break; }
+    }
+
+    const out = document.getElementById('diabetesResult');
+    out.innerHTML = '';
+
+    if (selected === 'veryHigh') {
+      out.innerHTML = `
+        <p><strong>Risk Group:</strong> Very High Risk</p>
+        <p><strong>LDL-C Target to Initiate Drug (mmol/L):</strong> &gt; 1.4</p>
+        <p><strong>LDL-C Target Level (mmol/L):</strong> ≤ 1.4 and a reduction of &gt;50% from baseline</p>
+        <p><strong>Non-HDL Target Level (mmol/L):</strong> ≤ 2.2 and a reduction of &gt;50% from baseline</p>
+      `;
+    } else if (selected === 'high') {
+      out.innerHTML = `
+        <p><strong>Risk Group:</strong> High Risk</p>
+        <p><strong>LDL-C Target to Initiate Drug (mmol/L):</strong> &gt; 1.8</p>
+        <p><strong>LDL-C Target Level (mmol/L):</strong> ≤ 1.8 and a reduction of &gt;50% from baseline</p>
+        <p><strong>Non-HDL Target Level (mmol/L):</strong> ≤ 2.6 and a reduction of &gt;50% from baseline</p>
+      `;
+    } else if (selected === 'moderate') {
+      out.innerHTML = `
+        <p><strong>Risk Group:</strong> Intermediate (Moderate) Risk</p>
+        <p><strong>LDL-C Target to Initiate Drug (mmol/L):</strong> &gt; 2.6
+           <em>(after 8–12 weeks of TLC and discussion of risk:benefit)</em></p>
+        <p><strong>LDL-C Target Level (mmol/L):</strong> &lt; 2.6 and a reduction of &gt;50% from baseline</p>
+        <p><strong>Non-HDL Target Level (mmol/L):</strong> &lt; 3.4 and a reduction of &gt;50% from baseline</p>
+      `;
+    } else {
+      out.innerHTML = `<p style="color:#e74c3c;"><strong>Please select an option.</strong></p>`;
+      return;
+    }
+
+    showStep('step4a');
+  }
+
+  function resetForm() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+    document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+    document.getElementById('diabetesResult').innerHTML = '';
+    showStep('step1');
+    stepHistory.length = 0;
+    stepHistory.push(1);
+  }
+</script>
+
+</body>
+</html>

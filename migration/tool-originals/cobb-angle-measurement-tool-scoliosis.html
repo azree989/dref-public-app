@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cobb Angle Measurement Tool — DRef</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+
+  <style>
+    :root{
+      --bg:#f9fafb; --text:#222; --muted:#6b7280;
+      --primary:#2563eb; --primary-700:#1e40af;
+      --surface:#ffffff; --ring:#e5e7eb;
+      --accent:#f43f5e; --arc:#fa8500;
+      --radius:12px; --shadow:0 6px 18px rgba(0,0,0,.08);
+    }
+    html,body{margin:0;padding:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text)}
+    #app{min-height:100vh;display:flex;flex-direction:column}
+    *,*::before,*::after{ box-sizing:border-box; }
+html,body,#app{ max-width:100vw; overflow-x:hidden; }
+    .wrap{max-width:1100px;margin:0 auto;padding:10px 14px; width:100%}
+    #app{
+  padding-bottom: 80px;                   /* space you want */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* iOS safe area */
+}
+
+    /* header + footer */
+    .app-header{
+  text-align:center;
+  color:var(--muted);
+  font-size:.9rem;
+  margin:14px 0 8px;         /* <-- semicolon here */
+  font-family:'Josefin Sans', sans-serif;
+  letter-spacing:.0em;      /* optional: keeps the airy Josefin look */
+}
+    .heading{ text-align:center;font-size:1.6rem;font-weight:700;margin:.3rem 0 1rem;color:#1f2937 }
+
+    button{
+      font-family:inherit;font-weight:600;border:none;border-radius:12px;padding:.7rem 1.05rem;cursor:pointer;
+      transition:background .15s, transform .06s; background:var(--primary); color:#fff; font-size:1rem;
+      box-shadow:0 2px 8px rgba(0,0,0,.12)
+    }
+    button:hover:not(:disabled){background:var(--primary-700)}
+    button:active{transform:translateY(1px)}
+    button:disabled{background:#bdbdbd;cursor:not-allowed}
+    .ghost-btn{ background:#f3f4f6;color:#111827;border:1px solid var(--ring);box-shadow:none }
+
+    /* canvas zone */
+    .stage{
+      background:#e6eef9;border:1px solid var(--ring);border-radius:var(--radius);
+      box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:60vh;
+      display:flex;align-items:center;justify-content:center
+    }
+    #xr,#cobbCanvas{
+      position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;background:transparent;
+      user-select:none;touch-action:none;display:block;max-width:100%;max-height:100%
+    }
+    #xr:not([src]){display:none}
+    #cobbCanvas{z-index:2}
+    #xr{z-index:1;pointer-events:none}
+
+    #angleOutput{
+      margin:.7rem 0 1rem;text-align:center;line-height:1.5;
+      background:var(--surface);border:1px solid var(--ring);border-radius:10px;
+      padding:.75rem .9rem;max-width:820px;margin-inline:auto
+    }
+    #angleOutput .source{font-size:.85rem;color:#6b7280}
+
+    .controls{ display:flex;gap:.8rem;justify-content:center;align-items:center;margin-bottom:1rem }
+   .controls.bottom-bar{
+  position:sticky; bottom:0; left:0; right:0; z-index:50;
+  width:100%;       /* no overhang */
+  box-sizing:border-box;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(6px);
+  border-top:1px solid var(--ring);
+}
+.controls.bottom-bar .wrap{
+  padding:.5rem 14px;   /* keep your existing side padding safely inside */
+  display:flex; gap:.6rem; justify-content:center; align-items:center;
+}
+
+    .app-footer{
+      text-align:center;color:var(--muted);font-size:.92rem;margin:40px auto 10px;max-width:1100px;
+      background:#ffffff;border:1px solid var(--ring);border-radius:10px;padding:10px
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="wrap">
+    <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+    <h1 class="heading">Cobb Angle Measurement</h1>
+
+    <div class="controls">
+      <input type="file" id="imgUpload" accept="image/*" hidden>
+      <button id="uploadBtn">Upload X-ray</button>
+      <button class="ghost-btn" id="invertBtn" aria-pressed="false">Invert</button>
+    </div>
+
+    <div class="stage" id="canvasShell">
+      <img id="xr" alt="Loaded X-ray">
+      <canvas id="cobbCanvas"></canvas>
+    </div>
+
+    <div id="angleOutput"></div>
+  </div>
+
+  <div class="controls bottom-bar">
+  <div class="wrap">
+    <button id="measureBtn" disabled>Measure Angle</button>
+    <button id="saveBtn" disabled>Save Image</button>
+  </div>
+</div>
+
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+</div>
+
+<script>
+/* stripped script remains same except brightness/contrast removed */
+
+/* refs */
+const canvas   = document.getElementById('cobbCanvas');
+const ctx      = canvas.getContext('2d');
+const xr       = document.getElementById('xr');
+const canvasShell = document.getElementById('canvasShell');
+const uploadBtn   = document.getElementById('uploadBtn');
+const imgInput    = document.getElementById('imgUpload');
+const invertBtn   = document.getElementById('invertBtn');
+const measureBtn  = document.getElementById('measureBtn');
+const saveBtn     = document.getElementById('saveBtn');
+const angleOut    = document.getElementById('angleOutput');
+
+/* constants */
+const CIRCLE_R = 16, DOT_R = 6, LINE_W = 3;
+
+/* state */
+let xrReady=false, imgW=1, imgH=1, lastAngleDeg, isInverted=false;
+let rulerHandles=[], rulerHandlesSet=false;
+let dragging=null, dragOffset={x:0,y:0};
+const pairs = [[0,1],[2,3]];
+
+/* helpers */
+function placeRulersInsideCanvas(w,h){
+  const pad = Math.max(32, Math.round(Math.min(w,h)*0.07));
+  rulerHandles=[
+    {x:pad,   y:pad},
+    {x:w-pad, y:pad},
+    {x:pad,   y:h-pad},
+    {x:w-pad, y:h-pad}
+  ];
+}
+function midpoint(i1,i2){
+  return {x:(rulerHandles[i1].x + rulerHandles[i2].x)/2,
+          y:(rulerHandles[i1].y + rulerHandles[i2].y)/2};
+}
+
+/* drawing */
+function drawRulerPair(i1,i2,color){
+  const a=rulerHandles[i1], b=rulerHandles[i2];
+  ctx.save();
+  ctx.strokeStyle=color; ctx.lineWidth=LINE_W;
+  ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+
+  [a,b].forEach(pt=>{
+    ctx.beginPath(); ctx.arc(pt.x,pt.y,CIRCLE_R,0,2*Math.PI);
+    ctx.fillStyle="rgba(37,99,235,.15)"; ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle=color; ctx.stroke();
+    ctx.beginPath(); ctx.arc(pt.x,pt.y,DOT_R,0,2*Math.PI);
+    ctx.fillStyle="#f43f5e"; ctx.fill();
+  });
+
+  const m=midpoint(i1,i2);
+  ctx.beginPath(); ctx.arc(m.x,m.y,DOT_R+3,0,2*Math.PI);
+  ctx.fillStyle="#06b6d4"; ctx.fill();
+  ctx.strokeStyle="#2563eb"; ctx.stroke();
+  ctx.restore();
+}
+function drawAll(showArc=false){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.globalAlpha=.68;
+  drawRulerPair(0,1,"#2563eb");
+  drawRulerPair(2,3,"#f43f5e");
+  ctx.globalAlpha=1;
+  if(showArc) drawAngleArc();
+}
+
+/* dragging */
+function handleFromPos(mx,my){
+  for(let i=0;i<rulerHandles.length;i++){
+    const dx=rulerHandles[i].x-mx, dy=rulerHandles[i].y-my;
+    if(dx*dx+dy*dy < CIRCLE_R*CIRCLE_R) return {type:'handle',idx:i};
+  }
+  for(const [i1,i2] of pairs){
+    const m=midpoint(i1,i2);
+    const dx=mx-m.x, dy=my-m.y;
+    if(dx*dx+dy*dy < (DOT_R+6)*(DOT_R+6)) return {type:'mid',i1,i2};
+  }
+  return null;
+}
+canvas.addEventListener('pointerdown',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)/rect.width*canvas.width;
+  const my=(e.clientY-rect.top )/rect.height*canvas.height;
+  const tgt=handleFromPos(mx,my);
+  if(!tgt) return;
+  dragging=tgt; dragOffset.x=mx; dragOffset.y=my;
+  if(tgt.type==='handle'){
+    const pair=pairs.find(p=>p.includes(tgt.idx));
+    dragging.partner=pair[0]===tgt.idx?pair[1]:pair[0];
+    dragging.cx=midpoint(pair[0],pair[1]).x;
+    dragging.cy=midpoint(pair[0],pair[1]).y;
+  }
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!dragging) return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)/rect.width*canvas.width;
+  const my=(e.clientY-rect.top )/rect.height*canvas.height;
+
+  if(dragging.type==='mid'){
+    const dx=mx-dragOffset.x, dy=my-dragOffset.y;
+    dragOffset.x=mx; dragOffset.y=my;
+    [dragging.i1,dragging.i2].forEach(i=>{
+      rulerHandles[i].x=Math.max(0,Math.min(rulerHandles[i].x+dx,canvas.width));
+      rulerHandles[i].y=Math.max(0,Math.min(rulerHandles[i].y+dy,canvas.height));
+    });
+  }else{
+    const partnerIdx=dragging.partner;
+    rulerHandles[dragging.idx].x=Math.max(0,Math.min(mx,canvas.width));
+    rulerHandles[dragging.idx].y=Math.max(0,Math.min(my,canvas.height));
+    const v={x:mx-dragging.cx, y:my-dragging.cy};
+    rulerHandles[partnerIdx].x=Math.max(0,Math.min(dragging.cx - v.x, canvas.width));
+    rulerHandles[partnerIdx].y=Math.max(0,Math.min(dragging.cy - v.y, canvas.height));
+  }
+  drawAll();
+});
+canvas.addEventListener('pointerup',()=>{ dragging=null; });
+
+/* angle math */
+function angleBetween(a,b,c,d){
+  const v1={x:b.x-a.x,y:b.y-a.y}, v2={x:d.x-c.x,y:d.y-c.y};
+  let ang=Math.abs(Math.atan2(v2.y,v2.x)-Math.atan2(v1.y,v1.x));
+  if(ang>Math.PI) ang=2*Math.PI-ang;
+  return ang*180/Math.PI;
+}
+function intersect(a,b,c,d){
+  const A1=b.y-a.y, B1=a.x-b.x, C1=A1*a.x+B1*a.y;
+  const A2=d.y-c.y, B2=c.x-d.x, C2=A2*c.x+B2*c.y;
+  const det=A1*B2-A2*B1;
+  if(Math.abs(det)<1e-7) return null;
+  return {x:(B2*C1-B1*C2)/det, y:(A1*C2-A2*C1)/det};
+}
+function lineAngle(c,p){ return Math.atan2(p.y-c.y,p.x-c.x); }
+function drawAngleArc(){
+  const pt=intersect(rulerHandles[0],rulerHandles[1],rulerHandles[2],rulerHandles[3]);
+  if(!pt) return;
+  const theta=angleBetween(rulerHandles[0],rulerHandles[1],rulerHandles[2],rulerHandles[3]);
+  ctx.save();
+  ctx.beginPath(); ctx.strokeStyle="#fa8500"; ctx.lineWidth=4; ctx.globalAlpha=.85;
+  ctx.arc(pt.x,pt.y,36,lineAngle(pt,rulerHandles[1]),lineAngle(pt,rulerHandles[3]),false);
+  ctx.stroke(); ctx.globalAlpha=1;
+  ctx.font="bold 20px Inter"; ctx.fillStyle="#fa8500"; ctx.textAlign="center";
+  ctx.fillText(theta.toFixed(1)+'°',pt.x,pt.y-40); ctx.restore();
+}
+
+/* invert toggle */
+invertBtn.addEventListener('click',()=>{
+  isInverted=!isInverted;
+  xr.style.filter=(isInverted?'invert(1)':'');
+  invertBtn.textContent=isInverted?'Normal':'Invert';
+});
+
+/* upload */
+uploadBtn.addEventListener('click',()=>imgInput.click());
+imgInput.addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const url=URL.createObjectURL(file);
+  xr.src=url;
+  xr.onload=()=>{
+    URL.revokeObjectURL(url);
+    xrReady=true; imgW=xr.naturalWidth; imgH=xr.naturalHeight;
+    rulerHandlesSet=false; resizeCanvasArea();
+    [measureBtn,saveBtn].forEach(b=>b.disabled=false);
+    drawAll(); angleOut.textContent='';
+  };
+});
+
+/* rec rules */
+const rules=[
+  {min:0,max:9.9,rec:'Within normal range; no action needed.'},
+  {min:10,max:19.9,rec:'Observe; radiography every six months.'},
+  {min:20,max:24.9,rec:'Radiography every six months; consider brace.'},
+  {min:25,max:29.9,rec:'Brace; radiography every six months.'},
+  {min:30,max:40,rec:'Referral; brace.'},
+  {min:40.1,max:Infinity,rec:'Referral; surgery.'}
+];
+
+measureBtn.addEventListener('click',()=>{
+  const theta=angleBetween(rulerHandles[0],rulerHandles[1],rulerHandles[2],rulerHandles[3]);
+  lastAngleDeg=theta;
+  if(theta>90||theta<1){
+    angleOut.textContent=theta>90?'⚠️ Intersection > 90°. Re-position rulers.':'⚠️ Rulers almost parallel; adjust them.';
+    drawAll(false); return;
+  }
+  drawAll(true);
+  const rec=(rules.find(r=>theta>=r.min&&theta<=r.max)||{}).rec||'No guideline.';
+  angleOut.innerHTML=`Cobb Angle: <strong>${theta.toFixed(1)}°</strong><br><em>Recommendation:</em> ${rec}<br><span class="source">Source: Reamy BV &amp; Slakey JB. Am Fam Physician 2001;64(1):111–116.</span>`;
+});
+
+/* save */
+function exportComposite(cb){
+  const temp=document.createElement('canvas'); temp.width=canvas.width; temp.height=canvas.height;
+  const tctx=temp.getContext('2d');
+  tctx.drawImage(xr,0,0,temp.width,temp.height);
+  tctx.drawImage(canvas,0,0); 
+  temp.toBlob(cb);
+}
+saveBtn.addEventListener('click',()=>{
+  if(!xrReady) return;
+  exportComposite(blob=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`cobb_${lastAngleDeg?.toFixed(1)||'angle'}.png`;
+    a.click();
+  });
+});
+
+/* responsive */
+function resizeCanvasArea(){
+  const areaW=canvasShell.clientWidth, areaH=canvasShell.clientHeight || 480;
+  const aspect=imgW/imgH;
+  let newW=areaW,newH=areaH;
+  if(areaW/areaH>aspect){ newH=areaH; newW=areaH*aspect; }else{ newW=areaW; newH=areaW/aspect; }
+  xr.style.width=canvas.style.width=newW+'px';
+  xr.style.height=canvas.style.height=newH+'px';
+  canvas.width=newW; canvas.height=newH;
+  if(!rulerHandlesSet){ placeRulersInsideCanvas(newW,newH); rulerHandlesSet=true; }
+  drawAll();
+}
+window.addEventListener('load',()=>{ resizeCanvasArea(); });
+window.addEventListener('resize',resizeCanvasArea);
+</script>
+</body>
+</html>

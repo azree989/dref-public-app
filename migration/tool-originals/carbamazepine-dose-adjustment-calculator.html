@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carbamazepine Dose Adjustment Calculator</title>
+
+  <!-- Include Google Font: Poppins -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f1f3f5;
+      color: #333;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1558b0;
+      margin-bottom: 20px;
+    }
+
+    /* Flex layout for the two cards */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      flex: 1 1 400px; /* grow/shrink, min-width ~400px */
+      box-sizing: border-box;
+    }
+
+    .card label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card select,
+    .card input {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+
+    .card input[readonly] {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    .btn {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    .result {
+      margin-top: 20px;
+      background-color: #e9f7ef;
+      border: 1px solid #c3e6cb;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #155724;
+      display: none;
+    }
+
+    #doseFrequency {
+      font-weight: 400;
+      font-size: 0.95rem;
+      margin-left: 6px;
+      color: #155724;
+    }
+
+    .evaluation {
+      margin-top: 20px;
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 12px 16px;
+      border-radius: 4px;
+      color: #856404;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .evaluation h4 {
+      margin-top: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #856404;
+    }
+
+    .evaluation ul {
+      margin: 6px 0 6px 20px;
+    }
+
+    /* On narrow/mobile screens (≤600px), stack the two cards vertically */
+    @media (max-width: 600px) {
+      .cards {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Carbamazepine Dose Adjustment Calculator</h2>
+
+    <div class="cards">
+      <!-- =========================
+           FIRST CARD: Current regimen + CL + Evaluation
+           ========================= -->
+      <div class="card">
+        <label for="currentDose">Current Dose (mg)</label>
+        <input
+          type="number"
+          id="currentDose"
+          placeholder="e.g. 400"
+          min="0"
+          step="any"
+        />
+
+        <label for="currentInterval">Dosing Interval (hr)</label>
+        <input
+          type="number"
+          id="currentInterval"
+          placeholder="e.g. 12"
+          min="0"
+          step="any"
+        />
+
+        <label for="measuredCss">Measured Css (mg/L)</label>
+        <input
+          type="number"
+          id="measuredCss"
+          placeholder="e.g. 6"
+          min="0"
+          step="any"
+        />
+
+        <label for="saltFactorAdj">Salt Factor (S)</label>
+        <input
+          type="number"
+          id="saltFactorAdj"
+          value="1.0"
+          min="0"
+          step="any"
+        />
+
+        <label for="bioavailabilityAdj">Bioavailability (F)</label>
+        <input
+          type="number"
+          id="bioavailabilityAdj"
+          value="0.9"
+          min="0"
+          max="1"
+          step="any"
+        />
+
+        <label for="estimatedCL">Estimated Clearance (CL, L/hr)</label>
+        <input type="text" id="estimatedCL" readonly />
+
+        <!-- Evaluation block (subtherapeutic / therapeutic / toxic) -->
+        <div class="evaluation" id="evaluationBox">
+          <h4>Result Evaluation</h4>
+          <div id="evaluationContent"></div>
+        </div>
+      </div>
+
+      <!-- =========================
+           SECOND CARD: Target Css + Buttons + New MD
+           ========================= -->
+      <div class="card">
+        <label for="targetCssAdj">Target Css (mg/L)</label>
+        <input
+          type="number"
+          id="targetCssAdj"
+          placeholder="e.g. 8"
+          min="0"
+          step="any"
+        />
+
+        <div class="buttons">
+          <button class="btn btn-primary" id="calculateAdjBtn">
+            Calculate Adjustment
+          </button>
+          <button class="btn btn-secondary" id="resetAdjBtn">
+            Reset
+          </button>
+        </div>
+
+        <div class="result" id="resultAdjBox">
+          New Maintenance Dose: 
+          <span id="newMdResult">0</span> mg
+          <span id="doseFrequency"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Grab references to DOM elements
+    const currentDoseEl = document.getElementById('currentDose');
+    const currentIntervalEl = document.getElementById('currentInterval');
+    const measuredCssEl = document.getElementById('measuredCss');
+    const saltFactorAdjEl = document.getElementById('saltFactorAdj');
+    const bioavailabilityAdjEl = document.getElementById('bioavailabilityAdj');
+    const estimatedCLEl = document.getElementById('estimatedCL');
+    const evaluationBox = document.getElementById('evaluationBox');
+    const evaluationContent = document.getElementById('evaluationContent');
+
+    const targetCssAdjEl = document.getElementById('targetCssAdj');
+    const calculateAdjBtn = document.getElementById('calculateAdjBtn');
+    const resetAdjBtn = document.getElementById('resetAdjBtn');
+    const resultAdjBox = document.getElementById('resultAdjBox');
+    const newMdResult = document.getElementById('newMdResult');
+    const doseFrequency = document.getElementById('doseFrequency');
+
+    // Helper: round to specified decimals
+    function round(value, decimals) {
+      return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+    }
+
+    // Function to evaluate measured Css & show comments
+    function showEvaluation(css) {
+      let html = '';
+
+      if (css < 4) {
+        // Subtherapeutic
+        html +=
+          '<strong>Subtherapeutic (&lt; 4&nbsp;mg/L)</strong><br/>' +
+          '<em>Contributing Factors:</em>' +
+          '<ul>' +
+          '<li>Poor compliance</li>' +
+          '<li>Wrong sampling time</li>' +
+          '<li>Insufficient dose</li>' +
+          '<li>Possible drug interaction</li>' +
+          '</ul>' +
+          '<em>Recommendation:</em>' +
+          '<ul>' +
+          '<li>If compliance & sampling time are satisfactory, increase the dose appropriately and re-sample after 5 days.</li>' +
+          '<li>If clinical response is good despite low level, continue current dose and monitor.</li>' +
+          '</ul>';
+      } else if (css >= 4 && css <= 12) {
+        // Within therapeutic range
+        html +=
+          '<strong>Within Therapeutic Range (4 – 12&nbsp;mg/L)</strong><br/>' +
+          '<em>Contributing Factors (if response is poor):</em>' +
+          '<ul>' +
+          '<li>Insufficient dose</li>' +
+          '<li>Possible drug interaction</li>' +
+          '</ul>' +
+          '<em>Recommendation:</em>' +
+          '<ul>' +
+          '<li>If clinical response is poor despite therapeutic level, consider increasing the dose (not exceeding maximum recommended) and re-sample in 5 days.</li>' +
+          '<li>If clinical response is good, continue current dose.</li>' +
+          '</ul>';
+      } else {
+        // Potentially toxic
+        html +=
+          '<strong>Potentially Toxic (&gt; 12&nbsp;mg/L)</strong><br/>' +
+          '<em>Toxic Effects to Watch For:</em>' +
+          '<ul>' +
+          '<li>Diplopia</li>' +
+          '<li>Hyponatremia</li>' +
+          '<li>Seizures</li>' +
+          '<li>Arrhythmias</li>' +
+          '<li>Dizziness</li>' +
+          '</ul>' +
+          '<em>Contributing Factors:</em>' +
+          '<ul>' +
+          '<li>Overdosage</li>' +
+          '<li>Underlying disease/factors</li>' +
+          '<li>Possible drug interaction</li>' +
+          '</ul>' +
+          '<em>Recommendation:</em>' +
+          '<ul>' +
+          '<li>Withhold treatment temporarily.</li>' +
+          '<li>Monitor concentration and treat signs/symptoms of toxicity as needed.</li>' +
+          '<li>Once stable, adjust the dose downward accordingly.</li>' +
+          '</ul>';
+      }
+
+      evaluationContent.innerHTML = html;
+      evaluationBox.style.display = 'block';
+    }
+
+    // Calculation logic when "Calculate Adjustment" is clicked
+    calculateAdjBtn.addEventListener('click', () => {
+      // Parse inputs from first card
+      const doseMg = parseFloat(currentDoseEl.value);
+      const intervalHr = parseFloat(currentIntervalEl.value);
+      const measuredCss = parseFloat(measuredCssEl.value);
+      const saltF = parseFloat(saltFactorAdjEl.value);
+      const bioF = parseFloat(bioavailabilityAdjEl.value);
+
+      // Basic validation for current regimen fields
+      if (
+        isNaN(doseMg) ||
+        isNaN(intervalHr) ||
+        isNaN(measuredCss) ||
+        isNaN(saltF) ||
+        isNaN(bioF) ||
+        doseMg <= 0 ||
+        intervalHr <= 0 ||
+        measuredCss <= 0 ||
+        saltF <= 0 ||
+        bioF <= 0
+      ) {
+        alert('Please fill in all current regimen fields with valid numbers.');
+        return;
+      }
+
+      // 1. Estimate CL (L/hr)
+      //    CL = (S × F × Dose (mg)) / (Interval (hr) × Css (mg/L))
+      const clLperHr =
+        (saltF * bioF * doseMg) / (intervalHr * measuredCss);
+
+      // Display Estimated CL (rounded to 3 decimals)
+      estimatedCLEl.value = round(clLperHr, 3);
+
+      // 2. Show evaluation comments based on measuredCss
+      showEvaluation(measuredCss);
+
+      // 3. Calculate new MD if Target Css is provided
+      const targetCss = parseFloat(targetCssAdjEl.value);
+      if (!isNaN(targetCss) && targetCss > 0) {
+        // New MD (mg) = [CL (L/hr) × TargetCss (mg/L) × Interval (hr)] / (S × F)
+        const newMdMg =
+          (clLperHr * targetCss * intervalHr) / (saltF * bioF);
+
+        const roundedMg = round(newMdMg, 0);
+        newMdResult.textContent = roundedMg;
+
+        // Append “every X hr” so it’s crystal clear
+        doseFrequency.textContent = `every ${intervalHr} hr`;
+
+        resultAdjBox.style.display = 'block';
+      } else {
+        // Hide new‐dose result if no valid targetCss
+        resultAdjBox.style.display = 'none';
+      }
+    });
+
+    // Reset logic
+    resetAdjBtn.addEventListener('click', () => {
+      // Clear first‐card fields
+      currentDoseEl.value = '';
+      currentIntervalEl.value = '';
+      measuredCssEl.value = '';
+      saltFactorAdjEl.value = '1.0';
+      bioavailabilityAdjEl.value = '0.9';
+      estimatedCLEl.value = '';
+      evaluationBox.style.display = 'none';
+
+      // Clear second‐card fields
+      targetCssAdjEl.value = '';
+      newMdResult.textContent = '0';
+      doseFrequency.textContent = '';
+      resultAdjBox.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

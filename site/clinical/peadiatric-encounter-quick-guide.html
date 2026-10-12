@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Paediatric Clinical Tool (Malaysia DRef)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <style>
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f9fafb;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 540px;
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px #0001;
+    padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    color: #1859A6;
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #444;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+ input, select {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #cfd8dc;
+  font-size: 1.04rem;
+  line-height: 1.4; /* add this */
+  box-sizing: border-box;
+  margin-bottom: 2px;
+  appearance: none; /* normalize select on some browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+  .result-block {
+    margin-top: 2rem;
+    background: #e3f2fd;
+    border-radius: 12px;
+    padding: 1.2rem;
+    overflow-x: auto;
+  }
+  .section-title {
+    margin: 1.2rem 0 0.6rem 0;
+    font-weight: 600;
+    color: #1976d2;
+    font-size: 1.09rem;
+  }
+  .ref-btn {
+    margin-top: 1.2rem;
+    display: flex;
+    justify-content: center;
+  }
+  .ref-btn a {
+    background: #1859A6;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 1px 2px #0002;
+    transition: background 0.2s;
+  }
+  .ref-btn a:hover { background: #124076; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    background: #fff;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.97em;
+  }
+  th, td {
+    padding: 6px 4px;
+    text-align: left;
+    border-bottom: 1px solid #f1f1f1;
+    vertical-align: middle;
+    font-size: 1em;
+  }
+  th { background: #e6ecf6; }
+  ul {
+    padding-left: 1em;
+    margin: 0 0 8px 0;
+  }
+  .disclaimer {
+  color: #777;
+  font-size: 0.99rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+  background: #f7f7fa;
+  padding: 7px 10px;
+  text-align: left;
+}
+.ett-table-wrap {
+  background: #f7fbff;         /* very pale blue */
+  border: 1px solid #e1e9f2;
+  border-radius: 12px;
+  padding: 0.5em 0.8em 0.7em 0.8em;
+  margin-bottom: 10px;
+  box-shadow: none;            /* remove shadow if any */
+}
+
+.ett-size-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  font-size: 1.02em;
+}
+.ett-size-table th {
+  background: #ede7f6;         /* much lighter than previous purple */
+  color: #62447a;
+  font-size: 1em;
+  font-weight: 600;
+  text-align: left;
+  border-radius: 7px 7px 0 0;
+  padding: 6px 8px;
+  border-bottom: 1px solid #e3e3e3;
+}
+.ett-size-table td {
+  padding: 6px 10px;
+  color: #232323;
+  background: transparent;
+  border-bottom: 1px solid #f2f2f2;
+}
+.ett-size-table tr:last-child td {
+  border-bottom: none;
+}
+.ett-section {
+  background: #fffbe8;
+  border: 2px solid #ff7043;
+  border-radius: 14px;
+  margin: 22px 0 0 0;
+  padding: 1.3em 1.3em 1.1em 1.3em;
+  box-shadow: 0 6px 18px #ff704340;
+}
+.ett-alert {
+  background: #ffeaea;
+  border-left: 7px solid #e53935;
+  padding: 0.85em 1.2em;
+  border-radius: 10px;
+  margin-bottom: 1em;
+  font-size: 1.17em;
+}
+.ett-value-main {
+  color: #b71c1c;
+  font-size: 1.19em;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.ett-value-sec {
+  color: #1976d2;
+  font-size: 1.08em;
+}
+.ett-formulas {
+  margin-bottom: 1em;
+  font-size: 1.07em;
+}
+.ett-formula {
+  color: #d84315;
+  font-family: monospace;
+}
+.ett-recommend {
+  background: #fffde7;
+  border-left: 5px solid #ffa000;
+  border-radius: 8px;
+  padding: 0.85em 1.1em;
+  margin-top: 0.6em;
+  font-size: 1.06em;
+}
+.ett-recommend ul {
+  margin: 0.15em 0 0.35em 1.3em;
+  padding-left: 0;
+}
+.ett-recommend li {
+  margin-bottom: 0.13em;
+}
+#calculateBtn.needs-update {
+  background: #f9a825 !important;
+  color: #fff !important;
+  border: 2px solid #ff9800;
+  box-shadow: 0 2px 8px #ffb30030;
+  animation: shake 0.12s 2;
+}
+@keyframes shake {
+  0% { transform: translateX(0);}
+  25% { transform: translateX(-2px);}
+  50% { transform: translateX(2px);}
+  75% { transform: translateX(-2px);}
+  100% { transform: translateX(0);}
+}
+
+  @media (max-width: 600px) {
+    .container {
+      margin: 0;
+      padding: 0.55rem 0.2rem 1rem 0.2rem;
+      min-width: 0;
+      max-width: 100vw;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    h1 {
+      font-size: 1.05rem;
+      margin-bottom: 0.9rem;
+    }
+    label { font-size: 0.99rem; }
+    input, select { font-size: 0.98rem; padding: 0.62rem 0.6rem; }
+    .form-group { margin-bottom: 0.73rem; }
+    .result-block {
+      padding: 0.55rem 0.13rem;
+      margin-top: 1.15rem;
+      font-size: 0.97rem;
+    }
+    .section-title { font-size: 1rem; margin: 1.03rem 0 0.53rem 0; }
+    table { font-size: 0.93em; }
+    th, td { padding: 5px 2px; font-size: 0.95em; }
+  }
+  /* Tables responsive: horizontal scroll if overflow */
+  .result-block table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+</style>
+
+<meta name="dref-tool" content="peadiatric-encounter-quick-guide"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+  <div class="container">
+    <h1>🩺👶👧🧒 Peads On the Go! <span style="font-size:1.1em;color:#1976d2;"></span></h1>
+    <div class="disclaimer">
+  Any calculations must be rechecked and should not be used alone to guide patient care.
+</div>
+    <div class="form-group">
+      <label for="sex">Sex*</label>
+      <select id="sex" required>
+  <option value="">Choose</option>
+  <option value="girl">Girl</option>
+  <option value="boy">Boy</option>
+</select>
+   </div>
+    <div class="form-group">
+      <label for="dob">Date of Birth*</label>
+      <input type="date" id="dob" required max="" />
+    </div>
+    <div class="form-group">
+      <label for="weight">Weight (kg)*</label>
+      <input type="number" step="0.01" id="weight" />
+    </div>
+    <div class="form-group">
+      <label for="height">Height (cm)</label>
+      <input type="number" step="0.1" id="height" />
+    </div>
+    <div class="form-group">
+      <label for="percentile">Height Percentile (optional)</label>
+      <input type="number" step="1" id="percentile" min="1" max="99" placeholder="e.g. 50"/>
+    </div>
+    <div class="form-group">
+  <label for="bpHeightPct">Height Percentile for BP</label>
+  <select id="bpHeightPct">
+    <option value="">Show All</option>
+    <option value="50">50%</option>
+    <option value="90">90%</option>
+    <option value="95">95%</option>
+  </select>
+</div>
+<div class="form-actions" style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;">
+  <button type="button" id="calculateBtn" style="background:#1976d2;color:#fff;border:none;padding:0.7rem 1.5rem;border-radius:8px;font-weight:600;cursor:pointer;">Evaluate</button>
+  <button type="button" id="resetBtn" style="background:#efefef;color:#1859A6;border:none;padding:0.7rem 1.5rem;border-radius:8px;font-weight:600;cursor:pointer;">Reset</button>
+</div>
+  <div class="result-block" id="ageResult">
+      <!-- Output goes here -->
+    </div>
+    <div class="ref-btn">
+      <a href="https://mpaeds.my/wp-content/uploads/2019/09/Paediatric_Protocols_4th_Edition_(MPA%20Version)_2nd_Print_Aug_2019.pdf" target="_blank">
+        Download Paediatric Protocol 4th Edition (MPA)
+      </a>
+    </div>
+  </div>
+  <script>
+    // VS reference data
+    const vsTable = [
+      { age: 0, label: "Birth", boys: 3.5, girls: 3.5, rr: "25 - 50", hr: "120 - 170" },
+      { age: 1/12, label: "1 month", boys: 4.5, girls: 4.5, rr: "25 - 50", hr: "120 - 170" },
+      { age: 3/12, label: "3 months", boys: 6.5, girls: 6, rr: "25 - 45", hr: "115 - 160" },
+      { age: 0.5, label: "6 months", boys: 8, girls: 7, rr: "20 - 40", hr: "110 - 160" },
+      { age: 1, label: "12 months", boys: 9.5, girls: 9, rr: "20 - 40", hr: "110 - 160" },
+      { age: 1.5, label: "18 months", boys: 11, girls: 10, rr: "20 - 35", hr: "100 - 155" },
+      { age: 2, label: "2 years", boys: 12, girls: 12, rr: "20 - 30", hr: "100 - 150" },
+      { age: 3, label: "3 years", boys: 14, girls: 14, rr: "20 - 30", hr: "90 - 140" },
+      { age: 4, label: "4 years", boys: 16, girls: 16, rr: "20 - 30", hr: "80 - 135" },
+      { age: 5, label: "5 years", boys: 18, girls: 18, rr: "20 - 30", hr: "80 - 135" },
+      { age: 6, label: "6 years", boys: 21, girls: 20, rr: "20 - 30", hr: "80 - 130" },
+      { age: 7, label: "7 years", boys: 23, girls: 22, rr: "20 - 30", hr: "80 - 130" },
+      { age: 8, label: "8 years", boys: 25, girls: 25, rr: "15 - 25", hr: "70 - 120" },
+      { age: 9, label: "9 years", boys: 28, girls: 28, rr: "15 - 25", hr: "70 - 120" },
+      { age: 10, label: "10 years", boys: 31, girls: 32, rr: "15 - 25", hr: "70 - 120" },
+      { age: 11, label: "11 years", boys: 35, girls: 35, rr: "15 - 25", hr: "70 - 120" },
+      { age: 12, label: "12 years", boys: 43, girls: 43, rr: "12 - 24", hr: "65 - 115" },
+      { age: 14, label: "14 years", boys: 50, girls: 50, rr: "12 - 24", hr: "60 - 110" },
+      { age: 18, label: "Adult", boys: 70, girls: 70, rr: "12 - 24", hr: "60 - 110" }
+    ];
+
+    // BP reference data for girls and boys, ages 1-13
+    const bpGirls = {
+  1: {
+    sbp: [
+      // 5th, 50th, 95th BP percentile
+      [84,   86,   88],
+      [98,   100,  102],
+      [101,  103,  105]
+    ],
+    dbp: [
+      [41,   43,   46],
+      [54,   56,   58],
+      [59,   60,   62]
+    ]
+  },
+  2: {
+    sbp: [
+    // 5th, 50th, 95th BP percentile
+      [87,   89,   91],
+      [101,  103,  106],
+      [104,  106,  109]
+    ],
+    dbp: [
+      
+      [45,   48,   51],
+      [58,   60,   62],
+      [62,   64,   66]
+    ]
+  },
+  3: {
+    sbp: [
+      
+      [88, 90,   93],
+      [102,104, 107],
+      [106,108, 110]
+    ],
+    dbp: [
+      
+      [48, 50,   53],
+      [60, 62,   65],
+      [64, 66,   69]
+    ]
+  },
+  4: {
+    sbp: [
+      
+      [89,   92,    94],
+      [103,  106,   108],
+      [107,  109,   112]
+    ],
+    dbp: [
+      
+      [50,   53,    55],
+      [62,   65,    67],
+      [66,   69,    71]
+    ]
+  },
+  5: {
+    sbp: [
+      
+      [90,    93,    96],
+      [104,   107,   110],
+      [108,   110,   113]
+    ],
+    dbp: [
+      
+      [52,    55,    57],
+      [64,    67,    70],
+      [68,    71,    73]
+    ]
+  },
+  6: {
+    sbp: [
+      
+      [92,   94,    97],
+      [105,  108,   111],
+      [109,  111,   114]
+    ],
+    dbp: [
+      
+      [54,   56,    59],
+      [67,   69,    71],
+      [70,   72,    74]
+    ]
+  },
+  7: {
+    sbp: [
+      
+      [92,    95,    99],
+      [106,   109,   112],
+      [109,   112,   115]
+    ],
+    dbp: [
+      
+      [55,    57,    60],
+      [68,    70,    72],
+      [72,    73,    75]
+    ]
+  },
+  8: {
+    sbp: [
+      // 5th, 50th, 95th BP percentile
+      [93,  97,    100],
+      [107, 110,   113],
+      [110, 113,   117]
+    ],
+    dbp: [
+     
+      [56,  59,    61],
+      [69,  72,    73],
+      [72,  74,    75]
+    ]
+  },
+  9: {
+    sbp: [
+      
+      [95,    98,    101],
+      [108,   111,   114],
+      [112,   114,   118]
+    ],
+    dbp: [
+      
+      [57,    60,    61],
+      [71,    73,    75],
+      [74,    75,    75]
+    ]
+  },
+  10: {
+    sbp: [
+      
+      [96,    99,    103],
+      [109,   112,   116],
+      [113,   116,   120]
+    ],
+    dbp: [
+      
+      [58,    60,    62],
+      [72,    73,    73],
+      [75,    76,    76]
+    ]
+  },
+  11: {
+    sbp: [
+      
+      [98,    102,   106],
+      [111,   114,   120],
+      [115,   118,   124]
+    ],
+    dbp: [
+     
+      [60,    61,    64],
+      [74,    74,    75],
+      [76,    77,    77]
+    ]
+  },
+  12: {
+    sbp: [
+     
+      [102,   105,   108],
+      [114,   118,   122],
+      [118,   122,   126]
+    ],
+    dbp: [
+     
+      [61,    62,    65],
+      [75,    75,    76],
+      [78,    78,    79]
+    ]
+  },
+  13: {
+    sbp: [
+      
+      [104,   107,   109],
+      [116,   121,   123],
+      [121,   124,   127]
+    ],
+    dbp: [
+      
+      [62,    64,    66],
+      [75,    76,    76],
+      [79,    79,    81]
+    ]
+  }
+};
+const bpBoys = {
+  1: {
+    sbp: [
+     // 5th, 50th, 95th BP percentile
+      [85,   86,   88],
+      [98,   100,  101],
+      [102,  103,  105]
+    ],
+    dbp: [
+     
+      [40,   41,   42],
+      [52,   53,   54],
+      [54,   55,   57]
+    ]
+  },
+  2: {
+    sbp: [
+      
+      [87,   89,   91],
+      [100,  102,  104],
+      [104,  106,  108]
+    ],
+    dbp: [
+      
+      [43,   44,   46],
+      [55,   56,   58],
+      [57,   59,   61]
+    ]
+  },
+  3: {
+    sbp: [
+      
+      [88,   90,   92],
+      [101,  103,  105],
+      [106,  107,  109]
+    ],
+    dbp: [
+     
+      [45,   47,   49],
+      [58,   59,   61],
+      [60,   62,   64]
+    ]
+  },
+  4: {
+    sbp: [
+      
+      [90,   92,    94],
+      [102,  105,   107],
+      [107,  108,   110]
+    ],
+    dbp: [
+     
+      [48,   50,    52],
+      [60,   62,    64],
+      [63,   66,    68]
+    ]
+  },
+  5: {
+    sbp: [
+     
+      [91,    94,    96],
+      [103,   106,   108],
+      [107,   109,   112]
+    ],
+    dbp: [
+      
+      [51,    53,    55],
+      [63,    65,    67],
+      [66,    69,    71]
+    ]
+  },
+  6: {
+    sbp: [
+      
+      [93,    95,    98],
+      [105,   107,   110],
+      [110,   111,   114]
+    ],
+    dbp: [
+      
+      [54,    56,    58],
+      [66,    68,    69],
+      [69,    71,    73]
+    ]
+  },
+  7: {
+    sbp: [
+      
+      [94,    97,    99],
+      [106,   109,   111],
+      [110,   112,   116]
+    ],
+    dbp: [
+      
+      [56,    58,    59],
+      [68,    70,    71],
+      [71,    73,    74]
+    ]
+  },
+  8: {
+    sbp: [
+     // 50th, 90th, 95th height percentile
+      [95,    98,    100],
+      [107,   110,   112],
+      [111,   114,   117]
+    ],
+    dbp: [
+    
+      [57,    59,    60],
+      [69,    71,    73],
+      [72,    74,    75]
+    ]
+  },
+  9: {
+    sbp: [
+     
+      [96,    99,    101],
+      [107,   110,   114],
+      [112,   115,   119]
+    ],
+    dbp: [
+     
+      [57,    60,    62],
+      [70,    73,    74],
+      [74,    76,    77]
+    ]
+  },
+  10: {
+    sbp: [
+      
+      [97,    100,   103],
+      [108,   112,   116],
+      [112,   116,   121]
+    ],
+    dbp: [
+     
+      [59,    62,    63],
+      [72,    74,    76],
+      [76,    77,    78]
+    ]
+  },
+  11: {
+    sbp: [
+     
+      [99,    102,   106],
+      [110,   114,   118],
+      [114,   118,   124]
+    ],
+    dbp: [
+     
+      [61,    63,    63],
+      [74,    75,    76],
+      [77,    78,    78]
+    ]
+  },
+  12: {
+    sbp: [
+      
+      [101,   104,   109],
+      [113,   117,   122],
+      [116,   121,   128]
+    ],
+    dbp: [
+      
+      [61,    62,    63],
+      [75,    75,    76],
+      [78,    78,    79]
+    ]
+  },
+  13: {
+    sbp: [
+     
+      [103,   108,   112],
+      [115,   121,   126],
+      [119,   125,   131]
+    ],
+    dbp: [
+     
+      [61,    62,    65],
+      [74,    75,    77],
+      [78,    78,    81]
+    ]
+  }
+};
+function findClosestVSByMonths(years, months) {
+  const totalMonths = years * 12 + months;
+  let closest = vsTable[0];
+  for (let i = 1; i < vsTable.length; i++) {
+    const refMonths = vsTable[i].age * 12;
+    if (totalMonths >= refMonths) closest = vsTable[i];
+    else break;
+  }
+  return closest;
+}
+
+   function getBP5thCentile(ageY) {
+      if (ageY < 1) return "65–75";
+      if (ageY < 2) return "70–75";
+      if (ageY < 5) return "70–80";
+      if (ageY < 12) return "80–90";
+      return "90–105";
+    }
+    function calcBP5th(ageY) {
+      return Math.round(65 + 2 * ageY);
+    }
+
+    // Set max date for DOB to today
+    document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+
+    function calculateAgeObject(dobStr) {
+      if (!dobStr) return null;
+      const dob = new Date(dobStr);
+      const now = new Date();
+      let years = now.getFullYear() - dob.getFullYear();
+      let months = now.getMonth() - dob.getMonth();
+      let days = now.getDate() - dob.getDate();
+      if (days < 0) {
+        months -= 1;
+        days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+      }
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+      // For precise age in years (decimal)
+      const ageInYears = ((now - dob) / (365.25 * 24 * 60 * 60 * 1000));
+      return { years, months, days, ageInYears: Math.max(0, ageInYears) };
+    }
+
+    //function findClosestVS(ageY) {
+      // Find the closest age group in vsTable <= actual age
+      //let closest = vsTable[0];
+      //for (let i = 1; i < vsTable.length; i++) {
+        //if (ageY >= vsTable[i].age) closest = vsTable[i];
+        //else break;
+      //}
+      //return closest;
+    //}
+
+    function renderBPTable(bpData, age, selectedHeightPct = null) {
+  const heightLabels = ['50%', '90%', '95%'];
+  const bpLabels = ['5th', '50th', '95th'];
+  if (!bpData[age]) return '<div style="color:#b71c1c;">BP data not available for this age.</div>';
+  const sbp = bpData[age].sbp;
+  const dbp = bpData[age].dbp;
+
+  let html = `<table style="width:100%;text-align:center;margin-bottom:10px;">
+    <tr>
+      <th>Height centile</th>
+      <th colspan="3">Systolic BP (mmHg)</th>
+      <th colspan="3">Diastolic BP (mmHg)</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>5th</th><th>50th</th><th>95th</th>
+      <th>5th</th><th>50th</th><th>95th</th>
+    </tr>`;
+
+  let rowsToShow = [0, 1, 2];
+  if (selectedHeightPct !== null) {
+    let pctIdx = {50:0, 90:1, 95:2}[selectedHeightPct];
+    rowsToShow = [pctIdx];
+  }
+
+  for (let r of rowsToShow) {
+    html += `<tr>
+      <td>${heightLabels[r]}</td>
+      ${sbp[r].map((v, c) =>
+        `<td style="background:${c === 0 ? '#CFFAD0' : ''};font-weight:${c === 0 ? 'bold' : 'normal'}">${v}</td>`
+      ).join('')}
+      ${dbp[r].map((v, c) =>
+        `<td style="background:${c === 0 ? '#CFFAD0' : ''};font-weight:${c === 0 ? 'bold' : 'normal'}">${v}</td>`
+      ).join('')}
+    </tr>`;
+  }
+  html += `</table>`;
+  return html;
+}
+const anthropometricRef = [
+  { years: 0, months: 0,    label: "Birth",      w: "3.5 kg", h: "50 cm",     hc: "35 cm" },
+  { years: 0, months: 6,    label: "6 months",   w: "7 kg",   h: "68 cm",     hc: "42 cm" },
+  { years: 1, months: 0,    label: "1 year",     w: "10 kg",  h: "75 cm",     hc: "47 cm" },
+  { years: 2, months: 0,    label: "2 years",    w: "12 kg",  h: "85 cm",     hc: "49 cm" },
+  { years: 3, months: 0,    label: "3 years",    w: "14 kg",  h: "95 cm",     hc: "49.5 cm" },
+  { years: 4, months: 0,    label: "4 years",    w: "",       h: "100 cm",    hc: "50 cm" },
+  { years: 5, months: null, label: "5–12 years", w: "",       h: "5 cm/year", hc: "0.33 cm/year" }
+];
+
+function getAnthropometric(years, months) {
+  // Find if age matches any row (first 6)
+  let found = anthropometricRef.find(row =>
+    row.months !== null && row.years === years && row.months === months
+  );
+  // If not found, check for 5–12 years (any months)
+  if (!found && years >= 5 && years <= 12) {
+    found = anthropometricRef.find(row => row.label === "5–12 years");
+  }
+
+  let tableHTML = "";
+  if (found) {
+    tableHTML = `
+      <table style="width:100%;background:#fff;border-radius:6px;font-size:0.97em;margin-bottom:8px;table-layout:fixed;">
+        <tr>
+          <th style="width:26%;">Age</th>
+          <th style="width:21%;">Weight</th>
+          <th style="width:28%;">Height</th>
+          <th style="width:25%;">Head size</th>
+        </tr>
+        <tr>
+          <td>${found.label}</td>
+          <td>${found.w || ""}</td>
+          <td>${found.h || ""}</td>
+          <td>${found.hc || ""}</td>
+        </tr>
+      </table>
+    `;
+  }
+
+  // ---- Weight estimation block (reuse your own, or copy this) ----
+  let wtFormula = "", wtVal = "";
+  if (years < 1) {
+    wtFormula = "months × 0.5 + 4";
+    wtVal = Math.round(months * 0.5 + 4) + " kg";
+  } else if (years < 10.1) {
+    wtFormula = "(years + 4) × 2";
+    wtVal = Math.round((years + 4) * 2) + " kg";
+  }
+
+  let wtEstBlock = "";
+  if (wtFormula && wtVal) {
+    wtEstBlock = `
+      <div style="margin:12px 0 8px 0;padding:10px 15px;background:#ede7f6;border-radius:8px;">
+        <div style="font-weight:normal;font-size:1.07em;">
+          Weight estimation: <span style="color:#2e7d32;font-size:1.08em;">${wtVal}</span>
+        </div>
+        <div style="font-size:97%;margin-top:4px;color:#1976d2;">
+          Formula: <span style="font-family:monospace;color:#222;">${wtFormula} kg</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- Points to note block (unchanged) ----
+  const notesBlock = `
+    <div style="font-size:93%">
+      <b>Points to Note</b><br>
+      <u>Weight</u>:<br>
+      • 1st 7–10 days: babies lose 10–15% birth weight.<br>
+      • 1st 3 months: gain ≈25g/day.<br>
+      • Babies regain birth weight by week 2, double by 5 months, triple by 1 year.<br>
+      <u>Head circumference</u>:<br>
+      • Preterm: ≈1 cm/week growth but reduces with age.<br>
+      • HC +12 cm in 1st year (6 cm in first 3 months, then 3 cm in second 3 months, and 3 cm in last 6 months).<br>
+    </div>
+  `;
+
+  return tableHTML + wtEstBlock + notesBlock;
+}
+
+function getHaemParameters(years, months, sex) {
+  // Define age bands
+  let band, bandLabel;
+  if (years < 0 || (years === 0 && months === 0)) {
+    band = 0; bandLabel = "Cord Blood";
+  } else if (years === 0 && months < 1) {
+    band = 1; bandLabel = "2 weeks";
+  } else if (years === 0 && months < 6) {
+    band = 2; bandLabel = "3 months";
+  } else if (years < 7) {
+    band = 3; bandLabel = "6 mths – 6 yrs";
+  } else if (years < 13) {
+    band = 4; bandLabel = "7 – 12 years";
+  } else if (years >= 13) {
+  if (typeof sex !== "undefined" && sex === "girl") {
+    band = 6; bandLabel = "Adult female";
+  } else {
+    band = 5; bandLabel = "Adult male";
+  }
+}
+  // Reference values
+  const data = [
+    { label: "Cord Blood", Hb: "13.7–20.1", PCV: "45–65", Retics: "5.0", MCV: "110", MCH: "29", TWBC: "9–30", Neut: "61", Lymph: "31" },
+    { label: "2 weeks", Hb: "13.0–20.0", PCV: "42–66", Retics: "1.0", MCV: "-", MCH: "29", TWBC: "5–21", Neut: "40", Lymph: "63" },
+    { label: "3 months", Hb: "9.5–14.5", PCV: "31–41", Retics: "1.0", MCV: "-", MCH: "27", TWBC: "6–18", Neut: "30", Lymph: "48" },
+    { label: "6 mths – 6 yrs", Hb: "10.5–14.0", PCV: "33–42", Retics: "1.0", MCV: "70–74", MCH: "25–31", TWBC: "6–14", Neut: "35", Lymph: "38" },
+    { label: "7 – 12 years", Hb: "11.0–16.0", PCV: "34–40", Retics: "1.0", MCV: "76–80", MCH: "26–32", TWBC: "4.5–13.5", Neut: "55", Lymph: "38" },
+    { label: "Adult male", Hb: "14.0–18.0", PCV: "42–52", Retics: "1.6", MCV: "80", MCH: "27–32", TWBC: "5–10", Neut: "55", Lymph: "35" },
+    { label: "Adult female", Hb: "12.0–16.0", PCV: "37–47", Retics: "1.6", MCV: "80", MCH: "26–34", TWBC: "5–10", Neut: "55", Lymph: "35" }
+  ];
+  const d = data[band];
+  return `
+    <div style="font-size:1.03em;margin-bottom:4px;color:#1976d2;">
+      <b>Age reference:</b> ${bandLabel}
+    </div>
+    <table style="width:100%;background:#fff;border-radius:6px;font-size:0.97em;margin-bottom:8px;">
+      <tr>
+        <th>Hb (g/dL)</th><th>PCV (%)</th><th>Retics (%)</th>
+        <th>MCV (fl)</th><th>MCH (pg)</th><th>TWBC (x1000)</th>
+        <th>Neut (Mean)</th><th>Lymph (Mean)</th>
+      </tr>
+      <tr>
+        <td>${d.Hb}</td>
+        <td>${d.PCV}</td>
+        <td>${d.Retics}</td>
+        <td>${d.MCV}</td>
+        <td>${d.MCH}</td>
+        <td>${d.TWBC}</td>
+        <td>${d.Neut}</td>
+        <td>${d.Lymph}</td>
+      </tr>
+    </table>
+    <div style="font-size:93%">
+      <b>Differential counts:</b><br>
+      &lt;7 days: neutrophils &gt; lymphocytes<br>
+      1 wk–4 yrs: lymphocytes &gt; neutrophils<br>
+      4–7 yrs: neutrophils ≈ lymphocytes<br>
+      &gt;7 yrs: neutrophils &gt; lymphocytes<br>
+      <br>
+      <b>Points to note</b><br>
+      • <b>Differential WBC</b>: eosinophils 2–3%; monocytes 6–9%<br>
+      • Platelets counts are lower in first months of age, but normal by 6 months<br>
+      • <b>ESR</b>: &lt;16 mm/hr in children, if PCV ≥35%<br>
+    </div>
+  `;
+}
+
+
+const imunisasiSchedule = [
+  // Format: {name, label, doses: [{label, when: months or years}]}
+  { name: "BCG", label: "BCG", doses: [{label: "Dos Tunggal", when: 0}] },
+  { name: "Hepatitis B", label: "Hepatitis B", doses: [
+      {label: "Dos Kelahiran", when: 0}
+    ]
+  },
+  { name: "DTaP-IPV-HepB-Hib", label: "DTaP-IPV-Hep B-Hib", doses: [
+      {label:"Dos 1", when: 2},
+      {label:"Dos 2", when: 3},
+      {label:"Dos 3", when: 5},
+      {label:"Dos Penggalak", when: 18}
+    ]
+  },
+  { name: "Measles", label: "Measles", doses: [
+      {label:"SABAH Sahaja", when: 6}
+    ]
+  },
+  { name: "MMR", label: "MMR", doses: [
+      {label:"Dos 1", when: 9},
+      {label:"Dos 2", when: 12}
+    ]
+  },
+  { name: "PCV", label: "Pneumokokal (PCV)", doses: [
+      {label:"Dos 1", when: 4},
+      {label:"Dos 2", when: 6},
+      {label:"Dos Penggalak", when: 15}
+    ]
+  },
+  { name: "JE", label: "JE (Sarawak Sahaja)", doses: [
+      {label:"Dos 1", when: 9},
+      {label:"Dos Penggalak", when: 21}
+    ]
+  },
+  { name: "DT", label: "DT", doses: [
+      {label:"Dos Penggalak", when: 7*12}
+    ]
+  },
+  { name: "HPV", label: "HPV", doses: [
+      {label:"1 Dos", when: 13*12}
+    ]
+  },
+  { name: "TT", label: "TT", doses: [
+      {label:"Dos Penggalak", when: 15*12}
+    ]
+  },
+];
+function getImmunizationSection(years, months) {
+  const totalMonths = years * 12 + months;
+  let html = `<table style="width:100%;background:#fff;border-radius:6px;font-size:0.97em;margin-bottom:8px;">
+    <tr><th align="left">Vaccine</th><th>Dos</th><th>Age</th><th>Status</th></tr>`;
+  imunisasiSchedule.forEach(vac => {
+    vac.doses.forEach(dose => {
+      let yearsDue = Math.floor(dose.when / 12);
+      let monthsDue = dose.when % 12;
+      let dueStr = '';
+      if (yearsDue > 0 && monthsDue > 0) {
+        dueStr = yearsDue + " tahun " + monthsDue + " bulan";
+      } else if (yearsDue > 0) {
+        dueStr = yearsDue + " tahun";
+      } else {
+        dueStr = monthsDue + " bulan";
+      }
+      let status = totalMonths >= dose.when ? "✅" : "❌";
+      html += `<tr>
+        <td>${vac.label}</td>
+        <td>${dose.label}</td>
+        <td>${dueStr}</td>
+        <td style="text-align:center;">${status}</td>
+      </tr>`;
+    });
+  });
+  html += `</table>
+    <div style="font-size:92%;color:#1976d2;"><b>✅</b> Should have been completed by this age.<br>
+    <b>❌</b> Not yet due / wait for the appropriate age.</div>
+  `;
+  return html;
+}
+
+function getMedDose(weight) {
+  if (!weight || isNaN(weight) || weight <= 0) {
+    return `<div style="color:#b71c1c;">Please enter weight to calculate medication doses.</div>`;
+  }
+  weight = parseFloat(weight);
+  let html = `
+    <table style="width:100%;background:#fff;border-radius:6px;font-size:0.97em;margin-bottom:8px;">
+      <tr><th>Drug</th><th>Dose</th><th>Calculation</th><th>Remark</th></tr>
+      <tr>
+        <td>Paracetamol</td>
+        <td>Oral 15 mg/kg/dose<br>4–6 hourly</td>
+        <td>${weight} kg × 15 mg = <b>${Math.round(weight*15)} mg</b> / dose</td>
+        <td>Max 4g/day</td>
+      </tr>
+      <tr>
+        <td>Chlorpheniramine</td>
+        <td>Oral 0.1 mg/kg/dose<br>8 hourly</td>
+        <td>${weight} kg × 0.1 mg = <b>${(weight*0.1).toFixed(2)} mg</b> / dose</td>
+        <td>Not for &lt;2 year old</td>
+      </tr>
+      <tr>
+        <td>Bromhexine</td>
+        <td>Oral 0.3mg/kg<br>8 hourly for 7 days, then 0.15mg/kg<br>8 hourly</td>
+        <td>${weight} kg × 0.3 mg = <b>${(weight*0.3).toFixed(2)} mg</b> / dose</td>
+        <td>Not for &lt;2 years old<br><br>Dose for the first 7 days</td>
+      </tr>
+      <tr>
+        <td>Oral Rehydration Salt solution</td>
+        <td>10ml/kg/dose<br>as needed</td>
+        <td>${weight} kg × 10 ml = <b>${(weight*10).toFixed(2)} ml</b> / dose</td>
+        <td></td>
+      </tr>
+      </table>
+    <div style="font-size:92%"> 
+  <b>Notes:</b><br>
+  Always check product insert and confirm with pharmacist.
+</div>
+  `;
+  return html;
+  
+      
+}
+function getIVFluidMaintenance(weight) {
+  if (!weight || isNaN(weight) || weight <= 0) {
+    return `<div style="color:#b71c1c;">Please enter weight to calculate maintenance fluids.</div>`;
+  }
+  weight = parseFloat(weight);
+  let total = 0;
+  let step = "";
+
+  if (weight <= 10) {
+    total = weight * 100;
+    step = `${weight} kg × 100 ml = <b>${total} ml/day</b>`;
+  } else if (weight <= 20) {
+    total = 1000 + (weight - 10) * 50;
+    step = `10 kg × 100 ml = 1000 ml + (${weight - 10} kg × 50 ml = ${(weight - 10) * 50} ml) = <b>${total} ml/day</b>`;
+  } else {
+    total = 1500 + (weight - 20) * 20;
+    step = `10 kg × 100 ml = 1000 ml + 10 kg × 50 ml = 500 ml + (${weight - 20} kg × 20 ml = ${(weight - 20) * 20} ml) = <b>${total} ml/day</b>`;
+  }
+  // Infusion rate (per hour)
+  let rate = Math.round(total / 24);
+
+  // Stepwise rates
+  let hourlyStep = "";
+  if (weight <= 10) {
+    hourlyStep = `${weight} kg × 4 ml = <b>${(weight * 4).toFixed(1)} ml/hr</b>`;
+  } else if (weight <= 20) {
+    hourlyStep = `10 kg × 4 ml = 40 ml/hr + (${weight - 10} kg × 2 ml = ${((weight - 10) * 2).toFixed(1)} ml/hr) = <b>${(40 + (weight - 10) * 2).toFixed(1)} ml/hr</b>`;
+  } else {
+    hourlyStep = `10 kg × 4 ml = 40 ml/hr + 10 kg × 2 ml = 20 ml/hr + (${weight - 20} kg × 1 ml = ${(weight - 20).toFixed(1)} ml/hr) = <b>${(60 + (weight - 20) * 1).toFixed(1)} ml/hr</b>`;
+  }
+
+  return `
+    <table style="width:100%;background:#fff;border-radius:6px;font-size:0.97em;margin-bottom:8px;">
+      <tr><th>Total Fluids (per day)</th><th>Infusion Rate (per hour)</th></tr>
+      <tr>
+        <td>${total} ml/day<br><span style="font-size:90%">${step}</span></td>
+        <td>${rate} ml/hr<br><span style="font-size:90%">${hourlyStep}</span></td>
+      </tr>
+    </table>
+    <div style="font-size:92%">
+      <b>Reference (Holliday-Segar method):</b><br>
+      • First 10 kg: 100 ml/kg/day (4 ml/kg/hr)<br>
+      • Next 10 kg: 50 ml/kg/day (2 ml/kg/hr)<br>
+      • Each kg >20 kg: 20 ml/kg/day (1 ml/kg/hr)
+    </div>
+  `;
+}
+
+    function getBP5thCentileText(ageY) {
+  // Returns text based on your table (from image)
+  if (ageY < 1) return "65–75 mmHg";
+  if (ageY < 2) return "70–75 mmHg";
+  if (ageY < 5) return "70–80 mmHg";
+  if (ageY < 12) return "80–90 mmHg";
+  return "90–105 mmHg";
+}
+
+function calcBP5th(ageY) {
+  // Returns integer, per formula
+  return Math.round(65 + 2 * ageY);
+}
+function roundToNearestHalf(num) {
+  return (Math.round(num * 2) / 2).toFixed(1);
+}
+function getETTSection(years, weight) {
+  // Calculate suggested ETT size & length
+  let ettSize = "-", ettLen = "-";
+  if (years === 0 && weight && weight > 0) {
+    if (weight < 1) ettSize = "2.5 mm";
+    else if (weight < 2) ettSize = "3.0 mm";
+    else if (weight < 3) ettSize = "3.5 mm";
+    else ettSize = "3.5 – 4.0 mm";
+    ettLen = (6 + Number(weight)).toFixed(1) + " cm";
+  } else if (years >= 1) {
+    ettSize = roundToNearestHalf(4 + (years / 4)) + " mm";
+    ettLen = (12 + (years / 2)).toFixed(1) + " cm";
+  }
+
+  return `
+    <div class="ett-section">
+      <div class="section-title" style="margin-top:0;">Choosing ETT Size (mm)</div>
+      <div class="ett-alert">
+        <b>Calculated for your patient:</b>
+        <ul>
+          <li><b>Suggested ETT size:</b> <span class="ett-value-main">${ettSize}</span></li>
+          <li><b>Suggested oral ETT length:</b> <span class="ett-value-sec">${ettLen}</span></li>
+        </ul>
+      </div>
+      <div class="ett-formulas">
+        <b>Formulas:</b>
+        <ul>
+          <li><b>For Children &gt; 1 year:</b>
+            <ul>
+              <li><b>ETT size (mm)</b> = <span class="ett-formula">4 + (age in years / 4)</span></li>
+              <li><b>Oral ETT length (cm)</b> = <span class="ett-formula">12 + (age in years / 2)</span></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="ett-recommend">
+        <b>Recommended Size of ETT (mm) for Neonates:</b>
+        <ul>
+          <li><b>2.5 mm</b> for &lt;1 kg</li>
+          <li><b>3.0 mm</b> for 1–2 kg</li>
+          <li><b>3.5 mm</b> for 2–3 kg</li>
+          <li><b>3.5–4.0 mm</b> for &gt;3 kg</li>
+        </ul>
+        <div style="font-size:92%;color:#ff7043;margin-top:0.3em;"><b>Emergency use:</b> If in doubt, choose the smaller size!</div>
+      </div>
+    </div>
+  `;
+}
+
+function updateResult() {
+  const sex = document.getElementById('sex').value;
+  const dob = document.getElementById('dob').value;
+  const weight = document.getElementById('weight').value;
+  const height = document.getElementById('height').value;
+  const percentile = document.getElementById('percentile').value;
+
+  const ageObj = calculateAgeObject(dob);
+  let html = '';
+  if (ageObj) {
+    html += `<div><b>Current Age:</b> ${ageObj.years} years, ${ageObj.months} months, ${ageObj.days} days</div>`;
+    const vsRow = findClosestVSByMonths(ageObj.years, ageObj.months);
+    html += `<div class="section-title">Normal Vital Signs</div>
+  <div style="font-size:1.05em;color:#1976d2;margin:2px 0 7px 0;">
+    <b>Age reference:</b> ${vsRow.label}
+  </div>
+  <ul style="margin:0; padding-left:1em;">
+    <li><b>Guide Weight:</b> ${sex ? vsRow[sex === "boy" ? "boys" : "girls"] + " kg" : "-"}</li>
+      <li><b>Respiratory Rate at rest:</b> ${vsRow.rr ? vsRow.rr + " breaths/min" : "-"} (5th-95th centile)</li>
+      <li><b>Heart Rate at rest:</b> ${vsRow.hr ? vsRow.hr + " beats/min" : "-"} (5th-95th centile)</li>
+    </ul>`;
+
+    // BP Section
+    if (ageObj && sex && ageObj.years >= 1 && ageObj.years <= 13) {
+      let bpData = (sex === 'girl') ? bpGirls : bpBoys;
+      let bpHeightPctVal = document.getElementById('bpHeightPct').value;
+      let selPct = bpHeightPctVal ? parseInt(bpHeightPctVal) : null;
+      html += `<div class="section-title">Blood Pressure Reference Table</div>`;
+      html += renderBPTable(bpData, ageObj.years, selPct);
+
+      // --- Insert your 5th centile estimates here! ---
+      const estBand = getBP5thCentileText(ageObj.ageInYears);
+      const calcVal = calcBP5th(ageObj.ageInYears);
+
+      html += `
+        <div style="margin:12px 0 8px 0;padding:8px 12px;background:#ede7f6;border-radius:8px;">
+          <b>5th centile Systolic BP (minimum normal):</b><br>
+          <ul style="margin:0 0 4px 1.2em;padding-left:0;">
+            <li><b>Estimated by age group:</b> <span style="color:#2e7d32">${estBand}</span></li>
+            <li><b>Calculated by formula:</b> <span style="color:#1976d2">65 + (2 × Age in years) = <b>${calcVal} mmHg</b></span></li>
+          </ul>
+          <div style="font-size:80%;color:#555;">
+  <i>
+    Reference: Advanced Paediatric Life Support: The Practical Approach To Emergencies, 6th Edition 2016
+  </i>
+</div>
+        </div>
+      `;
+    }
+
+    // Anthropometric Measurements
+    html += `<div class="section-title">Anthropometric Measurements</div>`;
+    html += getAnthropometric(ageObj.years, ageObj.months);
+
+    // Haematological Parameters
+    html += `<div class="section-title">Haematological Parameters</div>`;
+    html += getHaemParameters(ageObj.years, ageObj.months, sex);
+
+    // Immunizations
+    html += `<div class="section-title">National Immunization Schedule (Update 2023)</div>`;
+    html += getImmunizationSection(ageObj.years, ageObj.months);
+
+    // Medication Dose Calculator
+    html += `<div class="section-title">Calculate Common Medication Dose</div>`;
+    html += getMedDose(weight);
+
+    // IV Maintenance Fluids
+    html += `<div class="section-title">IV Maintenance Fluid Calculator</div>`;
+    html += getIVFluidMaintenance(weight);
+    html += getETTSection(ageObj.years, weight);
+  }
+  document.getElementById('ageResult').innerHTML = html;
+}
+
+    
+/*['sex','dob','weight','height','percentile','bpHeightPct'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateResult);
+});*/
+    updateResult();
+    // Evaluate/Calculate button
+document.getElementById('calculateBtn').onclick = function() {
+  // Validate required fields
+  var sex = document.getElementById('sex').value;
+  var dob = document.getElementById('dob').value;
+  let errorMsg = '';
+  if (!sex) errorMsg += '<div style="color:#c62828;">Please select <b>Sex</b>.</div>';
+  if (!dob) errorMsg += '<div style="color:#c62828;">Please enter <b>Date of Birth</b>.</div>';
+
+  if (errorMsg) {
+    document.getElementById('ageResult').innerHTML = errorMsg;
+    return;
+  }
+  // Actually calculate if validation passed:
+  updateResult();
+  // REMOVE highlight after click
+  this.classList.remove('needs-update');
+  this.textContent = "Evaluate";
+};
+
+// Reset button
+document.getElementById('resetBtn').onclick = function() {
+  ['sex','dob','weight','height','percentile','bpHeightPct'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('ageResult').innerHTML = '';
+  // Optionally, reset DOB max
+document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+document.getElementById('calculateBtn').classList.remove('needs-update');
+document.getElementById('calculateBtn').textContent = "Evaluate";
+
+};
+document.querySelectorAll('#sex,#dob,#weight,#height,#percentile,#bpHeightPct')
+  .forEach(el => el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('calculateBtn').click();
+  }));
+
+  const monitoredInputs = ['sex','dob','weight','height','percentile','bpHeightPct'];
+
+monitoredInputs.forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    const btn = document.getElementById('calculateBtn');
+    btn.classList.add('needs-update');
+    btn.textContent = "Evaluate (Updated)";
+  });
+});
+
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

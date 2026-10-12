@@ -1,4 +1,4 @@
-import {icon} from './icons.js';
+import {icon} from './icons.js?v=1.0';
 export const dockItems=[
  {id:'home',path:'/',label:'Home',icon:'home',title:'Home'},
  {id:'album',path:'/album',label:'Album',icon:'layers',title:'Chronic Medication Album'},

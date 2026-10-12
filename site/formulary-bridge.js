@@ -1,4 +1,4 @@
-import {validatePayload} from './formulary-logic.js';
+import {validatePayload} from './formulary-logic.js?v=1.0';
 export const formularyAppUrl='https://script.google.com/macros/s/AKfycbzL9JH03csacl7msG01Y0Vdmi5qe34kU3uWx-1a1suwkbkQyNiTcvyw7ohjeHBEA8z8xg/exec';
 export function allowedBridgeOrigin(origin){try{const u=new URL(origin);return u.protocol==='https:'&&(u.hostname==='script.google.com'||u.hostname==='script.googleusercontent.com'||/^[a-z0-9-]+-script\.googleusercontent\.com$/.test(u.hostname));}catch{return false;}}
 export function acceptsBridgeMessage(event,requestId,frame){

@@ -1,5 +1,7 @@
 // Navigation, listing and search all derive from this catalogue.
-import {album,albumSource} from './album.js';
+import {album,albumSource} from './album.js?v=1.0';
+import {albumPhotos} from './album-photos.js?v=1.0';
+import {clinicalTools} from './clinical-catalogue.js?v=1.0';
 export const primaryAreas = [
  {id:'album',title:'Chronic Medication Album',icon:'layers',path:'/album',description:'Browse medication photographs by category and drug class.'},
  {id:'tools',title:'Clinical Tools',icon:'calculator',path:'/tools',description:'Open calculators and clinical reference tools.'},
@@ -27,15 +29,16 @@ export const entries = [
  {id:'bmi',section:'tools',group:'calculators',title:'Body mass index',description:'A simple built-in calculation using weight and height.',type:'calculator',source:'CDC · BMI calculation formula',url:'https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html',tags:['BMI','weight','height'],related:['myformulary']},
  {id:'myformulary',section:'tools',group:'calculators',title:'MyFormulary calculators',description:'Open the pharmacy calculator collection.',type:'external',source:'MyFormulary · MOH Malaysia',url:'https://myformulary.pharmacy.gov.my/calculators',tags:['renal','creatinine','eGFR','body surface area','steroid'],related:['bmi','fukkm']},
  {id:'pharmacy-guidance',section:'guidelines',group:'reference-portals',title:'MOH pharmacy guidelines',description:'Browse guidelines published by the Pharmaceutical Services Programme.',type:'external',source:'Pharmaceutical Services Programme, MOH Malaysia',url:'https://pharmacy.moh.gov.my/en/documents-library/guidelines',tags:['guideline','pharmacy','KKM'],related:['fukkm']},
- {id:'dref-original',section:'local',group:'dref',title:'DRef website',description:'Access existing pages and tools while migration is underway.',type:'external',source:'DRef.my',url:'https://www.dref.my/',tags:['Mahligai','Bachok','local','Apps Script'],related:['dref-team']},
- {id:'dref-team',section:'local',group:'dref',title:'Meet the DRef team',description:'View the current team on the original DRef website.',type:'external',source:'DRef.my',url:'https://www.dref.my/meet-the-team',tags:['team','about','contact'],related:['dref-original']}
+ {id:'dref-original',section:'local',group:'dref',title:'DRef website',description:'Access existing pages and tools while migration is underway.',type:'external',source:'DRef.my',url:'https://sites.google.com/view/drefmy2/',tags:['Mahligai','Bachok','local','Apps Script'],related:['dref-team']},
+ {id:'dref-team',section:'local',group:'dref',title:'Meet the DRef team',description:'View the current team on the original DRef website.',type:'external',source:'DRef.my',url:'https://sites.google.com/view/drefmy2/meet-the-team',tags:['team','about','contact'],related:['dref-original']}
 ];
 for(const category of album){
  entries.push({id:'album-'+category.id,section:'drugs',group:'chronic-album',title:category.title,description:'Browse drug classes in this medication category.',type:'album',path:'/album/'+category.id,albumCategory:category.id,source:'DRef.my',url:category.url,tags:[category.title,'medication','album'],related:['chronic-medication-album']});
  for(const drugClass of category.classes){
   const legacyMedicineTerms=entries.filter(e=>e.alias&&e.path==='/album/'+category.id+'/'+drugClass.id).flatMap(e=>[e.title,...e.tags]);
-  entries.push({id:'album-'+category.id+'-'+drugClass.id,section:'drugs',group:'chronic-album',title:drugClass.title,description:category.title+' · Medication album',type:'album',path:'/album/'+category.id+'/'+drugClass.id,albumCategory:category.id,albumClass:drugClass.id,source:'DRef.my',url:drugClass.url,tags:[category.title,'album',...legacyMedicineTerms,...(drugClass.products||[]).flatMap(p=>[p.medicine,p.brand])],related:['album-'+category.id,'fukkm']});
+  entries.push({id:'album-'+category.id+'-'+drugClass.id,section:'drugs',group:'chronic-album',title:drugClass.title,description:category.title+' · Medication album',type:'album',path:'/album/'+category.id+'/'+drugClass.id,albumCategory:category.id,albumClass:drugClass.id,source:'DRef.my',url:drugClass.url,tags:[category.title,'album',...legacyMedicineTerms,...(albumPhotos[category.id+'/'+drugClass.id]||drugClass.products||[]).flatMap(p=>[p.medicine,p.brand])],related:['album-'+category.id,'fukkm']});
  }
 }
+for(const tool of clinicalTools)entries.push({id:'clinical-'+tool.id,section:'tools',group:'calculators',title:tool.title,description:tool.description,type:'clinical',path:tool.path,source:'DRef',tags:[tool.title,'clinical','calculator','guide'],related:['district-formulary']});
 export const pathFor = item => item.path || `/${item.section}/${item.group}/${item.id}`;
 export const searchEntries = query => {const words=query.toLowerCase().trim().split(/\s+/).filter(Boolean);return entries.filter(e=>!e.alias&&words.every(w=>[e.title,e.description,e.source,...e.tags,sections.find(s=>s.id===e.section).title,groups.find(g=>g.id===e.group).title].join(' ').toLowerCase().includes(w)));};

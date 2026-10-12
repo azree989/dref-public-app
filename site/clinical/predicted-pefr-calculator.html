@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Josefin Sans for tagline -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <title>DRef PEFR Calculator</title>
+
+  <style> 
+  :root {
+    --muted: #6b7280;
+    --accent: #1976d2;
+    --surface: #f7fafc;
+    --ring: #e5e7eb;
+    --radius: 10px;
+  }
+
+  /* Global reset */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Tagline Header */
+  .app-header {
+    position: static;
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-family: "Josefin Sans", sans-serif;
+    color: var(--muted);
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: .03em;
+    margin-top: 24px;   /* adjust gap from top */
+    margin-bottom: 4px;
+    padding: 4px 12px;          /* side padding */
+    max-width: 90%;             /* prevents touching screen edges */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+    font-size: 1.6rem;
+  }
+
+  .card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  form label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+  }
+  .form-control { margin-bottom: 1rem; }
+  .form-control input,
+  .form-control select,
+  .form-control input[type="range"] {
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    font-size: 1rem;
+  }
+
+  .button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .button-group button {
+    padding: .75rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: #fff;
+    font-size: 1rem;
+  }
+  button.calculate { background: var(--accent); }
+  button.calculate:hover { background: #115293; }
+  button.reset { background: #e53935; }
+  button.reset:hover { background: #ab000d; }
+
+  .output {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 1.1rem;
+  }
+
+  /* Footer */
+  .app-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--ring);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    margin: 16px auto 12px;
+    max-width: 700px;
+    line-height: 1.4;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    .button-group { grid-template-columns: 1fr; }
+    .app-footer { font-size: .85rem; padding: 8px 10px; }
+    /* NEW: Extra breathing room for tagline on mobile */
+    .app-header { 
+      padding: 6px 16px;  /* increased side padding */
+      max-width: 94%;     /* prevents edge-to-edge text */
+    }
+  }
+</style>
+<meta name="dref-tool" content="predicted-pefr-calculator"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+
+  <!-- Tagline above main heading -->
+  <div class="app-header">
+    app crafted by our medical doctors, for better patient care
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h1>Calculate Predicted PEFR</h1>
+      <form onsubmit="return false;">
+        <div class="form-control">
+          <label for="sex">Sex:</label>
+          <select id="sex">
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+
+        <div class="form-control">
+          <label for="height_cm">Height (cm):</label>
+          <div id="heightDisplay" class="range-display">160 cm</div>
+          <input type="range" id="height_cm" min="135" max="185" step="1" value="160" oninput="updateHeight(this.value)">
+        </div>
+
+        <div class="form-control">
+          <label for="age">Age (years):</label>
+          <div id="ageDisplay" class="range-display">30 years</div>
+          <input type="range" id="age" min="10" max="74" step="1" value="30" oninput="updateAge(this.value)">
+        </div>
+
+        <div class="form-control">
+          <label for="actual_pefr">Actual PEFR (L/min):</label>
+          <input type="number" id="actual_pefr" placeholder="Enter actual PEFR">
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="calculate" onclick="calculatePEFR()">Calculate</button>
+          <button type="button" class="reset" onclick="resetForm()">Reset</button>
+        </div>
+      </form>
+
+      <div id="result" class="output" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+
+  <script>
+    function updateHeight(v){document.getElementById('heightDisplay').textContent=v+' cm';}
+    function updateAge(v){document.getElementById('ageDisplay').textContent=v+' years';}
+    function calculatePEFR(){
+      const sex=document.getElementById('sex').value;
+      const h=parseFloat(document.getElementById('height_cm').value);
+      const a=parseFloat(document.getElementById('age').value);
+      const actual=parseFloat(document.getElementById('actual_pefr').value);
+      if(isNaN(h)||isNaN(a)){show('Please enter valid values',true);return;}
+      const hin=h/2.54;
+      let p=sex==='M'?(9.8*hin)-(1.2*a)-72.1:(5*hin)-a+159;
+      let msg=`Predicted PEFR: ${p.toFixed(1)} L/min`;
+      if(!isNaN(actual)&&actual>0){msg+=`<br>Percent of Predicted: ${(actual/p*100).toFixed(1)}%`;}
+      show(msg,false);
+    }
+    function show(m,e){
+      const r=document.getElementById('result');
+      r.style.display='block';
+      r.style.borderColor=e?'#ff5252':'#ccc';
+      r.style.background=e?'#ffebee':'#f5f5f5';
+      r.innerHTML=m;
+    }
+    function resetForm(){
+      document.getElementById('sex').value='M';
+      document.getElementById('height_cm').value=160;
+      document.getElementById('age').value=30;
+      document.getElementById('actual_pefr').value='';
+      updateHeight(160);updateAge(30);
+      document.getElementById('result').style.display='none';
+      document.getElementById('result').innerHTML='';
+    }
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

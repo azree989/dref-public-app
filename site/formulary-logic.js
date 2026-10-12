@@ -1,4 +1,4 @@
-import Fuse from './vendor/fuse.mjs';
+import Fuse from './vendor/fuse.mjs?v=1.0';
 export const escapeHtml = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 export const fields=['genericName','brandName','dosage','indications','prescriberCategory','pictureUrl','lasaGeneric','tallManGeneric','lasaBrand'];

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Warfarin Dose Initiation Pathway Calculator — DRef</title>
+
+  <!-- Core SEO -->
+  <meta name="description" content="Warfarin initiation and early monitoring pathway: day 1–7 starting dose by sensitivity, day-8 INR-based adjustments, and recommended INR monitoring intervals." />
+  <meta name="keywords" content="warfarin initiation, warfarin dose calculator, INR monitoring, anticoagulation dosing, sensitive patient dosing, dose adjustment, Malaysia, DRef" />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://www.dref.my/tools/warfarin-initiation" />
+
+  <!-- Open Graph / Twitter (minimal) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DRef — Doctor’s Reference" />
+  <meta property="og:title" content="Warfarin Dose Initiation Pathway Calculator" />
+  <meta property="og:description" content="Start and adjust Warfarin: day-by-day dosing (sensitive vs non-sensitive), day-8 INR actions, and monitoring frequency." />
+  <meta property="og:url" content="https://www.dref.my/tools/warfarin-initiation" />
+  <meta property="og:locale" content="en_MY" />
+  <meta property="og:locale:alternate" content="ms_MY" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Warfarin Dose Initiation Pathway Calculator — DRef" />
+  <meta name="twitter:description" content="Day-by-day start, day-8 INR adjustment, and monitoring intervals." />
+
+  <!-- Schema.org (single, minimal) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"MedicalWebPage",
+    "name":"Warfarin Dose Initiation Pathway Calculator — DRef",
+    "url":"https://www.dref.my/tools/warfarin-initiation",
+    "description":"Warfarin initiation and monitoring pathway with day-8 INR-based dose adjustment and monitoring frequency guidance.",
+    "inLanguage":"en-MY",
+    "about":[
+      {"@type":"MedicalTherapy","name":"Warfarin therapy"},
+      {"@type":"MedicalEntity","name":"International Normalized Ratio (INR)"}
+    ],
+    "publisher":{
+      "@type":"Organization",
+      "name":"Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url":"https://www.dref.my",
+      "address":{
+        "@type":"PostalAddress",
+        "addressLocality":"Bachok",
+        "addressRegion":"Kelantan",
+        "addressCountry":"MY"
+      }
+    }
+  }
+  </script>
+
+  <!-- Shared header/footer font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <style>
+    :root{
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --radius:12px;
+      --blue:#1976d2;    /* PEFR blue */
+      --blue-d:#125aa0;
+      --red:#e53935;     /* PEFR red */
+      --red-d:#b71c1c;
+      --bg:#f4f4f9;
+      --text:#333;
+    }
+
+    /* Base */
+    body{ font-family: Arial, sans-serif; margin:0; padding:0; background:var(--bg); color:var(--text); }
+
+    /* Standard header (shared) */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin-top:16px;
+      margin-bottom:12px;
+      padding:4px 12px;
+      max-width:90%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* Card */
+    main{
+      max-width:800px;
+      margin:0 auto 24px;
+      background:#fff;
+      padding:24px;
+      border-radius:var(--radius);
+      box-shadow:0 2px 5px rgba(0,0,0,.08);
+    }
+
+    /* Title (match eGFR/PEFR) */
+    .card-title{
+      text-align:center;
+      color:var(--blue);
+      font-size:1.8rem;
+      font-weight:700;
+      margin:6px 0 14px;
+    }
+
+    h2{ font-size:1.125rem; margin:22px 0 10px; color:#214a48; border-bottom:1px solid #e5e7eb; padding-bottom:8px; }
+    label{ font-weight:bold; display:block; margin-top:10px; }
+
+    select, input[type="number"]{
+      width:100%; padding:10px; margin-top:6px;
+      border:1px solid #ddd; border-radius:8px; font-size:16px;
+    }
+
+    .btn-row{ display:flex; gap:12px; margin-top:12px; }
+    .btn{ padding:12px 16px; border:none; border-radius:8px; color:#fff; font-size:16px; font-weight:600; cursor:pointer; }
+    .btn-primary{ background:var(--blue); }
+    .btn-primary:hover{ background:var(--blue-d); }
+    .btn-danger{ background:var(--red); }
+    .btn-danger:hover{ background:var(--red-d); }
+    .btn-full{ width:100%; }
+
+    .output{
+      margin-top:14px; padding:14px; text-align:left;
+      font-size:16px; border-radius:8px;
+      background:#eef7ff; border:1px solid #cfe3ff;
+    }
+
+    .info-box{
+      background:#fff8e1; border:1px solid #ffe082;
+      padding:12px; border-radius:8px; font-size:15px; color:#4e342e;
+      margin-bottom:10px;
+    }
+    .info-box ul{ margin:6px 0 0 18px; }
+
+    .disclaimer{
+      text-align:center; font-size:.95rem; color:#555; line-height:1.5;
+      margin-top:14px;
+    }
+
+    /* Standard footer (shared) */
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 18px;
+      max-width:800px;
+      line-height:1.4;
+    }
+
+    @media (max-width:600px){
+      .app-header{ padding:6px 16px; max-width:94%; }
+      main{ padding:18px; }
+      .btn-row{ flex-direction:column; }
+    }
+  </style>
+<meta name="dref-tool" content="warfarin-dose-initiation-guide"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+
+  <!-- Standard header -->
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">Warfarin Dose Initiation Pathway</h1>
+
+    <!-- Sensitive Patient Criteria -->
+    <div class="info-box" aria-live="polite">
+      <strong>Criteria for “Sensitive” patients (tend to need lower initial doses):</strong>
+      <ul>
+        <li>Elderly or frail; debilitated, malnourished, or low body weight</li>
+        <li>Congestive heart failure or liver disease</li>
+        <li>On interacting medicines that increase sensitivity (e.g., amiodarone)</li>
+        <li>Other conditions known to enhance sensitivity to warfarin</li>
+      </ul>
+      <em>Use lower starting doses and monitor more closely.</em>
+    </div>
+
+    <!-- Step 1: Patient Type & Initial Dosing -->
+    <h2>Step 1 — Patient Type & Initial Dosing (Days 1–7)</h2>
+    <label for="patientType">Select patient type</label>
+    <select id="patientType" aria-label="Patient type">
+      <option value="non-sensitive">Non-Sensitive</option>
+      <option value="sensitive">Sensitive</option>
+    </select>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-full" onclick="showInitialDoses()">Show Recommended Initial Doses</button>
+    </div>
+    <div id="initialDoses" class="output" style="display:none;"></div>
+
+    <!-- Step 2: Day-8 INR-Based Adjustment -->
+    <h2>Step 2 — Day 8 INR-Based Dose Adjustment</h2>
+    <label for="inrValueDay8">Day 8 INR</label>
+    <input type="number" id="inrValueDay8" step="0.1" placeholder="e.g., 2.5" aria-label="INR on day 8">
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-full" onclick="calculateDoseAdjustment()">Calculate Dose Adjustment</button>
+    </div>
+    <div id="doseAdjustmentResult" class="output" style="display:none;"></div>
+
+    <!-- Step 3: Monitoring Frequency -->
+    <h2>Step 3 — INR Monitoring Frequency</h2>
+    <label for="monitoringScenario">Select scenario</label>
+    <select id="monitoringScenario" aria-label="Monitoring scenario">
+      <option value="initiation">Initiation of warfarin</option>
+      <option value="inr-target">INR has just reached target range</option>
+      <option value="inr-8-10-weeks">INR therapeutic for 8–10 consecutive weeks</option>
+      <option value="inr-slightly-out">INR slightly outside target (±0.2)</option>
+      <option value="inr-above-below">INR &gt; target range but &lt; 5</option>
+    </select>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-full" onclick="getMonitoringAdvice()">Get Monitoring Advice</button>
+    </div>
+    <div id="monitoringAdvice" class="output" style="display:none;"></div>
+
+  </main>
+<div class="disclaimer">
+      Reference: <em>Anticoagulant Quick Guide (1st Edition, 2023)</em> — Pharmaceutical Services Programme, Ministry of Health Malaysia.
+    </div>
+  <!-- Standard footer -->
+  <div class="app-footer">Any calculations must be rechecked and should not be used alone to guide patient care.</div>
+
+  <script>
+    // --------------------------
+    // Step 1 — Initial Doses
+    // --------------------------
+    // Non-Sensitive: Day 1 = 5 mg, Day 2 = 5 mg, Days 3–7 = 3 mg daily  (INR target 2.0–3.0)
+    // Sensitive:     Day 1 = 3 mg, Days 2–7 = 2 mg daily                (INR target 2.0–3.0)
+    function showInitialDoses() {
+      const type = document.getElementById("patientType").value;
+      const box = document.getElementById("initialDoses");
+
+      if (type === "non-sensitive") {
+        box.innerHTML = `
+          <strong>Non-Sensitive — Suggested start (Days 1–7):</strong>
+          <ul style="margin:6px 0 0 18px;">
+            <li>Day 1: 5 mg</li>
+            <li>Day 2: 5 mg</li>
+            <li>Days 3–7: 3 mg daily</li>
+          </ul>
+          <div style="margin-top:6px;"><em>Therapeutic INR target: 2.0–3.0</em></div>
+        `;
+      } else {
+        box.innerHTML = `
+          <strong>Sensitive — Suggested start (Days 1–7):</strong>
+          <ul style="margin:6px 0 0 18px;">
+            <li>Day 1: 3 mg</li>
+            <li>Days 2–7: 2 mg daily</li>
+          </ul>
+          <div style="margin-top:6px;"><em>Therapeutic INR target: 2.0–3.0</em></div>
+        `;
+      }
+      box.style.display = "block";
+    }
+
+    // -----------------------------------
+    // Step 2 — Day-8 INR Based Adjustment
+    // -----------------------------------
+    // <1.5       → Increase weekly dose by 10–15%; review in 7 days
+    // 1.5–1.9    → Maintain dose; review in 7–14 days
+    // 2.0–3.0    → Reduce weekly dose by 0.5–1 mg; review in 7–10 days
+    // >3.0       → Hold; restart at lower dose when INR back in range; review in 7 days
+    function calculateDoseAdjustment() {
+      const val = parseFloat(document.getElementById("inrValueDay8").value);
+      const box = document.getElementById("doseAdjustmentResult");
+
+      if (isNaN(val)) {
+        box.innerHTML = "Please enter a valid INR value.";
+        box.style.display = "block";
+        return;
+      }
+
+      let html = "";
+      if (val < 1.5) {
+        html = `
+          <strong>INR &lt; 1.5</strong>
+          <ul style="margin:6px 0 0 18px;">
+            <li>Increase total <em>weekly</em> dose by 10–15%.</li>
+            <li>Review INR in 7 days.</li>
+          </ul>`;
+      } else if (val >= 1.5 && val <= 1.9) {
+        html = `
+          <strong>INR 1.5–1.9</strong>
+          <ul style="margin:6px 0 0 18px;">
+            <li>Maintain current dose.</li>
+            <li>Review INR in 7–14 days.</li>
+          </ul>`;
+      } else if (val >= 2.0 && val <= 3.0) {
+        html = `
+          <strong>INR 2.0–3.0</strong>
+          <ul style="margin:6px 0 0 18px;">
+            <li>Reduce the <em>weekly</em> dose by 0.5–1 mg.</li>
+            <li>Review INR in 7–10 days.</li>
+          </ul>`;
+      } else { // > 3.0
+        html = `
+          <strong>INR &gt; 3.0</strong>
+          <ul style="margin:6px 0 0 18px;">
+            <li>Hold warfarin; restart at a lower dose when INR returns to target.</li>
+            <li>Review INR in 7 days.</li>
+          </ul>`;
+      }
+
+      box.innerHTML = html;
+      box.style.display = "block";
+    }
+
+    // -------------------------------
+    // Step 3 — Monitoring Frequency
+    // -------------------------------
+    // Initiation: every 3–7 days; if stable, extend stepwise
+    // Just reached target: recheck in 2 weeks ×2, then every 4 weeks if stable
+    // Therapeutic 8–10 wks: 6–12 weeks if good adherence/education
+    // Slightly off (±0.2): recheck 1–2 weeks; adjust if persists
+    // > target but < 5: hold dose, adjust, recheck in 1 week
+    function getMonitoringAdvice() {
+      const scenario = document.getElementById("monitoringScenario").value;
+      const box = document.getElementById("monitoringAdvice");
+
+      let html = "";
+      switch (scenario) {
+        case "initiation":
+          html = `
+            <strong>Initiation of warfarin</strong>
+            <ul style="margin:6px 0 0 18px;">
+              <li>Monitor INR every 3–7 days.</li>
+              <li>If stable, extend to weekly → biweekly → monthly.</li>
+            </ul>`;
+          break;
+        case "inr-target":
+          html = `
+            <strong>INR has just reached target range</strong>
+            <ul style="margin:6px 0 0 18px;">
+              <li>Recheck in 2 weeks, repeat twice.</li>
+              <li>If stable, every 4 weeks thereafter.</li>
+            </ul>`;
+          break;
+        case "inr-8-10-weeks":
+          html = `
+            <strong>INR therapeutic for 8–10 consecutive weeks</strong>
+            <ul style="margin:6px 0 0 18px;">
+              <li>If good adherence and education: extend to every 6–12 weeks.</li>
+              <li>Increase frequency with illness, medication change, or instability.</li>
+            </ul>`;
+          break;
+        case "inr-slightly-out":
+          html = `
+            <strong>INR slightly outside target (±0.2)</strong>
+            <ul style="margin:6px 0 0 18px;">
+              <li>Recheck in 1–2 weeks.</li>
+              <li>If persistently off-target, adjust dose and recheck in 1 week.</li>
+            </ul>`;
+          break;
+        case "inr-above-below":
+          html = `
+            <strong>INR &gt; target range but &lt; 5</strong>
+            <ul style="margin:6px 0 0 18px;">
+              <li>Hold warfarin dose.</li>
+              <li>Adjust subsequent dose.</li>
+              <li>Recheck INR in 1 week.</li>
+            </ul>`;
+          break;
+        default:
+          html = "Please select a valid scenario.";
+      }
+
+      box.innerHTML = html;
+      box.style.display = "block";
+    }
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

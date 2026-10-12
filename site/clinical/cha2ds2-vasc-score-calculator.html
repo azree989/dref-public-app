@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>CHA₂DS₂-VASc Score Calculator — AF Stroke Risk (DRef)</title>
+  <meta name="description" content="Fast, clinician-friendly CHA₂DS₂-VASc score calculator for atrial fibrillation. Computes stroke risk and shows guideline-style anticoagulation thresholds for men and women." />
+  <meta name="keywords" content="CHA2DS2-VASc, AF stroke risk, atrial fibrillation calculator, anticoagulation, stroke prevention, DRef" />
+  <meta name="robots" content="index,follow" />
+  <meta name="language" content="en-MY" />
+  <link rel="canonical" href="https://www.dref.my/tools/cha2ds2-vasc" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DRef — Doctor’s Reference" />
+  <meta property="og:title" content="CHA₂DS₂-VASc Score Calculator — AF Stroke Risk" />
+  <meta property="og:description" content="Compute CHA₂DS₂-VASc quickly and view anticoagulation recommendations by sex." />
+  <meta property="og:url" content="https://www.dref.my/tools/cha2ds2-vasc" />
+  <meta property="og:locale" content="en_MY" />
+  <meta property="og:locale:alternate" content="ms_MY" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="CHA₂DS₂-VASc Score Calculator — AF Stroke Risk" />
+  <meta name="twitter:description" content="Clinician-friendly AF stroke risk calculator with thresholds for men and women." />
+
+  <!-- Structured Data (MedicalWebPage + MedicalRiskEstimator) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "CHA₂DS₂-VASc Score Calculator — AF Stroke Risk",
+    "description": "Calculate CHA₂DS₂-VASc, estimate stroke risk and view anticoagulation thresholds by sex.",
+    "inLanguage": "en-MY",
+    "about": [
+      { "@type": "MedicalCondition", "name": "Atrial fibrillation" },
+      { "@type": "MedicalCondition", "name": "Stroke" }
+    ],
+    "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url": "https://www.dref.my",
+      "address": { "@type": "PostalAddress", "addressLocality": "Bachok", "addressRegion": "Kelantan", "addressCountry": "MY" }
+    },
+    "mainEntity": {
+      "@type": "MedicalRiskEstimator",
+      "name": "CHA₂DS₂-VASc",
+      "estimatesRiskOf": { "@type": "MedicalCondition", "name": "Ischaemic stroke" },
+      "guideline": { "@type": "MedicalGuideline", "name": "CHA₂DS₂-VASc–based anticoagulation thresholds" },
+      "url": "https://www.dref.my/tools/cha2ds2-vasc"
+    },
+    "url": "https://www.dref.my/tools/cha2ds2-vasc"
+  }
+  </script>
+
+  <!-- Header/Footer font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <style>
+    :root{
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --radius:12px;
+      --blue:#1976d2;   /* PEFR blue */
+      --blue-d:#125aa0;
+      --red:#e53935;    /* PEFR red */
+      --red-d:#b71c1c;
+    }
+
+    /* Base */
+    body{ font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f9; color:#333; }
+
+    /* Standard header (same as other apps) */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin-top:16px;
+      margin-bottom:12px;
+      padding:4px 12px;
+      max-width:90%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* Card */
+    main{
+      max-width:800px;
+      margin:20px auto 24px;
+      background:#fff;
+      padding:24px;
+      border-radius:var(--radius);
+      box-shadow:0 2px 5px rgba(0,0,0,.08);
+    }
+
+    /* Title style aligned with PEFR/eGFR */
+    .card-title{
+      text-align:center;
+      color:var(--blue);
+      font-size:1.8rem;
+      font-weight:700;
+      margin:6px 0 14px;
+    }
+
+    h2{ font-size:1.125rem; margin:18px 0 10px; color:#214a48; }
+    .lead{ max-width:820px; margin:0 auto 18px; padding:0 8px; color:#555; text-align:center; }
+
+    .form-check{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .form-check input[type="checkbox"], .form-check input[type="radio"]{ width:20px; height:20px; }
+
+    .button-container{ display:flex; gap:12px; margin-top:16px; }
+    .btn{ padding:12px 16px; border:none; border-radius:8px; color:#fff; font-size:16px; font-weight:600; cursor:pointer; flex:1; }
+    .btn-primary{ background:var(--blue); }
+    .btn-primary:hover{ background:var(--blue-d); }
+    .btn-danger{ background:var(--red); }
+    .btn-danger:hover{ background:var(--red-d); }
+
+    .output{ margin-top:20px; padding:15px; text-align:center; font-size:18px; font-weight:bold; border-radius:8px; display:none; }
+    .low-risk{ background:#e8f5e9; border:1px solid #c8e6c9; color:#1b5e20; }
+    .high-risk{ background:#ffebee; border:1px solid #e57373; color:#b71c1c; }
+
+    .info{ margin-top:20px; padding:15px; background:#f9f9f9; border:1px solid #ddd; border-radius:8px; font-size:14px; color:#555; }
+    .links{ text-align:center; margin-top:8px; font-size:14px; }
+    .sr-only{ position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
+
+    /* Standard footer (same as other apps) */
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 18px;
+      max-width:800px;
+      line-height:1.4;
+    }
+
+    @media (max-width:600px){
+      .app-header{ padding:6px 16px; max-width:94%; }
+      main{ padding:18px; }
+      .app-footer{ font-size:.85rem; padding:8px 10px; }
+    }
+  </style>
+<meta name="dref-tool" content="cha2ds2-vasc-score-calculator"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+
+  <!-- Standard header -->
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">CHA₂DS₂-VASc Score Calculator</h1>
+
+    <h2 id="inputs">Inputs</h2>
+    <form id="scoreForm" aria-labelledby="inputs">
+      <div class="form-check">
+        <input type="checkbox" id="congestiveHeartFailure" aria-label="Congestive heart failure" />
+        <label for="congestiveHeartFailure">Congestive Heart Failure (1 point)</label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="hypertension" aria-label="Hypertension" />
+        <label for="hypertension">Hypertension (1 point)</label>
+      </div>
+
+      <fieldset style="border:none; padding:0; margin:0 0 6px;">
+        <legend class="sr-only">Age category</legend>
+        <div class="form-check" role="radiogroup" aria-label="Age">
+          <label for="below65" style="margin-right:10px;"><input type="radio" name="age" id="below65" value="0" /> Below 65 years (0)</label>
+          <label for="age65to74" style="margin-right:10px;"><input type="radio" name="age" id="age65to74" value="1" /> 65–74 years (1)</label>
+          <label for="above75"><input type="radio" name="age" id="above75" value="2" /> ≥75 years (2)</label>
+        </div>
+      </fieldset>
+
+      <div class="form-check">
+        <input type="checkbox" id="diabetesMellitus" aria-label="Diabetes Mellitus" />
+        <label for="diabetesMellitus">Diabetes Mellitus (1 point)</label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="stroke" aria-label="Previous stroke, TIA, or thromboembolism" />
+        <label for="stroke">Previous stroke/TIA/thromboembolism (2 points)</label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="vascularDisease" aria-label="Vascular Disease" />
+        <label for="vascularDisease">Vascular Disease (1 point)</label>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="femaleSex" aria-label="Female sex" />
+        <label for="femaleSex">Female Sex (1 point)</label>
+      </div>
+
+      <div class="button-container">
+        <button type="button" class="btn btn-primary" onclick="calculateScore()" aria-label="Calculate CHA2DS2-VASc score">Calculate Score</button>
+        <button type="button" class="btn btn-danger" onclick="resetForm()" aria-label="Reset form">Reset</button>
+      </div>
+    </form>
+
+    <h2 id="resultHeading" style="margin-top:20px;">Result</h2>
+    <div id="result" class="output" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="info" aria-labelledby="resultHeading">
+      <strong>Interpretation (guide):</strong>
+      <ul>
+        <li><strong>Men: 0</strong> or <strong>Women: 1</strong> → Low stroke risk.</li>
+        <li><strong>Men: 1</strong> or <strong>Women: 2+</strong> → Moderate risk — consider anticoagulation.</li>
+        <li><strong>Men: ≥2</strong> or <strong>Women: ≥3</strong> → High risk — anticoagulation recommended.</li>
+      </ul>
+      <p class="links">Also see: <a href="https://www.dref.my/clinical-tools_1/has-bled-score">HAS-BLED (bleeding risk)</a></p>
+    </div>
+  </main>
+
+  <!-- Standard footer -->
+  <div class="app-footer">Any calculations must be rechecked and should not be used alone to guide patient care.</div>
+
+  <script>
+    function calculateScore() {
+      let score = 0;
+
+      if (document.getElementById('congestiveHeartFailure').checked) score += 1;
+      if (document.getElementById('hypertension').checked) score += 1;
+
+      // Age radio group
+      const ageRadios = document.querySelectorAll("input[name='age']");
+      let ageSelected = false;
+      ageRadios.forEach(r => { if (r.checked) { score += parseInt(r.value, 10); ageSelected = true; } });
+      if (!ageSelected) {
+        const res = document.getElementById('result');
+        res.className = "output high-risk";
+        res.textContent = "Please select an age category.";
+        res.style.display = "block";
+        return;
+      }
+
+      if (document.getElementById('diabetesMellitus').checked) score += 1;
+      if (document.getElementById('stroke').checked) score += 2;
+      if (document.getElementById('vascularDisease').checked) score += 1;
+      if (document.getElementById('femaleSex').checked) score += 1;
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = `CHA₂DS₂-VASc Score: ${score}`;
+      resultDiv.style.display = "block";
+
+      // Visual emphasis: <=1 (often low) vs >1
+      resultDiv.className = (score <= 1) ? "output low-risk" : "output high-risk";
+    }
+
+    function resetForm() {
+      document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => { input.checked = false; });
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "none";
+      resultDiv.textContent = "";
+      resultDiv.className = "output";
+    }
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

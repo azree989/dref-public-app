@@ -1,0 +1,392 @@
+<meta name="dref-tool" content="phenytoin-tdm-dose-calculator"><link rel="stylesheet" href="../tool-theme.css?v=1.0"><!-- Include Google Font: Poppins -->
+
+
+<style>
+  /* On screens ≤ 600px, make each card full-width */
+  @media (max-width: 600px) {
+    .phenytoin-card {
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+  }
+</style>
+
+<div style="font-family: 'Poppins', sans-serif; max-width: 900px; margin:auto; color:#333; padding:10px;">
+  <h2 style="text-align:center; color:#1558b0; margin-bottom:20px;">
+    Phenytoin TDM & Dose Calculator
+  </h2>
+
+  <!-- ==============================
+       CARD #1: Loading & Maintenance Dose
+       ============================== -->
+  <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px;">
+    <div class="phenytoin-card" style="
+      width:48%;
+      background:#f9fbff;
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      padding:20px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+      box-sizing:border-box;
+    ">
+      <h3 style="margin-top:0; margin-bottom:15px; color:#1558b0;">Dose Calculation</h3>
+
+      <!-- Patient Category (sets Vd, Vmax, Km) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Patient Category</label>
+      <select id="ptCategory" onchange="/* no extra action needed here */" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;">
+        <option value="neonate">Neonate</option>
+        <option value="infant">Infant</option>
+        <option value="pediatric">Pediatric</option>
+        <option value="adult" selected>Adult</option>
+      </select>
+
+      <!-- Dosage Form (sets F & S) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Dosage Form</label>
+      <select id="dosageForm" onchange="/* no extra action needed here */" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;">
+        <option value="IV">IV</option>
+        <option value="Capsule" selected>Capsule</option>
+        <option value="Suspension">Suspension/Chew Tab</option>
+      </select>
+
+      <!-- Body Weight -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Body Weight (kg)</label>
+      <input type="number" id="bw" placeholder="e.g. 70" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Desired Cp for LD/MD -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Desired Cp (mg/L)</label>
+      <input type="number" id="desiredCp" value="15" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Measured Cp (optional - for incremental LD) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Measured Cp (mg/L) (if any)</label>
+      <input type="number" id="measuredCp" placeholder="e.g. 8.17" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:20px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Buttons -->
+      <div style="display:flex; gap:10px;">
+        <button onclick="calculatePhenytoinDoses()" style="
+          flex:1;
+          padding:12px;
+          background:#1a73e8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#1558b0';" onmouseout="this.style.background='#1a73e8';">
+          Calculate
+        </button>
+        <button onclick="resetPhenytoinDoses()" style="
+          flex:1;
+          padding:12px;
+          background:#94a3b8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#64748b';" onmouseout="this.style.background='#94a3b8';">
+          Reset
+        </button>
+      </div>
+
+      <!-- Output: Loading Dose & Maintenance Dose -->
+      <div id="doseResults" style="margin-top:20px; display:none;">
+        <div style="margin-bottom:12px;"><strong>Loading Dose (LD):</strong> <span id="LDout">—</span> mg</div>
+        <div style="margin-bottom:12px;"><strong>Incremental LD:</strong> <span id="iLDout">—</span> mg</div>
+        <div style="margin-bottom:12px;"><strong>Maintenance Dose (MD, total mg/day):</strong> <span id="MDout">—</span> mg/day</div>
+      </div>
+    </div>
+
+    <!-- ==============================
+         CARD #2: TDM Adjustment & Evaluation
+         ============================== -->
+    <div class="phenytoin-card" style="
+      width:48%;
+      background:#ffffff;
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      padding:20px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.03);
+      box-sizing:border-box;
+    ">
+      <h3 style="margin-top:0; margin-bottom:15px; color:#1558b0;">TDM & Result Evaluation</h3>
+
+      <!-- Current Daily Dose -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Current Total Daily Dose (mg/day)</label>
+      <input type="number" id="currentDailyDose" placeholder="e.g. 300" step="1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <!-- Re-use Patient Category from CARD #1 -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">(Re-use Patient Category)</label>
+      <select id="ptCategory2" onchange="syncCategory2()" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;">
+        <option value="neonate">Neonate</option>
+        <option value="infant">Infant</option>
+        <option value="pediatric">Pediatric</option>
+        <option value="adult" selected>Adult</option>
+      </select>
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">(Re-use Dosage Form)</label>
+      <select id="dosageForm2" onchange="syncForm2()" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;">
+        <option value="IV">IV</option>
+        <option value="Capsule" selected>Capsule</option>
+        <option value="Suspension">Suspension/Chew Tab</option>
+      </select>
+
+      <!-- Measured Concentration -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Measured Cp (mg/L)</label>
+      <input type="number" id="cssMeasured2" placeholder="e.g. 12" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Body Weight (kg)</label>
+      <input type="number" id="bw2" placeholder="e.g. 70" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <!-- Buttons -->
+      <div style="display:flex; gap:10px;">
+        <button onclick="tdmPhenytoinCalc()" style="
+          flex:1;
+          padding:12px;
+          background:#1a73e8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#1558b0';" onmouseout="this.style.background='#1a73e8';">
+          Compute CL & Cp
+        </button>
+        <button onclick="tdmPhenytoinReset()" style="
+          flex:1;
+          padding:12px;
+          background:#94a3b8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#64748b';" onmouseout="this.style.background='#94a3b8';">
+          Reset
+        </button>
+      </div>
+
+      <!-- Output: Clearance, Predicted Cp, & Evaluation -->
+      <div id="tdmResults" style="margin-top:20px; display:none;">
+        <div style="margin-bottom:12px;"><strong>Calculated CL (mg/kg/day):</strong> <span id="CLmgkg">—</span></div>
+        <div style="margin-bottom:12px;"><strong>Predicted Cp (mg/L):</strong> <span id="predCp">—</span></div>
+        <div id="evalBox" style="
+          background:#f1f5f9;
+          border:1px solid #cbd5e1;
+          border-radius:6px;
+          padding:12px;
+          color:#334155;
+          font-size:0.95rem;
+          line-height:1.4;
+          margin-top:12px;
+        ">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // PK parameters exactly from Malaysian Handbook (2nd Ed.)
+  const pkParams = {
+    neonate: {
+      Vd: 1.1,   // L/kg (average 1.0–1.2)
+      Vmax: 10,  // mg/kg/day
+      Km: 6     // mg/L
+    },
+    infant: {
+      Vd: 0.75,  // L/kg (0.7–0.8)
+      Vmax: 12,  // mg/kg/day
+      Km: 6     // mg/L
+    },
+    pediatric: {
+      Vd: 0.7,   // L/kg
+      Vmax: 12,  // mg/kg/day
+      Km: 6     // mg/L
+    },
+    adult: {
+      Vd: 0.675, // L/kg (0.65–0.7)
+      Vmax: 8.45,// mg/kg/day
+      Km: 6.72   // mg/L
+    }
+  };
+
+  // Bioavailability (F) = 1; Salt factor (S) from Malaysian table
+  const formParams = {
+    IV:         { F: 1,   S: 0.92 }, 
+    Capsule:    { F: 1,   S: 0.92 }, 
+    Suspension: { F: 1,   S: 1    }  // “Susp/Chew” = S 1
+  };
+
+  // Sync CARD #2 dropdowns with CARD #1
+  function syncCategory2() {
+    document.getElementById("ptCategory2").value = document.getElementById("ptCategory").value;
+  }
+  function syncForm2() {
+    document.getElementById("dosageForm2").value = document.getElementById("dosageForm").value;
+  }
+
+  // ===== CARD #1: Calculate LD, iLD, MD =====
+  function calculatePhenytoinDoses() {
+    const category   = document.getElementById("ptCategory").value;
+    const form       = document.getElementById("dosageForm").value;
+    const BW         = parseFloat(document.getElementById("bw").value);
+    const Cp_desired = parseFloat(document.getElementById("desiredCp").value);
+    const Cp_meas    = parseFloat(document.getElementById("measuredCp").value);
+
+    if (isNaN(BW) || BW <= 0 || isNaN(Cp_desired) || Cp_desired <= 0) {
+      alert("Please enter valid body weight and desired concentration.");
+      return;
+    }
+
+    // Pull PK & form parameters
+    const { Vd, Vmax, Km } = pkParams[category];
+    const { F, S }         = formParams[form];
+
+    // Loading Dose (LD) = (Cp_desired * Vd * BW) / (S * F)
+    const LD = (Cp_desired * Vd * BW) / (S * F);
+
+    // Incremental LD, only if measured Cp provided
+    let iLD = 0;
+    if (!isNaN(Cp_meas) && Cp_meas > 0) {
+      iLD = ((Cp_desired - Cp_meas) * Vd * BW) / (S * F);
+      if (iLD < 0) { iLD = 0; } 
+    }
+
+    // Maintenance Dose (MD) via Michaelis–Menten:
+    // MD (mg/day) = [Vmax * BW * Cp_desired] / [ (S*F) * (Km + Cp_desired) ]
+    const MD = (Vmax * BW * Cp_desired) / ((S * F) * (Km + Cp_desired));
+
+    // Display
+    document.getElementById("LDout").textContent  = LD.toFixed(1);
+    document.getElementById("iLDout").textContent = iLD.toFixed(1);
+    document.getElementById("MDout").textContent  = MD.toFixed(1);
+    document.getElementById("doseResults").style.display = "block";
+  }
+
+  function resetPhenytoinDoses() {
+    document.getElementById("ptCategory").value  = "adult";
+    document.getElementById("dosageForm").value  = "Capsule";
+    document.getElementById("bw").value          = "";
+    document.getElementById("desiredCp").value   = 15;
+    document.getElementById("measuredCp").value  = "";
+    document.getElementById("LDout").textContent  = "—";
+    document.getElementById("iLDout").textContent = "—";
+    document.getElementById("MDout").textContent  = "—";
+    document.getElementById("doseResults").style.display = "none";
+  }
+
+  // ===== CARD #2: TDM Adjustment & Evaluation =====
+  function tdmPhenytoinCalc() {
+    const currentDose = parseFloat(document.getElementById("currentDailyDose").value);
+    const category    = document.getElementById("ptCategory2").value;
+    const form        = document.getElementById("dosageForm2").value;
+    const Cp_meas2    = parseFloat(document.getElementById("cssMeasured2").value);
+    const BW2         = parseFloat(document.getElementById("bw2").value);
+
+    if (isNaN(currentDose) || currentDose <= 0 ||
+        isNaN(Cp_meas2)   || Cp_meas2   <= 0 ||
+        isNaN(BW2)        || BW2        <= 0) {
+      alert("Please enter valid values for dose, measured concentration, and weight.");
+      return;
+    }
+
+    // Pull PK & form parameters
+    const { Vd: Vd2, Vmax: Vmax2, Km: Km2 } = pkParams[category];
+    const { F: F2, S: S2 }                  = formParams[form];
+
+    // Clearance (mg/kg/day) = Vmax / (Km + Cp_meas)
+    const CL_mgkg_day = Vmax2 / (Km2 + Cp_meas2);
+
+    // Predicted Cp from current daily dose using MM rearrangement:
+    // Cp_pred = [Km * (S*F) * Dose] / [Vmax*BW - (S*F)*Dose]
+    const numerator   = Km2 * (S2 * F2) * currentDose;
+    const denominator = (Vmax2 * BW2) - (S2 * F2 * currentDose);
+    let Cp_pred = NaN;
+    if (denominator > 0) {
+      Cp_pred = numerator / denominator;
+    }
+
+    // Display CL & predicted Cp
+    document.getElementById("CLmgkg").textContent = CL_mgkg_day.toFixed(3);
+    document.getElementById("predCp").textContent = isNaN(Cp_pred) ? "N/A" : Cp_pred.toFixed(2);
+
+    // Evaluate measured Cp and give recommendation
+    let evalHTML = "";
+    if (Cp_meas2 < 10) {
+      evalHTML = `
+        <strong>Subtherapeutic (< 10 mg/L)</strong><br>
+        <em>Contributing Factors:</em><br>
+        &bull; Non-adherence/compliance issues<br>
+        &bull; Sampling at wrong time (peak vs. trough)<br>
+        &bull; Underdosing<br>
+        &bull; Drug–drug induction (↑ metabolism)<br>
+        &bull; Hypoalbuminemia (↑ free fraction)<br><br>
+        <em>Recommendation:</em><br>
+        If adherence and sampling time are okay, <strong>increase dose</strong> 
+        (consider incremental LD if needed) and re-sample. If patient’s clinical response 
+        is fine despite low level, you may continue but monitor closely.
+      `;
+    }
+    else if (Cp_meas2 <= 20) {
+      evalHTML = `
+        <strong>Within Therapeutic Range (10 – 20 mg/L)</strong><br><br>
+        <em>Recommendation:</em><br>
+        If clinical response is good (e.g., seizures controlled), 
+        <strong>continue current dose</strong> and re-check per protocol. 
+        If response is poor, consider <strong>gradual dose increase</strong> 
+        (do not exceed max recommended daily dose) and re-sample in 
+        5 – 7 days.
+      `;
+    }
+    else {
+      evalHTML = `
+        <strong>Potentially Toxic (> 20 mg/L)</strong><br>
+        <em>Contributing Factors:</em><br>
+        &bull; Overdosage<br>
+        &bull; Reduced clearance (hepatic dysfunction)<br>
+        &bull; Drug–drug inhibition (↓ metabolism)<br>
+        &bull; Hypoalbuminemia (↑ free fraction)<br><br>
+        <em>Toxic Effects may include:</em><br>
+        Nystagmus, ataxia, confusion, sedation, hypotension, coma<br><br>
+        <em>Recommendation:</em><br>
+        <strong>Withhold phenytoin</strong>, monitor blood levels, 
+        manage toxicity signs. Once level falls (e.g., < 15 mg/L), 
+        resume at a <strong>lower maintenance dose</strong> or switch therapy. 
+        Re-sample frequently until stable.
+      `;
+    }
+
+    document.getElementById("evalBox").innerHTML = evalHTML.trim();
+    document.getElementById("tdmResults").style.display = "block";
+  }
+
+  function tdmPhenytoinReset() {
+    document.getElementById("currentDailyDose").value = "";
+    document.getElementById("ptCategory2").value    = "adult";
+    document.getElementById("dosageForm2").value    = "Capsule";
+    document.getElementById("cssMeasured2").value   = "";
+    document.getElementById("bw2").value            = "";
+    document.getElementById("CLmgkg").textContent   = "—";
+    document.getElementById("predCp").textContent   = "—";
+    document.getElementById("evalBox").innerHTML    = "";
+    document.getElementById("tdmResults").style.display = "none";
+  }
+
+  // On page load, hide result sections
+  window.onload = function() {
+    document.getElementById("doseResults").style.display = "none";
+    document.getElementById("tdmResults").style.display  = "none";
+  };
+</script>
+<script src="../tool-adapter.js?v=1.0"></script>

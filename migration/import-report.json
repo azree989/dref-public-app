@@ -1,0 +1,733 @@
+{
+  "sourceArchive": "takeout-20261012T085310Z-1-001.zip",
+  "importedAt": "2026-10-12",
+  "album": [
+    {
+      "class": "antiasthmatic-copd/short-acting-beta-agonists-saba",
+      "exportPage": "Short Acting Beta Agonists SABA.html",
+      "products": 1,
+      "photographs": 2
+    },
+    {
+      "class": "antiasthmatic-copd/short-acting-muscarinic-agent-sama",
+      "exportPage": "Short Acting Muscarinic Agent SAMA.html",
+      "products": 1,
+      "photographs": 2
+    },
+    {
+      "class": "antiasthmatic-copd/inhaled-corticosteroid-ics",
+      "exportPage": "Inhaled Corticosteroid ICS.html",
+      "products": 3,
+      "photographs": 6
+    },
+    {
+      "class": "antiasthmatic-copd/ics-long-acting-beta-agonists-laba",
+      "exportPage": "ICS Long Acting Beta Agonists LABA.html",
+      "products": 6,
+      "photographs": 18
+    },
+    {
+      "class": "antiasthmatic-copd/long-acting-muscarinic-agents-lama",
+      "exportPage": "Long Acting Muscarinic Agents LAMA.html",
+      "products": 2,
+      "photographs": 8
+    },
+    {
+      "class": "antiasthmatic-copd/labalama",
+      "exportPage": "LABALAMA.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "antiasthmatic-copd/leukotriene-receptor-antagonists-ltra",
+      "exportPage": "Leukotriene Receptor Antagonists LTRA.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "antiasthmatic-copd/theophylline",
+      "exportPage": "Theophylline.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antidiabetics/biguanides",
+      "exportPage": "Biguanides.html",
+      "products": 3,
+      "photographs": 12
+    },
+    {
+      "class": "antidiabetics/sulphonylureas",
+      "exportPage": "Sulphonylureas.html",
+      "products": 3,
+      "photographs": 12
+    },
+    {
+      "class": "antidiabetics/dpp-4-inhibitors",
+      "exportPage": "DPP-4 inhibitors.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "antidiabetics/sglt2-inhibitors",
+      "exportPage": "SGLT2 inhibitors.html",
+      "products": 2,
+      "photographs": 10
+    },
+    {
+      "class": "antidiabetics/prandial-insulin",
+      "exportPage": "Prandial Insulin.html",
+      "products": 2,
+      "photographs": 7
+    },
+    {
+      "class": "antidiabetics/basal-insulin",
+      "exportPage": "Basal Insulin.html",
+      "products": 3,
+      "photographs": 10
+    },
+    {
+      "class": "antidiabetics/premixed-insulin",
+      "exportPage": "Premixed Insulin.html",
+      "products": 3,
+      "photographs": 10
+    },
+    {
+      "class": "antihypertensives/ccb-dihydropyridines",
+      "exportPage": "CCB_Dihydropyridines.html",
+      "products": 7,
+      "photographs": 29
+    },
+    {
+      "class": "antihypertensives/ccb-non-dihydropyridines",
+      "exportPage": "CCB_non_dihydropyridines.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antihypertensives/ß-blocker",
+      "exportPage": "-blocker.html",
+      "products": 6,
+      "photographs": 20
+    },
+    {
+      "class": "antihypertensives/hctz",
+      "exportPage": "HCTZ.html",
+      "products": 2,
+      "photographs": 8
+    },
+    {
+      "class": "antihypertensives/acei",
+      "exportPage": "ACEI.html",
+      "products": 6,
+      "photographs": 20
+    },
+    {
+      "class": "antihypertensives/arb",
+      "exportPage": "ARB_.html",
+      "products": 8,
+      "photographs": 36
+    },
+    {
+      "class": "antihypertensives/acei-diuretics",
+      "exportPage": "ACEI  diuretics.html",
+      "products": 2,
+      "photographs": 7
+    },
+    {
+      "class": "antihypertensives/acei-diuretics-ccb",
+      "exportPage": "ACEI  diuretics  CCB.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antihypertensives/ccb-arb",
+      "exportPage": "CCB  ARB.html",
+      "products": 2,
+      "photographs": 10
+    },
+    {
+      "class": "antihypertensives/methyldopa",
+      "exportPage": "Methyldopa.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "antihypertensives/prazosin",
+      "exportPage": "Prazosin.html",
+      "products": 3,
+      "photographs": 12
+    },
+    {
+      "class": "antihyperlipidemia/statins",
+      "exportPage": "Statins.html",
+      "products": 8,
+      "photographs": 33
+    },
+    {
+      "class": "antihyperlipidemia/fibric-acid-derivatives",
+      "exportPage": "Fibric acid derivatives_.html",
+      "products": 2,
+      "photographs": 10
+    },
+    {
+      "class": "antiplatelets/aspirin",
+      "exportPage": "Aspirin.html",
+      "products": 3,
+      "photographs": 12
+    },
+    {
+      "class": "antiplatelets/clopidogrel",
+      "exportPage": "Clopidogrel_.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "antiplatelets/ticlopidine",
+      "exportPage": "Ticlopidine_.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "anticoagulants/warfarin",
+      "exportPage": "Warfarin.html",
+      "products": 8,
+      "photographs": 24
+    },
+    {
+      "class": "antiepileptics-aeds/carbamazepine-200mg-tablet",
+      "exportPage": "Carbamazepine 200mg Tablet_.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antiepileptics-aeds/gabapentin-300mg-capsule",
+      "exportPage": "Gabapentin 300mg Capsule.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "antiepileptics-aeds/phenobarbitone-30mg-tablet",
+      "exportPage": "Phenobarbitone 30mg Tablet.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antiepileptics-aeds/phenytoin-100mg-capsule",
+      "exportPage": "Phenytoin 100mg Capsule.html",
+      "products": 1,
+      "photographs": 2
+    },
+    {
+      "class": "antiepileptics-aeds/sodium-valproate-200mg-tablet",
+      "exportPage": "Sodium Valproate 200mg Tablet.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antidepressants/tricyclic-antidepressants",
+      "exportPage": "Tricyclic antidepressants.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "antidepressants/ssris",
+      "exportPage": " SSRIs.html",
+      "products": 2,
+      "photographs": 8
+    },
+    {
+      "class": "antipsychotics/first-generation",
+      "exportPage": "First-generation.html",
+      "products": 3,
+      "photographs": 10
+    },
+    {
+      "class": "antipsychotics/second-generation",
+      "exportPage": "Second-generation.html",
+      "products": 4,
+      "photographs": 16
+    },
+    {
+      "class": "antithyroids-and-thyroid-products/carbimazole",
+      "exportPage": "Carbimazole_.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antithyroids-and-thyroid-products/levothyroxine",
+      "exportPage": "Levothyroxine_.html",
+      "products": 3,
+      "photographs": 12
+    },
+    {
+      "class": "antithyroids-and-thyroid-products/ptu",
+      "exportPage": "PTU.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "antigouts/allopurinol",
+      "exportPage": "Allopurinol_.html",
+      "products": 2,
+      "photographs": 7
+    },
+    {
+      "class": "antigouts/colchicine",
+      "exportPage": "Colchicine.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "iron-supplements/oral-iron",
+      "exportPage": "Oral Iron.html",
+      "products": 5,
+      "photographs": 20
+    },
+    {
+      "class": "diuretics/frusemide",
+      "exportPage": "Frusemide_.html",
+      "products": 2,
+      "photographs": 6
+    },
+    {
+      "class": "diuretics/spironolactone",
+      "exportPage": "Spironolactone_.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "antiretrovirals/efv",
+      "exportPage": "EFV.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "antiretrovirals/tdf-ftc",
+      "exportPage": "TDF  FTC.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "antiretrovirals/abc-3tc",
+      "exportPage": "ABC  3TC.html",
+      "products": 1,
+      "photographs": 5
+    },
+    {
+      "class": "anti-tuberculosis/ethambutol",
+      "exportPage": "Ethambutol.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "anti-tuberculosis/isoniazid",
+      "exportPage": "Isoniazid_.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "anti-tuberculosis/rifampicin",
+      "exportPage": "Rifampicin_.html",
+      "products": 2,
+      "photographs": 4
+    },
+    {
+      "class": "anti-tuberculosis/pyrazinamide",
+      "exportPage": "Pyrazinamide.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "anti-tuberculosis/rifampicin-150mg-isoniazid-75mg-tablet",
+      "exportPage": "Rifampicin 150mg Isoniazid 75mg Tablet.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "anti-tuberculosis/rifampicin-150mg-isoniazid-75mg-pyrazinamide-400mg-ethambutol-275mg-tabl",
+      "exportPage": "Rifampicin 150mg Isoniazid 75mg Pyrazinamide 400mg.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "nicotine-replacement-therapy/nicotine-gum",
+      "exportPage": "Nicotine Gum.html",
+      "products": 2,
+      "photographs": 8
+    },
+    {
+      "class": "nicotine-replacement-therapy/nicotine-patch",
+      "exportPage": "Nicotine Patch.html",
+      "products": 2,
+      "photographs": 6
+    },
+    {
+      "class": "others/benzhexol-anti-parkinson-agent",
+      "exportPage": "Benzhexol Anti-parkinson agent.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "others/budesonide-nasal-spray",
+      "exportPage": "Budesonide Nasal Spray.html",
+      "products": 1,
+      "photographs": 2
+    },
+    {
+      "class": "others/levodopa",
+      "exportPage": "Levodopa_.html",
+      "products": 2,
+      "photographs": 4
+    },
+    {
+      "class": "others/proton-pump-inhibitors-ppis",
+      "exportPage": "Proton Pump Inhibitors PPIs.html",
+      "products": 2,
+      "photographs": 9
+    },
+    {
+      "class": "others/terazosin",
+      "exportPage": "Terazosin.html",
+      "products": 2,
+      "photographs": 10
+    },
+    {
+      "class": "others/trimetazidine",
+      "exportPage": "Trimetazidine.html",
+      "products": 2,
+      "photographs": 8
+    },
+    {
+      "class": "others/gtn-sublingual",
+      "exportPage": "GTN sublingual.html",
+      "products": 1,
+      "photographs": 2
+    },
+    {
+      "class": "others/isosorbide-dinitrate",
+      "exportPage": "Isosorbide Dinitrate_.html",
+      "products": 1,
+      "photographs": 3
+    },
+    {
+      "class": "others/digoxin",
+      "exportPage": "Digoxin.html",
+      "products": 1,
+      "photographs": 4
+    },
+    {
+      "class": "others/pizotifen",
+      "exportPage": "Pizotifen.html",
+      "products": 1,
+      "photographs": 4
+    }
+  ],
+  "tools": [
+    {
+      "id": "cha2ds2-vasc-score-calculator",
+      "exportPage": "CHA2DS2-VASc Score Calculator.html",
+      "scriptHashes": [
+        "4ab41de21259c4a6b08acb29fb0b0db26cf8d47ec2267d9a2d6e23374db70080",
+        "fc57d031849b2e6aef520ab09ce4a693dafae4693cb24b54434c09d091ea2e3a"
+      ],
+      "originalHash": "d6ffb6b274b2db6e2873f504bc46e0d235f0cc714df903c2a0070b163f246201"
+    },
+    {
+      "id": "has-bled-score-calculator",
+      "exportPage": "HAS-BLED Score Calculator.html",
+      "scriptHashes": [
+        "460313c31d99a4bc7ea0f1ff70315fdbabc8cda972f89f2a001f18bb21d483a4",
+        "7a4f63cd67f0bd219a300e0e1c6f77cbb33833b27c909b5efa5c9aa8685d6f31"
+      ],
+      "originalHash": "427000a87ae80eb874e13b7bb911d603d682db7347640b0c7930eb7a835cb13b"
+    },
+    {
+      "id": "egfr-calculator-ckd-epi-2021",
+      "exportPage": "eGFR Calculator CKD-EPI 2021.html",
+      "scriptHashes": [
+        "486b7309443efe0c95fac20a96fb583f5256eb3ed9e35c8eeea9fdaae68393e5"
+      ],
+      "originalHash": "56c518545d8be23e4c6573b72d6707f95cbfb1c2cee11d5ba99e33ebc1051388"
+    },
+    {
+      "id": "warfarin-dose-initiation-guide",
+      "exportPage": "Warfarin Dose Initiation Guide.html",
+      "scriptHashes": [
+        "5cfdede1aadab61ff7e6aa7f0b2f6924a5af8c6979f86dcae4604e2f0071779c",
+        "01cc1543000aac495458ebd480c7a4eba8c8ddbae7622b83cae70c3c3cd2a57c"
+      ],
+      "originalHash": "bb4e3f7c0b33cef0990bdce3b873de0ca0a428aad924b5c5ced1ce88a3f2f9d2"
+    },
+    {
+      "id": "warfarin-dose-adjustment-guide",
+      "exportPage": "Warfarin Dose Adjustment Guide.html",
+      "scriptHashes": [
+        "97b606c347269305b6243f195413e97169d7dcaa698f21a72cdf3fb10d95de85"
+      ],
+      "originalHash": "74e2da5d47d3f53679cecf2e1324305e7fcc4653f95f28766c75e2b42d3aebe7"
+    },
+    {
+      "id": "risk-calculator-for-dm-fasting-in-ramadan",
+      "exportPage": "Risk Calculator for DM Fasting in Ramadan.html",
+      "scriptHashes": [
+        "87cb1d48c1fd7a7cb8278b2a5020d6dba77dd5e39793fc3b179814a2f6fe99d0"
+      ],
+      "originalHash": "7fcfc97dc6796d4cbcf073426d6acbcd3740af373c3422bf9896172d350eeeb5"
+    },
+    {
+      "id": "dengue-iv-fluid-regime-calculator",
+      "exportPage": "Dengue IV Fluid Regime Calculator.html",
+      "scriptHashes": [
+        "ebc95cdcb03de8d4a1dba3dce68778c7058e7fbcfefecab8d39f7a53b3aa9d92"
+      ],
+      "originalHash": "3cb52db389b7046827457e6251603f991d585acdb9f5601ba2002dbcda9d54e2"
+    },
+    {
+      "id": "predicted-pefr-calculator",
+      "exportPage": "Predicted PEFR Calculator_.html",
+      "scriptHashes": [
+        "e2d63629a89d53f537b18ccd6d7739d48e6d263152fad72f8e721ce556cb184b"
+      ],
+      "originalHash": "09539aab8dfa5ba1e7747427a5f37eb606ef513a5dbd5345d41846e0b3a4e3c0"
+    },
+    {
+      "id": "asthma-visit-tool-adultsadolescents",
+      "exportPage": "Asthma Visit Tool AdultsAdolescents.html",
+      "scriptHashes": [
+        "dbdd631ccaa5fc5ba527efdb054f96c92530da644c558113ca1e3f7905b83e71",
+        "e6b4ef4617d3fdd54f727a68e3266de5d199e09b652552d8e5f402f03660f8eb"
+      ],
+      "originalHash": "67bbefbdfb683d7168ea3dfd0f770eb7d3cf997e8caa48a7feab79ad472f5dc1"
+    },
+    {
+      "id": "nnj-assessment-guide-babies-35-weeks-gestation",
+      "exportPage": "NNJ Assessment Guide Babies 35 Weeks Gestation.html",
+      "scriptHashes": [
+        "3094f53e25d4a14726508fbf8833f32a117b4cda341dd53b7099bf1f0e81035c",
+        "4ec5bf2ddeabd85283fee255b0e207915396d24aa693c1c96895210f48558fbc"
+      ],
+      "originalHash": "e99c643f33a2cb7db363539012935b97f73d6cd9cdb1fa718c83e207e0392e1d"
+    },
+    {
+      "id": "jkn-kelantan-congenital-hypothyroidism-guide",
+      "exportPage": "JKN Kelantan Congenital Hypothyroidism Guide.html",
+      "scriptHashes": [
+        "5226c1658f7f8196ca59eafb4c7f0ffbe8ed6573a0d11489a87c486c5b41e1cc",
+        "ed5f537a7436a06d00d26044b8922c83d21c30b1ce4a25ac808f682f67fcf41f"
+      ],
+      "originalHash": "286e0331108cabaa694bc9966665b7ff62c2113c1e692b0aa10f1e95be9dc869"
+    },
+    {
+      "id": "strep-pharyngitis-score-calculator",
+      "exportPage": "Strep Pharyngitis Score Calculator.html",
+      "scriptHashes": [
+        "f0dd86fb070330e7ec43460b649fa43ab9f537d2c65849604e075ff3d0134d76"
+      ],
+      "originalHash": "6dce758da87dbbd37ffd6e8e72fc3082fec1523bdc6373df0b16fca6a9077348"
+    },
+    {
+      "id": "venofer-infusion-dose-calculator",
+      "exportPage": "Venofer Infusion Dose Calculator.html",
+      "scriptHashes": [
+        "1e796991a374014fc07c22ed9af8f35b4e65b71650dfdc7a370f7129dea4700b"
+      ],
+      "originalHash": "2b0504cf008e2ce820f1ebf49e3627e4e408a8156e2b19ff62602391feddaa7d"
+    },
+    {
+      "id": "saringan-minda-sihat-screening-tool",
+      "exportPage": "Saringan Minda Sihat Screening Tool.html",
+      "scriptHashes": [
+        "98ca4a7e504b3375677eb24027ca3fa0cc80a16b2dc590d12650bd74b706ba79"
+      ],
+      "originalHash": "2bde31515d80c4cb9dbdc6464bdcb68828a2e2bbcb31e1865afed9922118cd2f"
+    },
+    {
+      "id": "dsm-5-mdd-diagnosis-tool",
+      "exportPage": "DSM-5 MDD Diagnosis Tool.html",
+      "scriptHashes": [
+        "ab3bd2ab546d9e5f4220e054bb89f78701274c1dfa9d34220580d81e330f214b"
+      ],
+      "originalHash": "dfbcd1d88db1bda1ac953bcfb1847cac67405575aa5460fc75bc09fd8901ef60"
+    },
+    {
+      "id": "threshold-assessment-grid-tag-tool",
+      "exportPage": "Threshold Assessment Grid TAG Tool.html",
+      "scriptHashes": [
+        "7a50a5f9a7c15a4f9203fa141558cd1ac147c6354690ac11a5373909ca9fd7ec"
+      ],
+      "originalHash": "a62a01928347353d1275fe8b2949cbdea2eaa2f67a60f353648b7bad26b6dacc"
+    },
+    {
+      "id": "m-chat-screening-tool",
+      "exportPage": "M-CHAT Screening Tool.html",
+      "scriptHashes": [
+        "dbb21d9930848627750704abd0b58a0c7a96cae84fc3152e63759392c19487a1"
+      ],
+      "originalHash": "71a24f559ac81926baded9e0c0d12d64bb1cea8f9792627f9617e63c9ef48bf4"
+    },
+    {
+      "id": "who-mec-wheel-tool",
+      "exportPage": "WHO MEC Wheel Tool.html",
+      "scriptHashes": [
+        "4a8c7dc158075628562864cedc630abdded8cbc323a767965ed7da52144b5a33"
+      ],
+      "originalHash": "47ad3390d0749c1c946eda3a588eaaa49a0a7fffc280b12bb533824384ccfbd2"
+    },
+    {
+      "id": "valproic-acid-dose-initiation-calculator",
+      "exportPage": "Valproic Acid Dose Initiation Calculator.html",
+      "scriptHashes": [
+        "414e9e852a549ea9e6c9fb10a23b0e8c3bcd9269d120258ce2d6236a57d8b67d"
+      ],
+      "originalHash": "27e8561c6293eaece64b679cc67a423bc477f6b958969593cc958123be4b5a4c"
+    },
+    {
+      "id": "valproic-acid-dose-adjustment-calculator",
+      "exportPage": "Valproic Acid Dose Adjustment Calculator.html",
+      "scriptHashes": [
+        "78942e84eac93c8a90e93590452c5acfbcacf59e9d17577681efda5e569dfaee"
+      ],
+      "originalHash": "a1ecd4e54b841613750b55672529bef515987bca0d7ae80c8729594777ece63c"
+    },
+    {
+      "id": "carbamazepine-dose-initiation-calculator",
+      "exportPage": "Carbamazepine Dose Initiation Calculator.html",
+      "scriptHashes": [
+        "252ef765bdc9742e084c9507a88428eafcb78189c726f49e2ee2c0eb450dcf6a"
+      ],
+      "originalHash": "6d3d00ab22a3142af1a930f6305c6b192d99573448e314d85f4d2cde721c5a7b"
+    },
+    {
+      "id": "carbamazepine-dose-adjustment-calculator",
+      "exportPage": "Carbamazepine Dose Adjustment Calculator.html",
+      "scriptHashes": [
+        "e74f22df18e45a38746064c10ec9324c686e70b4c3bd40f947c25dadbbaad3ad"
+      ],
+      "originalHash": "930e14028b83a6ff3ca03da3c0111c8456426f1ee94247a5aac7870580bb8075"
+    },
+    {
+      "id": "phenytoin-tdm-dose-calculator",
+      "exportPage": "Phenytoin TDM  Dose Calculator.html",
+      "scriptHashes": [
+        "a910da193ded951c38a124b7dd72e601096635ee2218d3632f429be2e4a43b23"
+      ],
+      "originalHash": "0f5ad6cddad1f28fc4778129e864d96fc1a687e942f21f087ea338a8355a27ca"
+    },
+    {
+      "id": "radiological-guide-for-primary-healthcare-doctors",
+      "exportPage": "Radiological Guide for Primary Healthcare Doctors.html",
+      "scriptHashes": [
+        "0fe7635e7bc68106f7a7583e0b1a75600424ee67da95746c7c2598a2a5aae017"
+      ],
+      "originalHash": "7d9212802d18e78ea7493e518685adde00b867b9be34c49259d54291201202d9"
+    },
+    {
+      "id": "children-developmental-milestones-tool",
+      "exportPage": "Children Developmental Milestones Tool.html",
+      "scriptHashes": [
+        "669dff16e6c53efc464ef7f15faeb725ef8122ce3e33e970f33933d9883abde3"
+      ],
+      "originalHash": "c726820d7b257b1ffea6331b6a2592e704084abed1a201856f5716074cb8116b"
+    },
+    {
+      "id": "cobb-angle-measurement-tool-scoliosis",
+      "exportPage": "Cobb Angle Measurement Tool Scoliosis.html",
+      "scriptHashes": [
+        "f38222fbf2c005c8174aceb12809e733abe1e3a9c7065d66312d26d0101ca30d"
+      ],
+      "originalHash": "91464b6e1d492d44d1a8737a33cf34b986c272fc655ebe53433c645076af3654"
+    },
+    {
+      "id": "peadiatric-encounter-quick-guide",
+      "exportPage": "Peadiatric Encounter Quick Guide.html",
+      "scriptHashes": [
+        "0b0b8b6d68aad15d2e91af49f89eb7dd0f1229eb2b957ac7abde9da4c1da47a5"
+      ],
+      "originalHash": "60bced2aa83ff126b9b9614dc9080372672b71fe9c41e3d1dfa8fbeb11647c8a"
+    },
+    {
+      "id": "ripasa-score-calculator",
+      "exportPage": "RIPASA Score Calculator.html",
+      "scriptHashes": [
+        "45a768d47864a601d83abdc2f367774029a8f535aa05d5fd339194743b9906ac"
+      ],
+      "originalHash": "f2155b87c8054f7893bcca00d4e36bcabcc9cc3c640b7bf679d20a31de5163bb"
+    },
+    {
+      "id": "who-fetal-growth-chart-tool",
+      "exportPage": "WHO Fetal Growth Chart Tool.html",
+      "scriptHashes": [
+        "17320f986d2868623276934bada052c7ffe7c2c72a37715c90c6acf5fcd49e3a"
+      ],
+      "originalHash": "848236e35a341f95408689f7371139ce1bb51eddc51a3cea4f67f9107006e244"
+    },
+    {
+      "id": "fib-4-score",
+      "exportPage": "FIB-4 Score.html",
+      "scriptHashes": [
+        "3f6207174b96846ceeff293c61f7532211c30ff10453867147e9cd3a407f0954",
+        "080bdfd3a8b6075b8da537f0d5d121fab9ae7a9683993d959c5e610acdf94905"
+      ],
+      "originalHash": "2baff9e8a58e3ecfedaa9d5cec9e3a12b51bb102ca23edf6531487adb6ac2f9e"
+    },
+    {
+      "id": "soal-selidik-pesakit-dm",
+      "exportPage": "Soal Selidik Pesakit DM_.html",
+      "scriptHashes": [
+        "07830e1bfdad4ce8ecdbe644492ba7f002326d8bb24ca61f10a4bf8a9e1cc908",
+        "1be937fc77d91ac13bcf5eb697602f6da8d71f217afa627ed523b85846d2eac9"
+      ],
+      "originalHash": "e45bffcef5dc3df10bededec695b12ebf342a601fe2cc986868dc6709b7e115b"
+    },
+    {
+      "id": "cvd-risk-tool-non-diabeticsnon-cvd",
+      "exportPage": "CVD Risk Tool non-diabeticsnon-CVD.html",
+      "scriptHashes": [
+        "765951bc43e6781cb926cd12962ac882682577954f4af08dbcc9096b8f3384f0",
+        "5487923dbf5350aef10742fd32e51cf7d9208a254081ef7dd84876cd857576f1"
+      ],
+      "originalHash": "90e7ebf64df028cd181a2d76bc029fa1eda6b470d4a370ad371edd422dea60f4"
+    },
+    {
+      "id": "cvd-risk-tool-diabeticscvd-patient",
+      "exportPage": "CVD Risk Tool diabeticsCVD patient.html",
+      "scriptHashes": [
+        "4fac2d88c40ed758a077946f01cabfae4e33a42750dbee6b3972d908f8540b74",
+        "f8c256c901258cc8d462dbf710964bd43088ebfb5a0e96618aa2003c6dac0746"
+      ],
+      "originalHash": "7a4a3db826ba11522fe806dd4f3b81c1e10969f05094c259439491aecb42201e"
+    },
+    {
+      "id": "saringan-minda-sihat-screening-tool-kk-mahligai",
+      "exportPage": "Saringan Minda Sihat Screening Tool KK Mahligai.html",
+      "scriptHashes": [
+        "7773a4b5865bada9142491b56d524ade5f8519e8ba3f9abddee005ed76b78a80"
+      ],
+      "originalHash": "15c6bb21c30b92144f964c42952dfea92588849801bcff1dc260d3f25fd7ed52"
+    }
+  ],
+  "warnings": [
+    {
+      "page": "ACEI.html",
+      "medicine": "Enalapril 5mg Tablet",
+      "brand": "Invoril-5, Ranbaxy",
+      "reason": "No photographs present under this source heading."
+    },
+    {
+      "page": "Rifampicin_.html",
+      "medicine": "Rifampicin 300mg Capsule",
+      "brand": "Rifampicin 300mg Capsule, Royce",
+      "reason": "No photographs present under this source heading."
+    }
+  ],
+  "sourceReview": [
+    {
+      "page": "Proton Pump Inhibitors PPIs.html",
+      "medicine": "Pantoprazole 40mg Tablet",
+      "reason": "The source brand label says Vencid 20, while the packaging photograph shows 40 mg. Check this source label."
+    }
+  ],
+  "uniquePhotographs": 526,
+  "photoBytes": 116796388
+}

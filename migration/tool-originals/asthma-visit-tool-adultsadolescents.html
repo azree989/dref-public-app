@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <!-- === SEO: Meta, Canonical, Social Cards, Structured Data === -->
+  <meta name="description" content="DRef (Doctor’s Reference) Asthma Visit Tool for adults/adolescents: symptom control, risk factors, and GINA 2024 treatment tracks (Track 1 ICS-formoterol, Track 2 ICS/SABA).">
+  <meta name="keywords" content="Doctor’s Reference, DRef, asthma visit tool, GINA 2024, symptom control, risk factors, ICS-formoterol, ICS-LABA, SABA, Track 1, Track 2, adult, adolescent, Malaysia, Klinik Kesihatan">
+  <meta name="author" content="DRef — Doctor’s Reference">
+  <meta name="robots" content="index,follow">
+  <meta name="language" content="en-MY">
+
+  <!-- Optional but handy for embeds: open links outside iframe -->
+  <base target="_top">
+
+  <!-- Canonical (set to the exact public URL of THIS tool) -->
+  <link rel="canonical" href="https://www.dref.my/tools/asthma-visit-tool">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DRef — Doctor’s Reference">
+  <meta property="og:title" content="Asthma Visit Tool — DRef">
+  <meta property="og:description" content="Structured asthma assessment: control status, risk factors, and GINA 2024 treatment steps (Track 1/Track 2).">
+  <meta property="og:url" content="https://www.dref.my/tools/asthma-visit-tool">
+  <meta property="og:locale" content="en_MY">
+  <meta property="og:locale:alternate" content="ms_MY">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Asthma Visit Tool — DRef">
+  <meta name="twitter:description" content="Fast, structured asthma review with GINA 2024 tracks and step up/down planning.">
+
+  <!-- Structured Data (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "Asthma Visit Tool — DRef",
+    "description": "Interactive tool for adult/adolescent asthma visits: symptom control assessment, exacerbation risk, and GINA 2024 Track 1/Track 2 treatment steps with step up/down planning.",
+    "about": [
+      { "@type": "MedicalCondition", "name": "Asthma" },
+      { "@type": "MedicalGuideline", "name": "GINA 2024" }
+    ],
+    "audience": { "@type": "MedicalAudience", "audienceType": "Clinician" },
+    "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+    "inLanguage": "en-MY",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+      "url": "https://www.dref.my",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bachok",
+        "addressRegion": "Kelantan",
+        "addressCountry": "MY"
+      }
+    },
+    "url": "https://www.dref.my/tools/asthma-visit-tool"
+  }
+  </script>
+
+  <title>Asthma Visit Tool</title>
+  <style>
+  :root{
+  --ink:#2d3748;
+  --muted:#6b7280;
+  --accent:#005485;
+  --surface:#f7fafc;
+  --ring:#e5e7eb;
+  --radius:10px;
+  --buffer-top: 0;        /* no artificial top buffer */
+  --buffer-bottom: 96px;  /* keep bottom breathing room */
+}
+
+/* ===== Base ===== */
+html, body { height:100%; }
+body{
+  margin:0;
+  padding-top:0;
+  color:var(--ink);
+  font-family:Arial, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.app-wrap{
+  max-width:800px;
+  margin:0 auto;
+  padding:20px 20px 20px;   /* one source of truth */
+}
+
+/* ===== Header (plain, non-floating) ===== */
+.app-header.tagline{
+  position:static;
+  background:none;
+  border:none;
+  box-shadow:none;
+  font-family:"Josefin Sans", sans-serif;  /* set font here only */
+  font-weight:400;
+  letter-spacing:.03em;
+  font-size:1rem;           /* tidy default size */
+  color:var(--muted);
+  text-align:center;
+  margin:8px 0 16px;        /* tight top/bottom spacing */
+  padding:4px 0;
+}
+
+/* optional dot separator support (only if you use it) */
+.app-header .sep{ margin:0 .5ch; opacity:.6; }
+
+/* ===== Footer ===== */
+.app-footer{
+  position:sticky; bottom:0; z-index:10;
+  background:var(--surface);
+  border:1px solid var(--ring);
+  border-radius:var(--radius);
+  padding:10px 12px;
+  text-align:center;
+  font-size:.9rem; line-height:1.3;
+  color:var(--muted);
+  box-shadow:0 1px 2px rgba(0,0,0,.05);
+  user-select:none;
+  margin:16px 0 12px;
+}
+
+/* ===== Buffers ===== */
+.scroll-buffer-top{ height: calc(var(--buffer-top) + env(safe-area-inset-top,0px)); }
+.scroll-buffer-bottom{ height: calc(var(--buffer-bottom) + env(safe-area-inset-bottom,0px)); }
+
+/* ===== Your app styles ===== */
+h1, h2{ color:var(--accent); margin-bottom:5px; }
+.section{ display:none; margin-bottom:30px; }
+.visible{ display:block; }
+.button-container{ margin-top:20px; }
+button{
+  padding:10px 15px; margin:5px;
+  cursor:pointer; border:none; color:#fff;
+  background-color:var(--accent); border-radius:4px;
+}
+button:hover{ background-color:#0072a8; }
+.checklist label{ display:block; margin:5px 0; }
+.info-box{
+  background-color:#f0f8fa;
+  border-left:5px solid var(--accent);
+  padding:10px; margin:15px 0;
+}
+.hidden{ display:none; }
+.footer-note{ font-size:.9em; margin-top:24px; color:#666; }
+.status-box{ margin-top:10px; font-weight:bold; }
+.treatment-track{
+  background:#fff; border:1px solid #ccc;
+  border-radius:4px; padding:10px; margin-top:10px;
+}
+.treatment-track h3{ margin-top:0; color:var(--accent); font-size:16px; margin-bottom:5px; }
+.treatment-track ul{ margin:0 0 5px 20px; padding:0; }
+.treatment-track .note{ font-size:.9em; color:#555; margin-top:5px; }
+
+/* ===== Small screens ===== */
+@media (max-width:480px){
+  .app-footer{ font-size:.85rem; padding:8px 10px; }
+  .app-header.tagline{ font-size:.95rem; padding:6px 0; } /* slightly smaller on phones */
+}
+</style>
+</head>
+<body>
+
+  <!-- invisible top buffer -->
+  <div class="scroll-buffer-top" aria-hidden="true"></div>
+
+  <div class="app-wrap">
+    <!-- NEW standard header -->
+    <div class="app-header tagline" role="banner" aria-label="App header">
+  app crafted by our medical doctors, for better patient care
+</div>
+    <!-- Your original content starts here -->
+    <h1>Asthma Visit Tool (Adults/Adolescents)</h1>
+    <p><em></em></p>
+
+    <!-- SECTION 1: Symptom Control Assessment -->
+    <div id="section1" class="section visible">
+      <h2>Section: Symptom Control Assessment</h2>
+      <p>In the past 4 weeks, has the patient had any of the following? Tick all that apply.</p>
+      <div class="checklist">
+        <label><input type="checkbox" id="check1" /> Daytime symptoms more than twice/week</label>
+        <label><input type="checkbox" id="check2" /> Any night waking due to asthma</label>
+        <label><input type="checkbox" id="check3" /> SABA reliever needed more than twice/week</label>
+        <label><input type="checkbox" id="check4" /> Any activity limitation due to asthma</label>
+      </div>
+      <button onclick="calculateControlStatus()">Check Control Status</button>
+      <div id="statusResult" class="status-box"></div>
+
+      <div class="button-container">
+        <button onclick="goToSection('section2')">Next &raquo;</button>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div id="section2" class="section">
+      <h2>Section: Assess Risk Factors</h2>
+      <p>Select any risk factors that apply to this patient.</p>
+
+      <div class="info-box">
+        <h3>B1: Risk Factors for Exacerbations</h3>
+        <div class="checklist">
+          <label><input type="checkbox" /> Over-use of SABA (&ge;3 x 200-dose canisters/year)</label>
+          <label><input type="checkbox" /> Inadequate ICS (poor adherence or technique)</label>
+          <label><input type="checkbox" /> Comorbidities (e.g., GERD, rhinosinusitis, obesity)</label>
+          <label><input type="checkbox" /> Smoking or vaping exposure</label>
+          <label><input type="checkbox" /> Exposure to allergens (if sensitized)</label>
+          <label><input type="checkbox" /> Prior severe exacerbation / ICU admission</label>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>B2: Risk Factors for Persistent Airflow Limitation</h3>
+        <div class="checklist">
+          <label><input type="checkbox" /> History of severe exacerbations or lack of ICS</label>
+          <label><input type="checkbox" /> Exposure to tobacco smoke or noxious chemicals</label>
+          <label><input type="checkbox" /> Low initial FEV<sub>1</sub></label>
+          <label><input type="checkbox" /> High eosinophil levels in blood or sputum</label>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>B3: Risk Factors for Side Effects of Medication</h3>
+        <div class="checklist">
+          <label><input type="checkbox" /> Frequent OCS or long-term high-dose ICS</label>
+          <label><input type="checkbox" /> Poor inhaler technique with potent ICS</label>
+        </div>
+      </div>
+
+      <div class="button-container">
+        <button onclick="goToSection('section1')">&laquo; Back</button>
+        <button onclick="goToSection('section3')">Next &raquo;</button>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div id="section3" class="section">
+      <h2>Section: Poor Control Despite Treatment</h2>
+      <p id="poorControlNote"></p>
+      <p>If the patient's symptom control status was <em>uncontrolled</em> or <em>partly controlled</em>, address the following:</p>
+      <div class="info-box">
+        <div class="checklist">
+          <label><input type="checkbox" /> Confirm inhaler technique (observe patient using inhaler)</label>
+          <label><input type="checkbox" /> Check and address adherence (missed doses)</label>
+          <label><input type="checkbox" /> Confirm the diagnosis of asthma</label>
+          <label><input type="checkbox" /> Reassess comorbidities (GERD, rhinitis, obesity, OSA etc.)</label>
+          <label><input type="checkbox" /> Address for risk factors/inducers (smoking, beta-blockers, NSAIDs)</label>
+          <label><input type="checkbox" /> Consider domestic and occupational allergen exposure/testing if relevant</label>
+          <label><input type="checkbox" /> Consider 3-6 months step-up to the next treatment level or alternative present level </label>
+          <label><input type="checkbox" /> Consider referral earlier if very severe, doubts about diagnosis or suspected occupational asthma</label>
+        </div>
+      </div>
+      <div class="button-container">
+        <button onclick="goToSection('section2')">&laquo; Back</button>
+        <button onclick="goToSection('section4')">Next &raquo;</button>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div id="section4" class="section">
+      <h2>Section: Treatment Steps</h2>
+      <p>Select <strong>Track 1</strong> or <strong>Track 2</strong> to see recommended steps, then set the patient's current step and whether to step <em>up</em> or <em>down</em> if needed.</p>
+
+      <label for="trackSelect"><strong>Choose GINA Track:</strong></label>
+      <select id="trackSelect" onchange="toggleTracks()">
+        <option value="none">-- Select a Track --</option>
+        <option value="track1">Track 1 (ICS-formoterol as both controller and reliever)</option>
+        <option value="track2">Track 2 (Alternative: ICS + SABA or ICS-LABA + SABA)</option>
+      </select>
+
+      <div id="track1Box" class="treatment-track" style="display:none;">
+        <h3>Track 1: Preferred Controller and Reliever</h3>
+        <ul>
+          <li><strong>Steps 1–2:</strong> As-needed only low-dose ICS-formoterol</li>
+          <li><strong>Step 3:</strong> Low-dose maintenance ICS-formoterol</li>
+          <li><strong>Step 4:</strong> Medium-dose ICS-formoterol</li>
+          <li><strong>Step 5:</strong> Add-on LAMA or refer for phenotype assessment</li>
+        </ul>
+        <div class="note">Reliever: as-needed low-dose ICS-formoterol</div>
+      </div>
+
+      <div id="track2Box" class="treatment-track" style="display:none;">
+        <h3>Track 2: Alternative Controller and Reliever</h3>
+        <ul>
+          <li><strong>Step 1:</strong> Take ICS whenever SABA taken</li>
+          <li><strong>Step 2:</strong> Low-dose maintenance ICS + as-needed SABA</li>
+          <li><strong>Step 3:</strong> Low-dose maintenance ICS-LABA</li>
+          <li><strong>Step 4:</strong> Medium/high-dose ICS-LABA</li>
+          <li><strong>Step 5:</strong> Add-on LAMA or refer for phenotype assessment</li>
+        </ul>
+        <div class="note">Reliever: as-needed ICS-SABA, or as-needed SABA</div>
+      </div>
+
+      <div class="info-box">
+        <label for="currentStep"><strong>Current Step:</strong></label>
+        <select id="currentStep">
+          <option value="step1">Step 1</option>
+          <option value="step2">Step 2</option>
+          <option value="step3">Step 3</option>
+          <option value="step4">Step 4</option>
+          <option value="step5">Step 5</option>
+        </select>
+        <p style="margin-top:10px;">Plan for today's visit:</p>
+        <label><input type="radio" name="stepChange" value="maintain" /> Maintain current step</label><br>
+        <label><input type="radio" name="stepChange" value="up" /> Step up (partly/not controlled)</label><br>
+        <label><input type="radio" name="stepChange" value="down" /> Step down (well controlled &ge;3 months)</label>
+      </div>
+
+      <div class="button-container">
+        <button onclick="goToSection('section3')">&laquo; Back</button>
+        <button onclick="goToSection('section5')">Next &raquo;</button>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div id="section5" class="section">
+      <h2>Section: Patient Counselling &amp; Education</h2>
+      <div class="info-box">
+        <p><strong>Key topics to discuss and document:</strong></p>
+        <ul>
+          <li>Managing identified risk factors (e.g., smoking, allergens)</li>
+          <li>Adherence to treatment and correct inhaler technique</li>
+          <li>Non-pharmacological strategies (e.g., regular physical activity)</li>
+          <li>Providing a written Asthma Action Plan (Green-Yellow-Red zones)</li>
+          <li>Ensuring follow-up frequency and ongoing monitoring</li>
+        </ul>
+      </div>
+
+      <div class="button-container">
+        <button onclick="goToSection('section4')">&laquo; Back</button>
+        <button onclick="finish()">Finish</button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <em>Reference: Summary Guide Asthma Management and Prevention 2024</em>
+    </div>
+
+    <!-- NEW standard footer -->
+    <div class="app-footer" role="contentinfo" aria-label="Medical disclaimer">
+      Any calculations must be rechecked and should not be used alone to guide patient care.
+    </div>
+  </div>
+
+  <!-- invisible bottom buffer -->
+  <div class="scroll-buffer-bottom" aria-hidden="true"></div>
+
+  <script>
+    function goToSection(sectionId) {
+      var sections = document.getElementsByClassName('section');
+      for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('visible');
+      }
+      document.getElementById(sectionId).classList.add('visible');
+      window.scrollTo(0, 0);
+    }
+
+    function calculateControlStatus() {
+      let checks = 0;
+      if (document.getElementById('check1').checked) checks++;
+      if (document.getElementById('check2').checked) checks++;
+      if (document.getElementById('check3').checked) checks++;
+      if (document.getElementById('check4').checked) checks++;
+
+      let resultText = "";
+      if (checks === 0) {
+        resultText = "Well controlled (0 of 4 factors)";
+      } else if (checks <= 2) {
+        resultText = "Partly controlled (" + checks + " of 4)";
+      } else {
+        resultText = "Uncontrolled (" + checks + " of 4)";
+      }
+
+      document.getElementById('statusResult').innerText = "Symptom Control Status: " + resultText;
+
+      let poorControlNote = document.getElementById('poorControlNote');
+      if (checks === 0) {
+        poorControlNote.innerHTML = "Patient is <strong>well controlled</strong>. You may bypass this section if desired.";
+      } else {
+        poorControlNote.innerHTML = "Patient is either <strong>partly controlled</strong> or <strong>uncontrolled</strong>. Please review items below.";
+      }
+    }
+
+    function finish() {
+      alert("Assessment complete. Please document your final plan and counsel the patient.");
+    }
+
+    function toggleTracks() {
+      const val = document.getElementById('trackSelect').value;
+      const track1Box = document.getElementById('track1Box');
+      const track2Box = document.getElementById('track2Box');
+
+      if (val === 'track1') {
+        track1Box.style.display = 'block';
+        track2Box.style.display = 'none';
+      } else if (val === 'track2') {
+        track1Box.style.display = 'none';
+        track2Box.style.display = 'block';
+      } else {
+        track1Box.style.display = 'none';
+        track2Box.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

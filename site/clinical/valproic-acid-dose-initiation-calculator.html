@@ -1,0 +1,221 @@
+<meta name="dref-tool" content="valproic-acid-dose-initiation-calculator"><link rel="stylesheet" href="../tool-theme.css?v=1.0"><!-- Include Google Font: Poppins -->
+
+
+<style>
+  /* When the viewport is 600px or narrower, make each card full width */
+  @media (max-width: 600px) {
+    .va‐calculator‐card {
+      width: 100% !important;
+      margin-bottom: 20px; /* add some space between stacked cards */
+    }
+  }
+</style>
+
+<div style="font-family: 'Poppins', sans-serif; max-width: 900px; margin: auto; color: #333; padding: 10px;">
+  <h2 style="text-align:center; color:#1558b0; margin-bottom:20px;">
+    Valproic Acid Dose Initiation Calculator
+  </h2>
+
+  <!-- Flex container for two cards side by side -->
+  <div style="display: flex; justify-content: space-between; gap: 20px;">
+    <!-- Card 1: Patient Demographics -->
+    <div class="va‐calculator‐card" style="
+      width: 48%;
+      background: #f9fbff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      box-sizing: border-box;
+    ">
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Patient Type</label>
+      <select id="patientType" onchange="autofill()" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;">
+        <option value="pediatric">Pediatric</option>
+        <option value="adult">Adult</option>
+      </select>
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Therapy Type</label>
+      <select id="therapyType" onchange="autofill()" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;">
+        <option value="mono">Monotherapy</option>
+        <option value="poly">Polytherapy</option>
+      </select>
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Clinical Target</label>
+      <select id="indication" onchange="autofill()" style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;">
+        <option value="seizure">Seizures (Css: 75 mg/L)</option>
+        <option value="psych">Psychiatric (Css: 87.5 mg/L)</option>
+      </select>
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Body Weight (kg)</label>
+      <input type="number" id="weight" placeholder="e.g. 70" step="0.1"
+             style="width:100%; padding:10px; border-radius:6px; border:1px solid #cbd5e1;" />
+    </div>
+
+    <!-- Card 2: PK Parameters & Actions -->
+    <div class="va‐calculator‐card" style="
+      width: 48%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      box-sizing: border-box;
+    ">
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Clearance (CL, mL/kg/hr)</label>
+      <input type="number" id="cl" step="0.01"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Volume of Distribution (Vd, L/kg)</label>
+      <input type="number" id="vd" step="0.01"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Target Css (mg/L)</label>
+      <input type="number" id="css" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Dosing Interval (hr)</label>
+      <input type="number" id="interval" value="12" step="1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Salt Factor (S)</label>
+      <input type="number" id="salt" value="1.0" step="0.01"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Bioavailability (F)</label>
+      <input type="number" id="f" value="1.0" step="0.01"
+             style="width:100%; padding:10px; margin-bottom:20px; border-radius:6px; border:1px solid #e2e8f0;" />
+
+      <div style="display:flex; gap:10px;">
+        <button onclick="calculate()" style="
+          flex:1;
+          padding:12px;
+          background:#1a73e8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#1558b0';" onmouseout="this.style.background='#1a73e8';">
+          Calculate
+        </button>
+        <button onclick="resetForm()" style="
+          flex:1;
+          padding:12px;
+          background:#94a3b8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#64748b';" onmouseout="this.style.background='#94a3b8';">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Box -->
+  <div id="result" style="
+    display:none;
+    background:#f1f5f9;
+    border:1px solid #cbd5e1;
+    margin-top:20px;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.05);
+  ">
+    <h3 style="margin-bottom:10px; color:#334155;">Results</h3>
+    <div><strong>CL<sub>total</sub>:</strong> <span id="cl_total"></span> L/hr</div>
+    <div><strong>Vd<sub>total</sub>:</strong> <span id="vd_total"></span> L</div>
+    <div><strong>Ke:</strong> <span id="ke"></span> hr⁻¹</div>
+    <div><strong>Half-life:</strong> <span id="half"></span> hr</div>
+    <div><strong>Loading Dose (LD):</strong> <span id="ld"></span> mg</div>
+    <div><strong>Maintenance Dose (MD):</strong> <span id="md"></span> mg/interval</div>
+  </div>
+
+  <script>
+    // Preset PK values based on patientType & therapyType
+    const presetValues = {
+      pediatric: {
+        mono: { cl: 15, vd: 0.22 },
+        poly: { cl: 25, vd: 0.22 }
+      },
+      adult: {
+        mono: { cl: 9.5, vd: 0.15 },
+        poly: { cl: 16.5, vd: 0.15 }
+      },
+      indication: {
+        seizure: 75,
+        psych: 87.5
+      }
+    };
+
+    // Fill CL, Vd, and Css whenever a dropdown changes
+    function autofill() {
+      const pt = document.getElementById('patientType').value;
+      const tt = document.getElementById('therapyType').value;
+      const ind = document.getElementById('indication').value;
+      document.getElementById('cl').value   = presetValues[pt][tt].cl;
+      document.getElementById('vd').value   = presetValues[pt][tt].vd;
+      document.getElementById('css').value  = presetValues.indication[ind];
+    }
+
+    function calculate() {
+      const bw       = parseFloat(document.getElementById("weight").value);
+      const cl       = parseFloat(document.getElementById("cl").value);
+      const vd       = parseFloat(document.getElementById("vd").value);
+      const css      = parseFloat(document.getElementById("css").value);
+      const interval = parseFloat(document.getElementById("interval").value);
+      const s        = parseFloat(document.getElementById("salt").value);
+      const fVal     = parseFloat(document.getElementById("f").value);
+
+      // All values must be positive numbers
+      if ([bw, cl, vd, css, interval, s, fVal].some(x => isNaN(x) || x <= 0)) {
+        alert("Please enter all values correctly.");
+        return;
+      }
+
+      // PK Calculations:
+      const cl_total = (cl * bw) / 1000;         // L/hr
+      const vd_total = vd * bw;                  // L
+      const ke       = cl_total / vd_total;      // hr⁻¹
+      const half     = 0.693 / ke;               // hr
+      const ld       = (css * vd_total) / (s * fVal);          // mg
+      const md       = (cl_total * css * interval) / (s * fVal); // mg per interval
+
+      // Display results:
+      document.getElementById("cl_total").textContent = cl_total.toFixed(3);
+      document.getElementById("vd_total").textContent = vd_total.toFixed(3);
+      document.getElementById("ke").textContent       = ke.toFixed(4);
+      document.getElementById("half").textContent     = half.toFixed(2);
+      document.getElementById("ld").textContent       = ld.toFixed(1);
+      document.getElementById("md").textContent       = md.toFixed(1);
+      document.getElementById("result").style.display = "block";
+    }
+
+    function resetForm() {
+      // Reset dropdowns back to defaults
+      document.getElementById("patientType").value  = "pediatric";
+      document.getElementById("therapyType").value  = "mono";
+      document.getElementById("indication").value   = "seizure";
+
+      // Clear numeric inputs or reset to defaults
+      document.getElementById("weight").value   = "";
+      document.getElementById("interval").value = 12;
+      document.getElementById("salt").value     = 1.0;
+      document.getElementById("f").value        = 1.0;
+
+      // Hide the results section again
+      document.getElementById("result").style.display = "none";
+
+      // Re‐autofill CL, Vd, Css with the brand‐new default dropdown selections
+      autofill();
+    }
+
+    // On page load, autofill initial values
+    window.onload = autofill;
+  </script>
+</div>
+<script src="../tool-adapter.js?v=1.0"></script>

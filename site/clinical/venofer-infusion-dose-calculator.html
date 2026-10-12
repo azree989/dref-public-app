@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Venofer Dose Calculator — DRef</title>
+
+  <!-- Tagline font for standard header -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --text:#333;
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --radius:12px;
+      --primary:#1976d2;   /* PEFR/eGFR primary */
+      --primary-hover:#155a9c;
+      --danger:#b22222;
+      --danger-hover:#8b0000;
+    }
+
+    /* Base */
+    *{box-sizing:border-box}
+    body{
+      font-family: Arial, sans-serif;
+      margin:0; padding:20px;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    /* Standard header & footer */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin:4px auto 12px;
+      padding:4px 12px;
+      max-width:90%;
+    }
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 12px;
+      max-width:800px;
+      line-height:1.4;
+    }
+    @media(max-width:600px){
+      .app-header{padding:6px 16px;max-width:94%}
+      .app-footer{font-size:.85rem;padding:8px 10px}
+    }
+
+    /* Card container */
+    main{
+      max-width:800px; margin:20px auto 18px;
+      background:#fff; padding:24px;
+      border-radius:12px;
+      box-shadow:0 2px 5px rgba(0,0,0,.08);
+    }
+    .card-title{
+      text-align:center;
+      color:var(--primary);
+      font-size:1.6rem;
+      font-weight:600;
+      margin:2px 0 16px;
+    }
+
+    label{font-weight:600; display:block; margin-top:10px}
+    input,select{
+      width:100%; padding:10px; margin-top:5px;
+      border:1px solid #ddd; border-radius:6px; font-size:16px;
+    }
+
+    /* Target Hb chips */
+    .target-hb-buttons{
+      display:flex; gap:10px; justify-content:center; margin:14px 0 6px; flex-wrap:wrap;
+    }
+    .target-hb-button{
+      padding:10px 14px; font-size:16px; font-weight:600; cursor:pointer;
+      border-radius:999px; border:2px solid var(--primary); background:#fff; color:var(--primary);
+      transition:background .2s, color .2s, transform .1s;
+    }
+    .target-hb-button:hover{background:#eef5ff}
+    .target-hb-button.selected{background:var(--primary); color:#fff}
+    .target-hb-button.selected:hover{background:var(--primary-hover); color:#fff}
+
+    .warning{
+      color:#c62828; font-weight:700; text-align:center; margin-top:6px;
+    }
+
+    /* Buttons */
+    .btn-row{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+    .primary-btn, .reset-btn{
+      flex:1 1 220px; padding:12px; border:none; border-radius:6px;
+      cursor:pointer; font-size:16px; font-weight:600; color:#fff;
+      transition:background .2s, transform .1s; box-shadow:0 2px 6px rgba(0,0,0,.1);
+    }
+    .primary-btn{background:var(--primary)}
+    .primary-btn:hover{background:var(--primary-hover)}
+    .reset-btn{background:var(--danger)}
+    .reset-btn:hover{background:var(--danger-hover)}
+
+    .output{
+      margin-top:16px; padding:14px; text-align:center; font-size:17px; font-weight:700;
+      background:#e8f5e9; border:1px solid #c8e6c9; border-radius:8px;
+    }
+
+    .note-box{
+      text-align:center; margin-top:10px; font-size:12px; color:#333;
+      background:#e8f5e9; border-radius:6px; padding:10px; border:1px solid #cfe8d2;
+    }
+  </style>
+<meta name="dref-tool" content="venofer-infusion-dose-calculator"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">Venofer&reg; Infusion Dose Calculator</h1>
+
+    <label for="weight">Patient Weight (kg):</label>
+    <input type="number" id="weight" placeholder="Enter weight in kg">
+
+    <label for="hb">Actual Hb (g/dL):</label>
+    <input type="number" id="hb" placeholder="Enter actual Hb level">
+
+    <label>Target Hb (g/dL):</label>
+    <div class="target-hb-buttons">
+      <button class="target-hb-button" onclick="selectTargetHb(13)">13 g/dL</button>
+      <button class="target-hb-button selected" onclick="selectTargetHb(14)">14 g/dL</button>
+      <button class="target-hb-button" onclick="selectTargetHb(15)">15 g/dL</button>
+    </div>
+
+    <div id="warning" class="warning" style="display:none;">
+      CONSIDER WRONG DECISION AS TARGET HB IS EQUAL OR LOWER THAN ACTUAL HB
+    </div>
+
+    <div class="btn-row">
+      <button class="primary-btn" onclick="calculateDose()">Calculate</button>
+      <button class="reset-btn" onclick="resetForm()">Reset</button>
+    </div>
+
+    <div id="result" class="output" style="display:none;"></div>
+
+    <div class="note-box">
+      Venofer&reg; is Iron (III) hydroxide sucrose complex — 100&nbsp;mg elemental iron per 5&nbsp;mL ampoule (20&nbsp;mg/mL solution).
+    </div>
+  </main>
+
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.<br/>
+    <span style="font-size:.85rem">Reference: Protocol for the use of Intravenous Iron Sucrose (Venofer) among pregnant women at Klinik Kesihatan in Pahang. Prepared by Dr. Yusnita Bt. Yatim (10&nbsp;March&nbsp;2017).</span>
+  </div>
+
+  <script>
+    // === original logic (unchanged) ===
+    let selectedHb = 14;
+
+    function selectTargetHb(value) {
+      selectedHb = value;
+      const buttons = document.querySelectorAll('.target-hb-button');
+      buttons.forEach(btn => btn.classList.toggle('selected', btn.textContent.includes(value + ' g/dL')));
+    }
+
+    function calculateDose() {
+      const weight = parseFloat(document.getElementById("weight").value);
+      const hb = parseFloat(document.getElementById("hb").value);
+      const warningDiv = document.getElementById("warning");
+
+      if (isNaN(weight) || isNaN(hb)) {
+        alert("Please enter valid values for weight and Hb.");
+        return;
+      }
+
+      if (hb >= selectedHb) {
+        warningDiv.style.display = "block";
+        return;
+      } else {
+        warningDiv.style.display = "none";
+      }
+
+      const storageIron = weight < 35 ? 15 * weight : 500;
+      const ironDeficit = weight * (selectedHb - hb) * 2.4 + storageIron; // mg iron
+      const totalVenofer = ironDeficit / 20; // mL (20 mg/mL)
+      const ampoules = Math.ceil(totalVenofer / 5); // 5 mL per ampoule
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = `
+        Total Iron Deficit: <strong>${ironDeficit.toFixed(2)} mg</strong><br>
+        Total Venofer to be Administered: <strong>${totalVenofer.toFixed(2)} mL</strong><br>
+        Total Ampoules Required: <strong>${ampoules}</strong>
+      `;
+    }
+
+    function resetForm() {
+      document.getElementById("weight").value = "";
+      document.getElementById("hb").value = "";
+      selectTargetHb(14);
+      document.getElementById("warning").style.display = "none";
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "none";
+      resultDiv.innerHTML = "";
+    }
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

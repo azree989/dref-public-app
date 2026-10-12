@@ -1,0 +1,1414 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <meta charset="UTF-8">
+    <!-- === SEO: Meta, Canonical, Social Cards, Structured Data === -->
+<meta name="description" content="DRef (Doctor’s Reference): neonatal jaundice (NNJ) bilirubin threshold calculator for babies ≥35 weeks. Phototherapy & exchange transfusion cut-offs by hours of life and risk factors.">
+<meta name="keywords" content="Doctor’s Reference, DRef, neonatal jaundice calculator, NNJ calculator, TSB calculator, bilirubin threshold, phototherapy threshold, exchange transfusion, BOSCO, ≥35 weeks, primary care, Klinik Kesihatan, Malaysia">
+<meta name="author" content="DRef — Doctor’s Reference">
+<meta name="robots" content="index,follow">
+<meta name="language" content="en-MY">
+
+<!-- Canonical (adjust to your exact URL) -->
+<link rel="canonical" href="https://www.dref.my/tools/nnj-tsb-35w">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DRef — Doctor’s Reference">
+<meta property="og:title" content="NNJ TSB Tool (≥35 Weeks) — DRef">
+<meta property="og:description" content="Bilirubin threshold calculator for ≥35w neonates. Phototherapy & exchange transfusion cut-offs by hours of life and risk factors.">
+<meta property="og:url" content="https://www.dref.my/tools/nnj-tsb-35w">
+<!-- Optional share image -->
+<!-- <meta property="og:image" content="https://www.dref.my/assets/nnj-tool-card.png"> -->
+<meta property="og:locale" content="en_MY">
+<meta property="og:locale:alternate" content="ms_MY">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NNJ TSB Tool (≥35 Weeks) — DRef">
+<meta name="twitter:description" content="Bilirubin threshold calculator for ≥35w neonates with risk factor handling.">
+<!-- <meta name="twitter:image" content="https://www.dref.my/assets/nnj-tool-card.png"> -->
+
+<!-- Structured Data (Schema.org) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "NNJ TSB Tool (≥35 Weeks) — DRef",
+  "description": "DRef (Doctor’s Reference) neonatal jaundice (NNJ) bilirubin threshold calculator for babies ≥35 weeks' gestation, showing phototherapy and exchange transfusion cut-offs by hours of life and risk factors.",
+  "about": [
+    { "@type": "MedicalCondition", "name": "Neonatal jaundice" },
+    { "@type": "MedicalTest", "name": "Total serum bilirubin (TSB)" }
+  ],
+  "audience": { "@type": "MedicalAudience", "audienceType": "Clinician" },
+  "isPartOf": { "@type": "WebSite", "name": "DRef — Doctor’s Reference", "url": "https://www.dref.my" },
+  "inLanguage": "en-MY",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Klinik Kesihatan Mahligai, PKD Bachok, Kelantan",
+    "url": "https://www.dref.my",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bachok",
+      "addressRegion": "Kelantan",
+      "addressCountry": "MY"
+    }
+  },
+  "url": "https://www.dref.my/tools/nnj-tsb-35w"
+}
+</script>
+
+    <title>NNJ TSB Tool for Babies ≥35 Weeks Gestation for KK</title>
+    <!-- Google Fonts -->
+    
+    <!-- Material Icons for Radio Buttons and Tick Icons -->
+    
+    <!-- Material Symbols Outlined Icon -->
+    
+    <!-- Stylesheet -->
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .electrolize-visible {
+            font-family: Arial, sans-serif; /* Use Arial or another visible font */
+            font-weight: 900; /* Extra bold */
+            font-size: 100px; /* Increase size for visibility */
+            color: #ff477e; /* Set color to black for contrast */
+            letter-spacing: 1px; /* Optional: Adjust letter spacing */
+            text-transform: uppercase; /* Optional: Make text all uppercase */
+        }
+        /* Alternate font for bold text */
+        .electrolize-bold {
+            font-family: Arial, sans-serif; /* Substitute with a widely supported font */
+            font-weight: 900; /* Extra bold weight */
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-title {
+            font-family: 'Tomorrow', sans-serif;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer {
+            font-size: 14px;
+            color: #555555;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Sections */
+
+       .nnj-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.2rem;
+  color: #222;
+  letter-spacing: -0.3px;
+}
+
+        .section {
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        /* Custom H-Divider Styling */
+        .h-divider { 
+            margin: auto;
+            margin-top: 40px;
+            width: 100%; /* Adjusts the width of the divider */
+            position: relative; /* Enables positioning for child elements */
+        }
+        .h-divider .shadow {
+            overflow: hidden;
+            height: 20px; /* Height of the divider */
+            position: relative; /* Necessary for pseudo-element positioning */
+        }
+        .h-divider .shadow:after {
+            content: '';
+            display: block;
+            margin: -25px auto 0; /* Adjusts the shadow position */
+            width: 80%; /* Matches the width of the parent */
+            height: 15px; /* Height of the shadow effect */
+            border-radius: 125px/12px; /* Smooth rounded shadow */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Strong shadow with slight blur */
+        }
+
+        /* Input Groups */
+        .input-group, .risk-container, .method-selection, .tsb-input {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group label, .gestational-age label, .tsb-input label {
+            font-weight: bold;
+        }
+
+        /* Baby Age Display Positioned Above Inputs */
+        .age-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .age-display h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .age-display p {
+            font-size: 16px;
+            color: #555555;
+            font-family: 'Tomorrow', sans-serif;
+        }
+
+        #current-date-time {
+            display: none;
+        }
+
+
+        /* Warning Message Styling */
+        .warning-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Gestational Age Inputs Aligned Side by Side */
+        .gestational-age {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .gestational-age .tooltip {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            gap: 10px;
+            position: relative;
+        }
+
+        .gestational-age .tooltip input {
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .gestational-age .tooltip .error-message {
+            position: absolute;
+            top: 100%;       /* place it below the input box */
+            left: 0;         /* align left edge or adjust as you prefer */
+            margin-top: 4px; /* small spacing below input */
+            color: red;      /* make it red */
+            font-size: 14px; /* tweak as needed */
+            width: 100%;     /* so it wraps nicely under the input if the message is long */
+            /* If you worry about it overlapping next row, you might want a min-height 
+                on .tooltip or reduce the text size, etc. */
+        }
+        /* Force bigger sizing and remove native appearance */
+        input.date-time-input[type="date"],
+        input.date-time-input[type="time"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 200px !important;
+            height: 40px !important;
+            font-size: 16px !important;
+            box-sizing: border-box;
+        }
+
+        input[type="date"],
+        input[type="time"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+
+        /* Adjust the internal text area for WebKit browsers */
+        input[type="date"]::-webkit-date-and-time-value,
+        input[type="time"]::-webkit-date-and-time-value {
+        font-size: 16px;
+        line-height: 1.4;
+        padding: 0.5em; /* optional extra spacing */
+        }
+
+
+        /* Risk Calculation */
+        .risk-container p {
+            margin: 0 0 10px 0;
+        }
+
+        .risk-container ul {
+            list-style-type: disc;
+            padding-left: 25px;
+            margin: 0 0 10px 0;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 10px;
+           
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #d32f2f;
+            font-weight: bold;
+            position: relative;
+            user-select: none;
+            margin-bottom: 10px; /* Adds spacing between labels */
+        }
+
+        .radio-group input {
+            display: none;
+        }
+
+        .radio-group .material-icons {
+            margin-right: 8px;
+            color: #d32f2f;
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+
+        .radio-group input:checked + .material-icons {
+            transform: scale(1.2);
+        }
+
+        /* Selected Indicator Styling */
+        .selected-indicator {
+            display: none; /* Hidden by default */
+            margin-left: 10px;
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .selected-indicator .material-icons {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        /* Threshold Calculation */
+        .method-selection {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            white-space: wrap;
+        }
+
+        .method-selection label {
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .method-selection input {
+            margin-right: 5px;
+        }
+        /* Style for the button container */
+        #calculate-threshold-container {
+            display: flex; /* Use flexbox for alignment */
+            justify-content: center; /* Horizontally center the button */
+            align-items: center; /* Vertically center (if needed for height) */
+            margin-top: 20px; /* Add spacing from the radio buttons */
+            flex-direction: column; /* Stack elements vertically (if needed) */
+}
+
+        #threshold-result {
+            margin-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+            
+        }
+
+        /* Icon Styling Next to Risk Category */
+        .risk-icon {
+            position: absolute;
+            top: -10px;
+            right: 0;
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            color: #1976d2;
+        }
+
+        #threshold-result h3 {
+            margin-bottom: 5px;
+            color: #1976d2;
+            display: flex;
+            align-items: center;
+        }
+
+        #threshold-result p {
+            margin: 2px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Decide Management */
+        .tsb-input {
+            display: block;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: nowrap;
+        }
+
+        .tsb-input input {
+            width: 10%; /* Increase the width of the numeric input box */
+            padding: 10px; /* Optional: Add padding for better spacing */
+            font-size: 16px; /* Optional: Ensure text is readable */
+        }
+
+        .tsb-input select {
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* Toggle container styling */
+        .toggle-container {
+            position: relative;
+            display: inline-flex; /* or flex, so it lays out horizontally */
+            align-items: center;
+            gap: 8px; /* space between switch and text labels */
+        }
+
+        /* Hide the default checkbox visually */
+        .toggle-checkbox {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute; /* so it doesn’t affect layout */
+        }
+
+        /* The switch “slider” */
+        .toggle-label {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;    /* default color (off) */
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* The round slider knob */
+        .toggle-label::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        /* When the checkbox is checked, move the knob to the right + change color */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #1AB193; /* “on” color */
+        }
+
+        .toggle-checkbox:checked + .toggle-label::before {
+            transform: translateX(24px);
+        }
+
+        /* (Optional) Text labels for the units */
+        .toggle-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            opacity: 0.4; /* Dim the “non-active” text a bit */
+            transition: opacity 0.3s;
+        }
+
+        /* If the checkbox is checked, highlight micromol & dim mg/dL (or vice versa) */
+        .toggle-checkbox:checked ~ .micromol-text {
+            opacity: 1;  /* micromol is active */
+        }
+        .toggle-checkbox:checked ~ .mgdl-text {
+            opacity: 0.4; /* mg/dL is inactive */
+        }
+
+        /* If the checkbox is unchecked, highlight mg/dL & dim micromol */
+        .toggle-container:not(:has(.toggle-checkbox:checked)) .micromol-text {
+            opacity: 0.4;
+        }
+        .toggle-container:not(:has(.toggle-checkbox:checked)) .mgdl-text {
+            opacity: 1;
+        }
+
+        #management-result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Icon Styling Next to Management Result */
+        .management-icon {
+            margin-right: 8px;
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            color: #2e7d32;
+        }
+
+        /* Reset Button */
+        .reset-button {
+            text-align: center;
+        }
+
+        #reset-tool {
+            padding: 10px 20px;
+            background-color: #9e9e9e;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #reset-tool:hover {
+            opacity: 0.9;
+        }
+        :root{
+  --muted:#6b7280;
+  --surface:#f7fafc;
+  --ring:#e5e7eb;
+  --radius:10px;
+}
+
+/* Tagline header — plain (not sticky) */
+.app-header{
+  position: static;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  font-family: "Josefin Sans", sans-serif;
+  color: var(--muted);
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 400;
+  letter-spacing: .03em;
+  margin-top: 16px;      /* space from very top */
+  margin-bottom: 12px;   /* space before your main card */
+  padding: 4px 12px;     /* keep text off the screen edge */
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Medical disclaimer footer */
+.app-footer{
+  text-align: center;
+  font-size: .9rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  margin: 16px auto 12px;
+  max-width: 1000px;      /* match your .container width */
+  line-height: 1.4;
+}
+
+/* Mobile niceties */
+@media (max-width:600px){
+  .app-header{ padding:6px 16px; max-width:94%; }
+  .app-footer{ font-size:.85rem; padding:8px 10px; }
+}
+        /* Tooltip Styling */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: auto; /* Dynamic width */
+            max-width: 200px; /* Set a maximum width for the tooltip */
+            background-color: #333; /* Dark background */
+            color: #fff; /* White text for contrast */
+            text-align: center; /* Center-align the text */
+            border-radius: 8px; /* Rounded corners */
+            padding: 8px 12px; /* Padding for readability */
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the input */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s, transform 0.3s; /* Smooth fade-in and slide-up effect */
+            font-size: 9px; /* Adjust font size for readability */
+            line-height: 1.4; /* Line spacing for readability */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            white-space: normal; /* Allows text to wrap to a new line */
+            overflow-wrap: break-word; /* Break long words if needed */
+            text-overflow: ellipsis; /* Adds ellipsis if text exceeds limits */
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1; /* Fade-in effect */
+            transform: translateX(-50%) translateY(-5px); /* Slide up slightly */
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 800px) {
+            .radio-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .tsb-input {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .gestational-age {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .gestational-age input {
+                width: 100%;
+            }
+
+            /* Error Message Styling */
+            .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none; /* Hidden by default */
+            }
+
+            /* Highlight Invalid Input Fields */
+            input:invalid {
+            border-color: red;
+            }
+
+            input:valid {
+            border-color: #cccccc;
+            }
+            
+        @media (max-width: 500px) {
+  #current-dob-time {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+
+        }
+    </style>
+<meta name="dref-tool" content="nnj-assessment-guide-babies-35-weeks-gestation"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+<div class="app-header">
+  app crafted by our medical doctors, for better patient care
+</div>
+    <div class="container">
+       <h1 class="nnj-title">NNJ TSB Tool for Babies ≥35 Weeks Gestation for KK</h1>
+       <hr style="width: 50px; border: 1px solid #ccc; margin: 0.8rem auto;">
+
+        <!-- Section 1: Age Calculation -->
+        <section id="age-calculation" class="section">
+            <div class="age-display">
+                <h3 id="baby-age" class="electrolize-visible"><b>Baby Age:</b> --</h3>
+                <p id="current-date-time">Current Date & Time: --</p>
+            </div>
+            <!-- Warning Message Div -->
+            <div id="warning-message" class="warning-message" style="display: none;"></div>
+            <div class="input-group">
+                <div class="input-row">
+                    <div class="tooltip">
+                        <label for="dob">Date of Birth:</label>
+                        <input type="date" id="dob" required>
+                        <span class="tooltiptext">Select the baby's date of birth.</span>
+                    </div>
+                    <div class="tooltip">
+                        <label for="time-of-birth">Time of Birth:</label>
+                        <input type="time" id="time-of-birth" required>
+                        <span class="tooltiptext">Use 24H format</span>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="tooltip">
+                        <label for="current-date">Current Date:</label>
+                        <input type="date" id="current-date" required>
+                        <span class="tooltiptext">Select the current date.</span>
+                    </div>
+                    <div class="tooltip">
+                        <label for="current-time">Current Time:</label>
+                        <input type="time" id="current-time" required>
+                        <span class="tooltiptext">Use 24H format</span>
+                    </div>
+                    <button id="current-dob-time" style="width: 200px; padding: 5px 5px; font-size: 16px; background-color: #1AB193; color: white; border: none; border-radius: 10px; cursor: pointer; margin-left: 20px">
+                        <b>Use System Date & Time</b> 
+                    </button>
+            </div>
+            <div class="gestational-age">
+                <div class="tooltip">
+                    <label for="gestational-week">Gestational Age (Weeks):</label>
+                    <input type="number" id="gestational-week" min="35" max="42" placeholder="35-42" required>
+                    <span class="tooltiptext">SELECT week 35 to 42.</span>
+            
+                    <span class="error-message" id="gestational-week-error"></span>
+                </div>
+                <div class="tooltip">
+                    <label for="gestational-day">Gestational Age (Days):</label>
+                    <input type="number" id="gestational-day" min="0" max="6" placeholder="0-6" required>
+                    <span class="tooltiptext">SELECT day 0 to 6.</span>
+                    
+                    <span class="error-message" id="gestational-day-error"></span>
+                </div>
+            </div>
+        </section>
+
+        <div class="h-divider">
+            <div class="shadow"></div>
+        </div>
+
+        <!-- Section 2: Risk Calculation -->
+        <section id="risk-calculation" class="section">
+            <h2>Risk Calculation</h2>
+            <div class="risk-container">
+                <p>Please choose 'Baby with Risk Factors' if patient has any of the following:</p>
+                <ul>
+                    <li>Isoimmune haemolytic disease**</li>
+                    <li>G6PD deficiency</li>
+                    <li>Asphyxia</li>
+                    <li>Sepsis</li>
+                </ul>
+                <p>**If consider baby less than 5 days of life <b>&</b> mother :O+ <b>&</b> baby's BG not known is at risk, please also select Baby with risk factors.</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="risk-factor" value="yes">
+                        <span class="material-icons">radio_button_unchecked</span> Baby with Risk Factors
+                    </label>
+                    <label>
+                        <input type="radio" name="risk-factor" value="no" checked>
+                        <span class="material-icons">radio_button_checked</span> Baby with No Risk Factors
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <div class="h-divider">
+            <div class="shadow"></div>
+        </div>
+
+        <!-- Section 3: Threshold Calculation -->
+<section id="threshold-calculation" class="section">
+  <h2>Threshold Calculation</h2>
+
+  <!-- the two radio buttons you already had -->
+  <div class="method-selection">
+    <label>
+      <input type="radio" name="calculation-method" value="hourly" checked>
+      By Hourly-block of hours of Life (BOSCO Extended Table)
+    </label>
+    <label>
+      <input type="radio" name="calculation-method" value="24hourly">
+      By 24-Hourly block of hours of Life
+    </label>
+  </div>
+
+  <!-- NEW wrapper around the button -->
+  <div id="calculate-threshold-container">
+    <button id="calculate-threshold" disabled
+            style="width:200px;font-size:large;background:#1AB193;color:#fff;
+                   border:none;border-radius:10px;padding:10px 5px;">
+      <b>Calculate Threshold</b>
+    </button>
+  </div>
+
+  <div id="threshold-result"></div>
+</section>
+        <div class="h-divider">
+            <div class="shadow"></div>
+        </div>
+
+        <!-- Section 4: Decide Management -->
+        <section id="decide-management" class="section">
+            <h2>Decide Management</h2>
+            <div class="tsb-input">
+                    <label for="tsb-value">Enter Latest TSB:</label>
+                    <input type="number" id="tsb-value" min="0" step="0.01" required>
+            <div class="toggle-container">
+                    <input type="checkbox" id="unit-toggle" class="toggle-checkbox" checked>
+                    <label class="toggle-label" for="unit-toggle"></label>
+                    <span class="toggle-text micromol-text">micromol/L</span>
+                    <span class="toggle-text mgdl-text">mg/dL</span>
+            </div>
+            <button id="decide-management-btn" disabled
+            style="width: 200px; font-size: large; background-color: #1AB193; color: #FFFFFF; border: none; border-radius: 10px; padding: 10px 5px;"><b>Decide Management</b></button>
+            <div id="management-result">
+                <!-- Management decisions will appear here -->
+                <!-- Icon will be inserted here dynamically -->
+            </div>
+               
+        </section>
+
+        <div class="h-divider">
+            <div class="shadow"></div>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="reset-button">
+            <button id="reset-tool">Reset</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+
+        // Threshold Calculation
+        const calculateThresholdBtn = document.getElementById('calculate-threshold');
+        const thresholdResultDiv = document.getElementById('threshold-result');
+
+        // Utility Functions
+        function showAlert(message) {
+            alert(message);
+        }
+
+        function convertMgDlToMicromol(mgdl) {
+            return mgdl * 17.1;
+        }
+        // Function to Construct Date Object from Separate Date and Time Strings
+        function constructDateTime(dateStr, timeStr) {
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return new Date(year, month - 1, day, hours, minutes);    
+        }
+
+
+        // Age Calculation
+        const dobInput = document.getElementById('dob');
+        const timeOfBirthInput = document.getElementById('time-of-birth');
+        const currentDateInput = document.getElementById('current-date');
+        const currentTimeInput = document.getElementById('current-time');
+        const currentDobTimeBtn = document.getElementById('current-dob-time');
+        const babyAgeDisplay = document.getElementById('baby-age');
+        const currentDateTimeDisplay = document.getElementById('current-date-time');
+        const gestationalWeekInput = document.getElementById('gestational-week');
+        const gestationalDayInput = document.getElementById('gestational-day');
+        const warningMessageDiv = document.getElementById('warning-message');
+
+        let ageReady = false;
+
+        // Select Error Message Elements 
+        const gestationalWeekError = document.getElementById('gestational-week-error');
+        const gestationalDayError = document.getElementById('gestational-day-error');
+
+        let babyAgeHours = 0;
+        let babyAgeDays = 0;
+
+        function calculateAge() {
+            const dob = dobInput.value;
+            const timeOfBirth = timeOfBirthInput.value;
+            const currentDate = currentDateInput.value;
+            const currentTime = currentTimeInput.value;
+            const gestationalWeek = Number(gestationalWeekInput.value);
+
+            const gestationalDay = parseInt(gestationalDayInput.value, 10); 
+            
+            
+
+            // ── 1. any field missing? ───────────────────────────────────
+if (!dob || !timeOfBirth || !currentDate || !currentTime ||
+    isNaN(gestationalWeek) || isNaN(gestationalDay)) {
+
+  ageReady = false;
+  babyAgeHours = NaN;
+
+  babyAgeDisplay.textContent       = 'Baby Age: --';
+  currentDateTimeDisplay.textContent = 'Current Date & Time: --';
+  warningMessageDiv.style.display  = 'none';
+
+  calculateThresholdBtn.disabled = true;
+  decideManagementBtn.disabled   = true;
+  return;        // stop here until the user completes all fields
+
+}
+ageReady = true;
+
+
+            const birthDateTime = new Date(`${dob}T${timeOfBirth}`);
+            const currentDateTime = new Date(`${currentDate}T${currentTime}`);
+
+            if (currentDateTime < birthDateTime) {
+                showAlert('Current date and time cannot be earlier than date and time of birth.');
+                babyAgeDisplay.textContent = 'Baby Age: --';
+                currentDateTimeDisplay.textContent = 'Current Date & Time: --';
+                warningMessageDiv.style.display = 'none';
+                // Enable buttons by default
+                document.getElementById('calculate-threshold').disabled = false;
+                document.getElementById('decide-management-btn').disabled = false;
+                return;
+            }
+            const diffMilliseconds = currentDateTime - birthDateTime;
+            babyAgeHours = Math.floor(diffMilliseconds / (1000 * 60 * 60));
+            babyAgeDays = Math.floor(diffMilliseconds / (1000 * 60 * 60 * 24));
+
+            // After determining babyAgeHours:
+            const totalDays = Math.floor(babyAgeHours / 24);
+            const remainderHours = babyAgeHours % 24;
+
+            babyAgeDisplay.textContent = 
+            `Baby Age: ${babyAgeHours} hours (${totalDays} days, ${remainderHours} hours)`;
+
+            // Format current date in DD/MM/YYYY format
+            const formattedDate = String(currentDateTime.getDate()).padStart(2, '0') + '/' + 
+                      String(currentDateTime.getMonth() + 1).padStart(2, '0') + '/' + 
+                      currentDateTime.getFullYear();
+
+            // Display current date and time
+            currentDateTimeDisplay.textContent = `Current Date & Time: ${formattedDate}, ${currentDateTime.toLocaleTimeString()}`;
+            
+            // Initialize variables to track blocking conditions
+            let isBlocked = false;
+            let message = '';
+
+            // Condition 1: Age less than 24 hours
+            if (babyAgeHours < 24) {
+                message = "Babies jaundiced at <24 hours of life are considered not healthy & require admission!";
+                isBlocked = true;
+            }
+            // Condition 2: Age >21 days AND gestational age between 35w0d to 36w6d
+            else if (babyAgeDays > 21 && gestationalWeek >=35 && (gestationalWeek < 37)) {
+                message = "Please follow prolonged jaundice guideline.";
+                isBlocked = true;
+            }
+            // Condition 3: Age >14 days AND gestational age >=37w0d
+            else if (babyAgeDays >14 && gestationalWeek >= 37) {
+                message = "Please follow prolonged jaundice guideline.";
+                isBlocked = true;
+            }
+
+            if (isBlocked) {
+                warningMessageDiv.textContent = message;
+                warningMessageDiv.style.display = 'block';
+                // Disable calculation buttons
+                document.getElementById('calculate-threshold').disabled = true;
+                document.getElementById('decide-management-btn').disabled = true;
+            } else {
+                warningMessageDiv.style.display = 'none';
+                // Enable calculation buttons
+                document.getElementById('calculate-threshold').disabled = false;
+                document.getElementById('decide-management-btn').disabled = false;
+            }
+        }
+
+        // Event Listeners for Age Calculation
+        dobInput.addEventListener('change', calculateAge);
+        timeOfBirthInput.addEventListener('change', calculateAge);
+        currentDateInput.addEventListener('change', calculateAge);
+        currentTimeInput.addEventListener('change', calculateAge);
+        
+        // Modify Validation for Gestational Weeks
+        gestationalWeekInput.addEventListener('blur', function() {
+        const week = parseInt(gestationalWeekInput.value, 10);
+        if (gestationalWeekInput.value === '') {
+            gestationalWeekError.textContent = 'Gestational weeks are required.';
+            gestationalWeekError.style.display = 'block';
+        } else if (isNaN(week) || week < 35 || week > 42) {
+            gestationalWeekError.textContent = 'Please enter gestational weeks between 35 and 42.';
+            gestationalWeekError.style.display = 'block';
+        } else {
+            gestationalWeekError.textContent = '';
+            gestationalWeekError.style.display = 'none';
+        }
+        calculateAge();
+    });
+
+        // Modify Validation for Gestational Days
+    gestationalDayInput.addEventListener('blur', function() {
+        const day = parseInt(gestationalDayInput.value, 10);
+        if (gestationalDayInput.value === '') {
+            gestationalDayError.textContent = 'Gestational days are required.';
+            gestationalDayError.style.display = 'block';
+        } else if (isNaN(day) || day < 0 || day > 6) {
+            gestationalDayError.textContent = 'Please enter gestational days between 0 and 6.';
+            gestationalDayError.style.display = 'block';
+        } else {
+            gestationalDayError.textContent = '';
+            gestationalDayError.style.display = 'none';
+        }
+        calculateAge();
+    });
+
+        // Optional: Handle Invalid Events for Additional Feedback
+    gestationalWeekInput.addEventListener('invalid', function(event) {
+        if (gestationalWeekInput.validity.valueMissing) {
+            gestationalWeekError.textContent = 'Gestational weeks are required.';
+        } else if (gestationalWeekInput.validity.rangeUnderflow || gestationalWeekInput.validity.rangeOverflow) {
+            gestationalWeekError.textContent = 'Please enter gestational weeks between 35 and 42.';
+        }
+        gestationalWeekError.style.display = 'block';
+    });
+
+    gestationalDayInput.addEventListener('invalid', function(event) {
+        if (gestationalDayInput.validity.valueMissing) {
+            gestationalDayError.textContent = 'Gestational days are required.';
+        } else if (gestationalDayInput.validity.rangeUnderflow || gestationalDayInput.validity.rangeOverflow) {
+            gestationalDayError.textContent = 'Please enter gestational days between 0 and 6.';
+        }
+        gestationalDayError.style.display = 'block';
+    });
+
+
+        // "Use Current Date & Time" Button Functionality
+        currentDobTimeBtn.addEventListener('click', () => {
+                const now = new Date();
+                const currentDate = now.getFullYear() + '-' + 
+                        String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(now.getDate()).padStart(2, '0');
+                const currentTime = String(now.getHours()).padStart(2, '0') + ':' + 
+                        String(now.getMinutes()).padStart(2, '0');
+    
+                currentDateInput.value = currentDate;
+                currentTimeInput.value = currentTime;
+                calculateAge();
+        });
+
+        let riskFactor = 'no';
+        const riskRadioButtons = document.getElementsByName('risk-factor');
+        riskRadioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                riskFactor = this.value;
+                updateRiskIcons();
+            });
+        });
+
+        function updateRiskIcons() {
+            riskRadioButtons.forEach(radio => {
+                const icon = radio.nextElementSibling;
+                if (radio.checked) {
+                    icon.textContent = 'radio_button_checked';
+                } else {
+                    icon.textContent = 'radio_button_unchecked';
+                }
+            });
+        }
+
+        // Initial icon update
+        updateRiskIcons();
+
+        function determineRiskCategory() {
+            const gestationalWeek = parseInt(gestationalWeekInput.value, 10);
+
+            let category = 'Low Risk';
+            if (gestationalWeek >= 38 && riskFactor === 'no') {
+                category = 'Low Risk';
+            }
+            else if (
+                (gestationalWeek >= 38 && riskFactor === 'yes') ||
+                (gestationalWeek >= 35 && gestationalWeek <38 && riskFactor === 'no')
+            ) {
+                category = 'Medium Risk';
+            }
+            else if (
+                gestationalWeek >= 35 && gestationalWeek <38 && 
+                riskFactor === 'yes'
+            ) {
+                category = 'High Risk';
+            }
+            return category;
+        }
+
+
+
+        
+        const thresholdHourly = [
+            { hours: 6, lowPhototherapy: 80, lowExchange: 290, mediumPhototherapy: 60, mediumExchange: 240, highPhototherapy: 30, highExchange: 220 },
+            { hours: 7, lowPhototherapy: 83.33, lowExchange: 293.333, mediumPhototherapy: 63.33, mediumExchange: 243.33, highPhototherapy: 33.33, highExchange: 223.33 },
+            { hours: 8, lowPhototherapy: 86.67, lowExchange: 296.667, mediumPhototherapy: 66.67, mediumExchange: 246.67, highPhototherapy: 36.67, highExchange: 226.67 },
+            { hours: 9, lowPhototherapy: 90, lowExchange: 300, mediumPhototherapy: 70, mediumExchange: 250, highPhototherapy: 40, highExchange: 230 },
+            { hours: 10, lowPhototherapy: 93.33, lowExchange: 303.333, mediumPhototherapy: 73.33, mediumExchange: 253.33, highPhototherapy: 43.33, highExchange: 233.33 },
+            { hours: 11, lowPhototherapy: 96.67, lowExchange: 306.667, mediumPhototherapy: 76.67, mediumExchange: 256.67, highPhototherapy: 46.67, highExchange: 236.67 },
+            { hours: 12, lowPhototherapy: 100, lowExchange: 310, mediumPhototherapy: 80, mediumExchange: 260, highPhototherapy: 50, highExchange: 240 },
+            { hours: 13, lowPhototherapy: 104.5, lowExchange: 311.25, mediumPhototherapy: 83.33, mediumExchange: 262.583, highPhototherapy: 53, highExchange: 241.417 },
+            { hours: 14, lowPhototherapy: 109, lowExchange: 312.5, mediumPhototherapy: 86.67, mediumExchange: 265.167, highPhototherapy: 56, highExchange: 242.83 },
+            { hours: 15, lowPhototherapy: 113.5, lowExchange: 313.75, mediumPhototherapy: 90, mediumExchange: 267.75, highPhototherapy: 59, highExchange: 244.25 },
+            { hours: 16, lowPhototherapy: 118, lowExchange: 315, mediumPhototherapy: 93.33, mediumExchange: 270.33, highPhototherapy: 62, highExchange: 245.67 },
+            { hours: 17, lowPhototherapy: 122.5, lowExchange: 316.25, mediumPhototherapy: 96.67, mediumExchange: 272.917, highPhototherapy: 65, highExchange: 247.083 },
+            { hours: 18, lowPhototherapy: 127, lowExchange: 317.5, mediumPhototherapy: 100, mediumExchange: 275.5, highPhototherapy: 68, highExchange: 248.5 },
+            { hours: 19, lowPhototherapy: 131.5, lowExchange: 318.75, mediumPhototherapy: 103.33, mediumExchange: 278.083, highPhototherapy: 71, highExchange: 249.917 },
+            { hours: 20, lowPhototherapy: 136, lowExchange: 320, mediumPhototherapy: 106.67, mediumExchange: 280.67, highPhototherapy: 74, highExchange: 251.33 },
+            { hours: 21, lowPhototherapy: 140.5, lowExchange: 321.25, mediumPhototherapy: 110, mediumExchange: 283.25, highPhototherapy: 77, highExchange: 252.75 },
+            { hours: 22, lowPhototherapy: 145, lowExchange: 322.5, mediumPhototherapy: 113.33, mediumExchange: 285.83, highPhototherapy: 80, highExchange: 254.167 },
+            { hours: 23, lowPhototherapy: 149.5, lowExchange: 323.75, mediumPhototherapy: 116.67, mediumExchange: 288.417, highPhototherapy: 83, highExchange: 255.583 },
+            { hours: 24, lowPhototherapy: 154, lowExchange: 325, mediumPhototherapy: 120, mediumExchange: 291, highPhototherapy: 86, highExchange: 257 },
+            { hours: 25, lowPhototherapy: 156.125, lowExchange: 327.125, mediumPhototherapy: 122.125, mediumExchange: 292.417, highPhototherapy: 88.125, highExchange: 258.417 },
+            { hours: 26, lowPhototherapy: 158.25, lowExchange: 329.25, mediumPhototherapy: 124.25, mediumExchange: 293.83, highPhototherapy: 90.25, highExchange: 259.83 },
+            { hours: 27, lowPhototherapy: 160.375, lowExchange: 331.375, mediumPhototherapy: 126.375, mediumExchange: 295.25, highPhototherapy: 92.375, highExchange: 261.25 },
+            { hours: 28, lowPhototherapy: 162.5, lowExchange: 333.5, mediumPhototherapy: 128.5, mediumExchange: 296.67, highPhototherapy: 94.5, highExchange: 262.67 },
+            { hours: 29, lowPhototherapy: 164.625, lowExchange: 335.625, mediumPhototherapy: 130.625, mediumExchange: 298.083, highPhototherapy: 96.625, highExchange: 264.083 },
+            { hours: 30, lowPhototherapy: 166.75, lowExchange: 337.75, mediumPhototherapy: 132.75, mediumExchange: 299.5, highPhototherapy: 98.75, highExchange: 265.5 },
+            { hours: 31, lowPhototherapy: 168.875, lowExchange: 339.875, mediumPhototherapy: 134.875, mediumExchange: 300.917, highPhototherapy: 100.875, highExchange: 266.917 },
+            { hours: 32, lowPhototherapy: 171, lowExchange: 342, mediumPhototherapy: 137, mediumExchange: 302.33, highPhototherapy: 103, highExchange: 268.33 },
+            { hours: 33, lowPhototherapy: 173.125, lowExchange: 344.125, mediumPhototherapy: 139.125, mediumExchange: 303.75, highPhototherapy: 105.125, highExchange: 269.75 },
+            { hours: 34, lowPhototherapy: 175.25, lowExchange: 346.25, mediumPhototherapy: 141.25, mediumExchange: 305.167, highPhototherapy: 107.25, highExchange: 271.167 },
+            { hours: 35, lowPhototherapy: 177.375, lowExchange: 348.375, mediumPhototherapy: 143.375, mediumExchange: 306.583, highPhototherapy: 109.375, highExchange: 272.583 },
+            { hours: 36, lowPhototherapy: 179.5, lowExchange: 350.5, mediumPhototherapy: 145.5, mediumExchange: 308, highPhototherapy: 111.5, highExchange: 274 },
+            { hours: 37, lowPhototherapy: 181.625, lowExchange: 352.625, mediumPhototherapy: 147.625, mediumExchange: 309.417, highPhototherapy: 113.625, highExchange: 275.417 },
+            { hours: 38, lowPhototherapy: 183.75, lowExchange: 354.75, mediumPhototherapy: 149.75, mediumExchange: 310.83, highPhototherapy: 115.75, highExchange: 276.83 },
+            { hours: 39, lowPhototherapy: 185.875, lowExchange: 356.875, mediumPhototherapy: 151.875, mediumExchange: 312.25, highPhototherapy: 117.875, highExchange: 278.25 },
+            { hours: 40, lowPhototherapy: 188, lowExchange: 359, mediumPhototherapy: 154, mediumExchange: 313.67, highPhototherapy: 120, highExchange: 279.67 },
+            { hours: 41, lowPhototherapy: 190.125, lowExchange: 361.125, mediumPhototherapy: 156.125, mediumExchange: 315.083, highPhototherapy: 122.125, highExchange: 281.083 },
+            { hours: 42, lowPhototherapy: 192.25, lowExchange: 363.25, mediumPhototherapy: 158.25, mediumExchange: 316.5, highPhototherapy: 124.25, highExchange: 282.5 },
+            { hours: 43, lowPhototherapy: 194.375, lowExchange: 365.375, mediumPhototherapy: 160.375, mediumExchange: 317.917, highPhototherapy: 126.375, highExchange: 283.917 },
+            { hours: 44, lowPhototherapy: 196.5, lowExchange: 367.5, mediumPhototherapy: 162.5, mediumExchange: 319.33, highPhototherapy: 128.5, highExchange: 285.33 },
+            { hours: 45, lowPhototherapy: 198.625, lowExchange: 369.625, mediumPhototherapy: 164.625, mediumExchange: 320.75, highPhototherapy: 130.625, highExchange: 286.75 },
+            { hours: 46, lowPhototherapy: 200.75, lowExchange: 371.75, mediumPhototherapy: 166.75, mediumExchange: 322.167, highPhototherapy: 132.75, highExchange: 288.167 },
+            { hours: 47, lowPhototherapy: 202.875, lowExchange: 373.875, mediumPhototherapy: 168.875, mediumExchange: 323.583, highPhototherapy: 134.875, highExchange: 289.583 },
+            { hours: 48, lowPhototherapy: 205, lowExchange: 376, mediumPhototherapy: 171, mediumExchange: 325, highPhototherapy: 137, highExchange: 291 },
+            { hours: 49, lowPhototherapy: 207.167, lowExchange: 377.417, mediumPhototherapy: 172.417, mediumExchange: 326.417, highPhototherapy: 138.417, highExchange: 292.0417 },
+            { hours: 50, lowPhototherapy: 209.33, lowExchange: 378.333, mediumPhototherapy: 173.83, mediumExchange: 327.83, highPhototherapy: 139.83, highExchange: 293.083 },
+            { hours: 51, lowPhototherapy: 211.5, lowExchange: 380.25, mediumPhototherapy: 175.25, mediumExchange: 329.25, highPhototherapy: 141.25, highExchange: 294.125 },
+            { hours: 52, lowPhototherapy: 213.667, lowExchange: 381.667, mediumPhototherapy: 176.67, mediumExchange: 330.67, highPhototherapy: 142.67, highExchange: 295.167 },
+            { hours: 53, lowPhototherapy: 215.833, lowExchange: 383.083, mediumPhototherapy: 178.083, mediumExchange: 332.083, highPhototherapy: 144.083, highExchange: 296.2083 },
+            { hours: 54, lowPhototherapy: 218, lowExchange: 384.5, mediumPhototherapy: 179.5, mediumExchange: 333.5, highPhototherapy: 145.5, highExchange: 297.25 },
+            { hours: 55, lowPhototherapy: 220.167, lowExchange: 385.917, mediumPhototherapy: 180.917, mediumExchange: 334.917, highPhototherapy: 146.917, highExchange: 298.2917 },
+            { hours: 56, lowPhototherapy: 222.33, lowExchange: 387.333, mediumPhototherapy: 182.33, mediumExchange: 336.33, highPhototherapy: 148.33, highExchange: 299.33 },
+            { hours: 57, lowPhototherapy: 224.5, lowExchange: 388.75, mediumPhototherapy: 183.75, mediumExchange: 337.75, highPhototherapy: 149.75, highExchange: 300.375 },
+            { hours: 58, lowPhototherapy: 226.667, lowExchange: 390.167, mediumPhototherapy: 185.167, mediumExchange: 339.167, highPhototherapy: 151.167, highExchange: 301.417 },
+            { hours: 59, lowPhototherapy: 228.833, lowExchange: 391.583, mediumPhototherapy: 186.583, mediumExchange: 340.583, highPhototherapy: 152.583, highExchange: 302.4583 },
+            { hours: 60, lowPhototherapy: 231, lowExchange: 393, mediumPhototherapy: 188, mediumExchange: 342, highPhototherapy: 154, highExchange: 303.5 },
+            { hours: 61, lowPhototherapy: 233.167, lowExchange: 394.417, mediumPhototherapy: 189.417, mediumExchange: 343.417, highPhototherapy: 155.417, highExchange: 304.5417 },
+            { hours: 62, lowPhototherapy: 235.333, lowExchange: 395.833, mediumPhototherapy: 190.83, mediumExchange: 344.83, highPhototherapy: 156.83, highExchange: 305.583 },
+            { hours: 63, lowPhototherapy: 237.5, lowExchange: 397.25, mediumPhototherapy: 192.25, mediumExchange: 346.25, highPhototherapy: 158.25, highExchange: 306.625 },
+            { hours: 64, lowPhototherapy: 239.667, lowExchange: 398.667, mediumPhototherapy: 193.67, mediumExchange: 347.67, highPhototherapy: 159.67, highExchange: 307.67 },
+            { hours: 65, lowPhototherapy: 241.833, lowExchange: 400.083, mediumPhototherapy: 195.083, mediumExchange: 349.083, highPhototherapy: 161.083, highExchange: 308.7083 },
+            { hours: 66, lowPhototherapy: 244, lowExchange: 401.5, mediumPhototherapy: 196.5, mediumExchange: 350.5, highPhototherapy: 162.5, highExchange: 309.75 },
+            { hours: 67, lowPhototherapy: 246.167, lowExchange: 402.917, mediumPhototherapy: 197.917, mediumExchange: 351.917, highPhototherapy: 163.917, highExchange: 310.7917 },
+            { hours: 68, lowPhototherapy: 248.333, lowExchange: 404.333, mediumPhototherapy: 199.33, mediumExchange: 353.33, highPhototherapy: 165.33, highExchange: 311.83 },
+            { hours: 69, lowPhototherapy: 250.5, lowExchange: 405.75, mediumPhototherapy: 200.75, mediumExchange: 354.75, highPhototherapy: 166.75, highExchange: 312.875 },
+            { hours: 70, lowPhototherapy: 252.667, lowExchange: 407.167, mediumPhototherapy: 202.167, mediumExchange: 356.167, highPhototherapy: 168.167, highExchange: 313.917 },
+            { hours: 71, lowPhototherapy: 254.833, lowExchange: 408.583, mediumPhototherapy: 203.583, mediumExchange: 357.83, highPhototherapy: 169.583, highExchange: 314.9583 },
+            { hours: 72, lowPhototherapy: 257, lowExchange: 410, mediumPhototherapy: 205, mediumExchange: 359, highPhototherapy: 171, highExchange: 316 },
+            { hours: 73, lowPhototherapy: 258.417, lowExchange: 410.75, mediumPhototherapy: 206.417, mediumExchange: 360.083, highPhototherapy: 171.7083, highExchange: 316.375 },
+            { hours: 74, lowPhototherapy: 259.833, lowExchange: 411.5, mediumPhototherapy: 207.83, mediumExchange: 361.167, highPhototherapy: 172.417, highExchange: 316.75 },
+            { hours: 75, lowPhototherapy: 261.25, lowExchange: 412.25, mediumPhototherapy: 209.25, mediumExchange: 362.25, highPhototherapy: 173.125, highExchange: 317.125 },
+            { hours: 76, lowPhototherapy: 262.667, lowExchange: 413, mediumPhototherapy: 210.67, mediumExchange: 363.33, highPhototherapy: 173.83, highExchange: 317.5 },
+            { hours: 77, lowPhototherapy: 264.083, lowExchange: 413.75, mediumPhototherapy: 212.083, mediumExchange: 364.417, highPhototherapy: 175.5417, highExchange: 317.875 },
+            { hours: 78, lowPhototherapy: 265.5, lowExchange: 414.5, mediumPhototherapy: 213.5, mediumExchange: 365.5, highPhototherapy: 175.25, highExchange: 318.25 },
+            { hours: 79, lowPhototherapy: 266.917, lowExchange: 415.25, mediumPhototherapy: 214.917, mediumExchange: 366.583, highPhototherapy: 175.9583, highExchange: 318.625 },
+            { hours: 80, lowPhototherapy: 268.333, lowExchange: 416, mediumPhototherapy: 216.33, mediumExchange: 367.67, highPhototherapy: 176.67, highExchange: 319 },
+            { hours: 81, lowPhototherapy: 269.75, lowExchange: 416.75, mediumPhototherapy: 217.75, mediumExchange: 368.75, highPhototherapy: 177.375, highExchange: 319.375 },
+            { hours: 82, lowPhototherapy: 271.167, lowExchange: 417.5, mediumPhototherapy: 219.167, mediumExchange: 369.83, highPhototherapy: 178.083, highExchange: 319.75 },
+            { hours: 83, lowPhototherapy: 272.583, lowExchange: 418.25, mediumPhototherapy: 220.583, mediumExchange: 370.917, highPhototherapy: 178.7917, highExchange: 320.125 },
+            { hours: 84, lowPhototherapy: 274, lowExchange: 419, mediumPhototherapy: 222, mediumExchange: 372, highPhototherapy: 179.5, highExchange: 320.5 },
+            { hours: 85, lowPhototherapy: 275.417, lowExchange: 419.75, mediumPhototherapy: 223.417, mediumExchange: 373.083, highPhototherapy: 180.2083, highExchange: 320.875 },
+            { hours: 86, lowPhototherapy: 276.833, lowExchange: 420.5, mediumPhototherapy: 224.83, mediumExchange: 374.167, highPhototherapy: 180.917, highExchange: 321.25 },
+            { hours: 87, lowPhototherapy: 278.25, lowExchange: 421.25, mediumPhototherapy: 226.25, mediumExchange: 375.25, highPhototherapy: 181.625, highExchange: 321.625 },
+            { hours: 88, lowPhototherapy: 279.667, lowExchange: 422, mediumPhototherapy: 227.67, mediumExchange: 376.33, highPhototherapy: 182.33, highExchange: 322 },
+            { hours: 89, lowPhototherapy: 281.083, lowExchange: 422.75, mediumPhototherapy: 229.083, mediumExchange: 377.417, highPhototherapy: 183.0417, highExchange: 322.375 },
+            { hours: 90, lowPhototherapy: 282.5, lowExchange: 423.5, mediumPhototherapy: 230.5, mediumExchange: 378.5, highPhototherapy: 183.75, highExchange: 322.75 },
+            { hours: 91, lowPhototherapy: 283.917, lowExchange: 424.25, mediumPhototherapy: 231.917, mediumExchange: 379.583, highPhototherapy: 184.4583, highExchange: 323.125 },
+            { hours: 92, lowPhototherapy: 285.333, lowExchange: 425, mediumPhototherapy: 233.33, mediumExchange: 380.67, highPhototherapy: 185.167, highExchange: 323.5 },
+            { hours: 93, lowPhototherapy: 286.75, lowExchange: 425.75, mediumPhototherapy: 234.75, mediumExchange: 381.75, highPhototherapy: 185.875, highExchange: 323.875 },
+            { hours: 94, lowPhototherapy: 288.167, lowExchange: 426.5, mediumPhototherapy: 236.167, mediumExchange: 382.83, highPhototherapy: 186.583, highExchange: 324.25 },
+            { hours: 95, lowPhototherapy: 289.583, lowExchange: 427.25, mediumPhototherapy: 237.583, mediumExchange: 383.917, highPhototherapy: 187.2917, highExchange: 324.625 },
+            { hours: 96, lowPhototherapy: 291, lowExchange: 428, mediumPhototherapy: 239, mediumExchange: 385, highPhototherapy: 188, highExchange: 325 },
+            { hours: '>96', lowPhototherapy: 308, lowExchange: 428, mediumPhototherapy: 257, mediumExchange: 385, highPhototherapy: 205, highExchange: 325 },
+        ];
+
+        const threshold24Hourly = [
+            { hours: 24, lowPhototherapy: 154, lowExchange: 325, mediumPhototherapy: 120, mediumExchange: 291, highPhototherapy: 86, highExchange: 257 },
+            { hours: 48, lowPhototherapy: 205, lowExchange: 376, mediumPhototherapy: 171, mediumExchange: 325, highPhototherapy: 137, highExchange: 291 },
+            { hours: 72, lowPhototherapy: 257, lowExchange: 410, mediumPhototherapy: 205, mediumExchange: 359, highPhototherapy: 171, highExchange: 316 },
+            { hours: 96, lowPhototherapy: 291, lowExchange: 428, mediumPhototherapy: 239, mediumExchange: 385, highPhototherapy: 188, highExchange: 325 },
+            { hours: '>96', lowPhototherapy: 308, lowExchange: 428, mediumPhototherapy: 257, mediumExchange: 385, highPhototherapy: 205, highExchange: 325 },
+        ];
+
+        let thresholdCalculated = false;
+
+        
+// Update Threshold Calculation to Use the Validation Logic
+console.log("Calculate Threshold button clicked!");
+
+function calculateThreshold() {
+
+if (!ageReady) {
+  showAlert('Please complete the Age / Gestational Age section first.');
+  return;
+}
+
+    const method = document.querySelector('input[name="calculation-method"]:checked').value;
+    const riskCategory = determineRiskCategory();
+
+    if (!riskCategory) {
+  showAlert('Please enter the baby’s gestational age.');
+  return;
+}
+   let selectedThreshold;
+    if (method === 'hourly') {
+        // Use hourly dataset
+        for (let data of thresholdHourly) {
+            if (data.hours === '>96') {
+                selectedThreshold = data;
+                break;
+            }
+            if (babyAgeHours <= data.hours) {
+                selectedThreshold = data;
+                break;
+            }
+        }
+
+        if (!selectedThreshold) {
+            selectedThreshold = thresholdHourly[thresholdHourly.length - 1];
+        }
+    } else if (method === '24hourly') {
+        // Use 24-hourly dataset
+        if (babyAgeHours < 24) {
+            showAlert('Age is less than 24 hours. Please check the age calculation.');
+            thresholdCalculated = false;
+            return;
+        } else if (babyAgeHours >= 24 && babyAgeHours < 48) {
+            selectedThreshold = threshold24Hourly.find(data => data.hours === 24);
+        } else if (babyAgeHours >= 48 && babyAgeHours < 72) {
+            selectedThreshold = threshold24Hourly.find(data => data.hours === 48);
+        } else if (babyAgeHours >= 72 && babyAgeHours < 96) {
+            selectedThreshold = threshold24Hourly.find(data => data.hours === 72);
+        } else {
+            selectedThreshold = threshold24Hourly.find(data => data.hours === '>96');
+        }
+    }
+
+    if (!selectedThreshold) {
+        showAlert('Threshold data not found. Please check the inputs.');
+        thresholdCalculated = false;
+        return;
+    }
+
+    thresholdResultDiv.innerHTML = `
+        <h3>Low Risk
+            ${riskCategory === 'Low Risk' ? '<span class="selected-indicator"><span class="material-icons">check_circle</span> This risk category is selected</span>' : ''}
+        </h3>
+        <p>Phototherapy Level: ${selectedThreshold.lowPhototherapy} μmol/L</p>
+        <p>Exchange Transfusion Level: ${selectedThreshold.lowExchange} μmol/L</p>
+        <h3>Medium Risk
+            ${riskCategory === 'Medium Risk' ? '<span class="selected-indicator"><span class="material-icons">check_circle</span> This risk category is selected</span>' : ''}
+        </h3>
+        <p>Phototherapy Level: ${selectedThreshold.mediumPhototherapy} μmol/L</p>
+        <p>Exchange Transfusion Level: ${selectedThreshold.mediumExchange} μmol/L</p>
+        <h3>High Risk
+            ${riskCategory === 'High Risk' ? '<span class="selected-indicator"><span class="material-icons">check_circle</span> This risk category is selected</span>' : ''}
+        </h3>
+        <p>Phototherapy Level: ${selectedThreshold.highPhototherapy} μmol/L</p>
+        <p>Exchange Transfusion Level: ${selectedThreshold.highExchange} μmol/L</p>
+    `;
+
+    thresholdCalculated = true; 
+}
+
+    calculateThresholdBtn.addEventListener('click', calculateThreshold);
+
+        // Decide Management
+        const decideManagementBtn = document.getElementById('decide-management-btn');
+        const managementResultDiv = document.getElementById('management-result');
+        const tsbValueInput = document.getElementById('tsb-value');
+        const unitToggle = document.getElementById('unit-toggle');
+
+        function decideManagement() {
+
+        if (!ageReady) {
+  showAlert('Please complete the Age / Gestational Age section first.');
+  return;
+}
+
+        // If threshold hasn’t been calculated, block decision logic
+        if (!thresholdCalculated) {
+            showAlert("Please calculate threshold first!");
+            return;
+        }
+
+        let tsbValue = parseFloat(tsbValueInput.value);
+        if (isNaN(tsbValue)) {
+            showAlert('Please enter a valid TSB value.');
+            return;
+        }
+
+        if (!unitToggle.checked) {
+            tsbValue = convertMgDlToMicromol(tsbValue);
+        }
+
+         
+       const method = document.querySelector('input[name="calculation-method"]:checked').value;
+       const riskCategory = determineRiskCategory();
+       let selectedThreshold;
+
+            if (method === 'hourly') {
+                // Use hourly dataset
+                for (let data of thresholdHourly) {
+                    if (data.hours === '>96') {
+                        selectedThreshold = data;
+                        break;
+                    }
+                    if (babyAgeHours <= data.hours) {
+                        selectedThreshold = data;
+                        break;
+                    }
+                }
+
+                if (!selectedThreshold) {
+                    selectedThreshold = thresholdHourly[thresholdHourly.length -1];
+                }
+            } else if (method === '24hourly') {
+                // Use 24Hourly-block dataset with specified rules
+                if (babyAgeHours < 24) {
+                    showAlert('Age is less than 24 hours. Please check the age calculation.');
+                    return;
+                } else if (babyAgeHours >= 24 && babyAgeHours < 48) {
+                    selectedThreshold = threshold24Hourly.find(data => data.hours === 24);
+                } else if (babyAgeHours >= 48 && babyAgeHours < 72) {
+                    selectedThreshold = threshold24Hourly.find(data => data.hours === 48);
+                } else if (babyAgeHours >= 72 && babyAgeHours < 96) {
+                    selectedThreshold = threshold24Hourly.find(data => data.hours === 72);
+                } else if (babyAgeHours === 96) {
+                    selectedThreshold = threshold24Hourly.find(data => data.hours === 96);
+                } else { // babyAgeHours >96
+                    selectedThreshold = threshold24Hourly.find(data => data.hours === '>96');
+                }
+            }
+
+            if (!selectedThreshold) {
+                showAlert('Threshold data not found. Please check the inputs.');
+                return;
+            }
+
+            let phototherapyThreshold, exchangeThreshold;
+
+            switch(riskCategory) {
+                case 'Low Risk':
+                    phototherapyThreshold = selectedThreshold.lowPhototherapy;
+                    exchangeThreshold = selectedThreshold.lowExchange;
+                    break;
+                case 'Medium Risk':
+                    phototherapyThreshold = selectedThreshold.mediumPhototherapy;
+                    exchangeThreshold = selectedThreshold.mediumExchange;
+                    break;
+                case 'High Risk':
+                    phototherapyThreshold = selectedThreshold.highPhototherapy;
+                    exchangeThreshold = selectedThreshold.highExchange;
+                    break;
+                default:
+                    phototherapyThreshold = 0;
+                    exchangeThreshold = 0;
+            }
+
+            let decision = '';
+            if (tsbValue >= exchangeThreshold) {
+                decision = 'Patient required urgent referral for Exchange Transfusion.';
+            } else if (tsbValue >= phototherapyThreshold) {
+                decision = 'Patient required referral for Phototherapy.';
+            } else {
+                decision = 'Patient may be discharged with proper parental education on Jaundice in Baby. TCA may be required as per the doctor\'s discretion.';
+            }
+
+            managementResultDiv.innerHTML = `
+                <span class="management-icon material-icons">check_circle</span>
+                ${decision}
+            `;
+        }
+
+        decideManagementBtn.addEventListener('click', decideManagement);
+
+        // Reset Functionality
+        const resetBtn = document.getElementById('reset-tool');
+        resetBtn.addEventListener('click', () => {
+            // Reset all inputs
+            dobInput.value = '';
+            timeOfBirthInput.value = '';
+            currentDateInput.value = '';
+            currentTimeInput.value = '';
+            gestationalWeekInput.value = '';
+            gestationalDayInput.value = '';
+            babyAgeDisplay.textContent = 'Baby Age: --';
+            currentDateTimeDisplay.textContent = 'Current Date & Time: --';
+            warningMessageDiv.style.display = 'none';
+            riskRadioButtons.forEach(radio => radio.checked = radio.value === 'no');
+            updateRiskIcons();
+            thresholdResultDiv.innerHTML = '';
+            tsbValueInput.value = '';
+            managementResultDiv.innerHTML = '';
+            // Enable buttons
+            document.getElementById('calculate-threshold').disabled = false;
+            document.getElementById('decide-management-btn').disabled = false;
+
+            ageReady = false;
+calculateThresholdBtn.disabled  = true;
+decideManagementBtn.disabled    = true;
+
+        });
+    </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+<div class="app-footer" role="contentinfo" aria-label="Medical disclaimer">
+  Any calculations must be rechecked and should not be used alone to guide patient care.
+</div>
+</html>

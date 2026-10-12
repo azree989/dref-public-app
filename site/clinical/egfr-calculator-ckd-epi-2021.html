@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>eGFR CKD-EPI 2021 Calculator</title>
+
+  <!-- SEO basics -->
+  <meta name="description" content="DRef eGFR (CKD-EPI 2021, race-free) calculator with CKD G-stage and albuminuria (ACR) A-stage plus KDIGO heat-map.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.dref.my/tools/egfr-ckdepi-2021">
+
+  <!-- Header/Footer font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <style>
+    :root{
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --card-max:800px;
+    }
+
+    /* Base */
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f9; color:#333; }
+
+    /* Standard header (same as other apps) */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin-top:16px;
+      margin-bottom:12px;
+      padding:4px 12px;
+      max-width:90%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* Card/container */
+    main{
+      max-width: var(--card-max);
+      margin: 0 auto 20px;
+      background:#fff;
+      padding:20px;
+      border-radius:10px;
+      box-shadow:0 2px 5px rgba(0,0,0,0.08);
+    }
+
+    /* Title to match PEFR look */
+    .card-title{
+      text-align:center;
+      color:#1976d2;           /* PEFR blue */
+      font-size:1.6rem;
+      font-weight:600;
+      margin:8px 0 18px;
+      font-family: Arial, sans-serif;
+    }
+
+    h1{ font-size:18px; margin:22px 0 8px; text-align:left; }
+    label{ font-weight:bold; display:block; margin-top:10px; }
+
+    input, select{
+      width:100%;
+      padding:10px;
+      margin-top:5px;
+      border:1px solid #ddd;
+      border-radius:5px;
+      font-size:16px;
+      background:#fff;
+    }
+
+    .row{ display:flex; gap:8px; }
+    .row > *{ flex:1; }
+
+    /* PEFR-style buttons */
+    button{
+      padding:12px 18px;
+      cursor:pointer;
+      border:none;
+      border-radius:6px;
+      color:#fff;
+      font-size:1rem;
+      font-weight:500;
+      width:100%;
+      margin-top:15px;
+      transition:background .25s ease;
+    }
+    /* Calculate (blue) */
+    button:not(.reset){ background-color:#1976d2; }
+    button:not(.reset):hover{ background-color:#125aa0; }
+    /* Reset (red) */
+    .reset{ background-color:#e53935; }
+    .reset:hover{ background-color:#b71c1c; }
+
+    .muted{ color:#555; }
+    .small{ font-size:.92rem; color:#444; font-weight:normal; }
+
+    .output{
+      margin-top:20px;
+      padding:15px;
+      background:#e8f5e9;
+      border:1px solid #c8e6c9;
+      border-radius:5px;
+      text-align:center;
+      font-size:18px;
+      font-weight:bold;
+    }
+    .output.secondary{ background:#eef7ff; border-color:#cfe3ff; }
+
+    /* KDIGO heat-map */
+    .heatmap-wrap{ margin-top:16px; display:none; }
+    .heatmap-legend{ display:flex; gap:8px; justify-content:center; align-items:center; margin:10px 0 6px; flex-wrap:wrap; }
+    .legend-chip{ display:inline-flex; align-items:center; gap:6px; font-size:.9rem; }
+    .chip-box{ width:16px; height:16px; border-radius:3px; border:1px solid rgba(0,0,0,.1); }
+
+    .hm-grid{ display:grid; grid-template-columns: 80px repeat(3, 1fr); border:1px solid #e4e7ee; border-radius:8px; overflow:hidden; }
+    .hm-cell{ padding:10px; text-align:center; border-right:1px solid #e4e7ee; border-bottom:1px solid #e4e7ee; font-size:.95rem; }
+    .hm-head{ background:#fafbff; font-weight:bold; }
+    .hm-rowhead{ background:#fafbff; font-weight:600; }
+    .hm-selected{ outline:3px solid #163; box-shadow: inset 0 0 0 2px rgba(0,0,0,.05); }
+    .risk-low{ background:#dff5e1; }
+    .risk-mod{ background:#fff6cc; }
+    .risk-high{ background:#ffe0b3; }
+    .risk-vhigh{ background:#ffcccc; }
+
+    /* Standard footer (same as other apps) */
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 18px;
+      max-width:var(--card-max);
+      line-height:1.4;
+    }
+
+    @media (max-width:600px){
+      .app-header{ padding:6px 16px; max-width:94%; }
+      .app-footer{ font-size:.85rem; padding:8px 10px; }
+    }
+  </style>
+<meta name="dref-tool" content="egfr-calculator-ckd-epi-2021"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <main>
+    <h1 class="card-title">Calculate eGFR (CKD-EPI 2021)</h1>
+
+    <form id="egfrForm">
+      <!-- Creatinine -->
+      <label for="creatinine">Serum Creatinine:</label>
+      <div class="row">
+        <input type="number" step="0.1" id="creatinine" placeholder="Enter value" required>
+        <select id="creaUnit" aria-label="Creatinine unit" style="max-width:160px;">
+          <option value="umol">µmol/L</option>
+          <option value="mgdl">mg/dL</option>
+        </select>
+      </div>
+
+      <!-- Age + Sex -->
+      <div class="row">
+        <div>
+          <label for="age">Age (years):</label>
+          <input type="number" step="1" id="age" placeholder="Enter age" min="1" max="120" required>
+        </div>
+        <div>
+          <label for="gender">Sex:</label>
+          <select id="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ACR -->
+      <h1>Albumin–Creatinine Ratio (ACR)</h1>
+      <p class="muted small" style="margin:0 0 8px;">
+        Enter ACR directly (mg/mmol or mg/g), or albumin (mg/L) + urine creatinine (mmol/L) to derive ACR.
+      </p>
+
+      <label for="acrDirect">ACR (direct):</label>
+      <div class="row">
+        <input type="number" step="0.1" id="acrDirect" placeholder="e.g., 2.5">
+        <select id="acrUnit" aria-label="ACR unit" style="max-width:160px;">
+          <option value="mg_per_mmol">mg/mmol</option>
+          <option value="mg_per_g">mg/g</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="uAlb">Urine Albumin (mg/L):</label>
+          <input type="number" step="0.1" id="uAlb" placeholder="e.g., 25">
+        </div>
+        <div>
+          <label for="uCr">Urine Creatinine (mmol/L):</label>
+          <input type="number" step="0.01" id="uCr" placeholder="e.g., 10">
+        </div>
+      </div>
+
+      <button type="button" onclick="calculateEGFR()">Calculate</button>
+      <button type="button" class="reset" onclick="resetForm()">Reset</button>
+    </form>
+
+    <div id="result" class="output">Result will appear here</div>
+    <div id="stage"  class="output secondary" style="display:none;"></div>
+    <div id="aStage" class="output secondary" style="display:none;"></div>
+    <div id="combo"  class="output secondary" style="display:none;"></div>
+
+    <!-- KDIGO Heat-map -->
+    <div id="heatmapWrap" class="heatmap-wrap">
+      <div id="heatmapLegend" class="heatmap-legend">
+        <span class="legend-chip"><span class="chip-box risk-low"></span> Low</span>
+        <span class="legend-chip"><span class="chip-box risk-mod"></span> Moderate</span>
+        <span class="legend-chip"><span class="chip-box risk-high"></span> High</span>
+        <span class="legend-chip"><span class="chip-box risk-vhigh"></span> Very High</span>
+      </div>
+
+      <div id="hmGrid" class="hm-grid" aria-label="KDIGO CKD risk heat-map">
+        <div class="hm-cell hm-head"></div>
+        <div class="hm-cell hm-head">A1<br><span class="small">ACR &lt;3 mg/mmol</span></div>
+        <div class="hm-cell hm-head">A2<br><span class="small">3–30 mg/mmol</span></div>
+        <div class="hm-cell hm-head">A3<br><span class="small">&gt;30 mg/mmol</span></div>
+
+        <div class="hm-cell hm-rowhead">G1</div>
+        <div id="G1A1" class="hm-cell"></div>
+        <div id="G1A2" class="hm-cell"></div>
+        <div id="G1A3" class="hm-cell"></div>
+
+        <div class="hm-cell hm-rowhead">G2</div>
+        <div id="G2A1" class="hm-cell"></div>
+        <div id="G2A2" class="hm-cell"></div>
+        <div id="G2A3" class="hm-cell"></div>
+
+        <div class="hm-cell hm-rowhead">G3a</div>
+        <div id="G3aA1" class="hm-cell"></div>
+        <div id="G3aA2" class="hm-cell"></div>
+        <div id="G3aA3" class="hm-cell"></div>
+
+        <div class="hm-cell hm-rowhead">G3b</div>
+        <div id="G3bA1" class="hm-cell"></div>
+        <div id="G3bA2" class="hm-cell"></div>
+        <div id="G3bA3" class="hm-cell"></div>
+
+        <div class="hm-cell hm-rowhead">G4</div>
+        <div id="G4A1" class="hm-cell"></div>
+        <div id="G4A2" class="hm-cell"></div>
+        <div id="G4A3" class="hm-cell"></div>
+
+        <div class="hm-cell hm-rowhead">G5</div>
+        <div id="G5A1" class="hm-cell"></div>
+        <div id="G5A2" class="hm-cell"></div>
+        <div id="G5A3" class="hm-cell"></div>
+      </div>
+      <p id="riskNote" class="small" style="text-align:center;margin-top:8px;"></p>
+    </div>
+  </main>
+
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+
+  <script>
+    const UMOL_PER_MGDL = 88.4;
+    const MG_PER_MMOL_CR = 113.0;
+    const G_PER_MMOL_CR  = MG_PER_MMOL_CR / 1000;
+
+    function gfrToStage(e){
+      if (e >= 90) return { stage: "G1", desc: "Normal or high" };
+      if (e >= 60) return { stage: "G2", desc: "Mildly decreased" };
+      if (e >= 45) return { stage: "G3a", desc: "Mild-moderately decreased" };
+      if (e >= 30) return { stage: "G3b", desc: "Moderately-severely decreased" };
+      if (e >= 15) return { stage: "G4", desc: "Severely decreased" };
+      return { stage: "G5", desc: "Kidney failure" };
+    }
+
+    function computeAcrMgPerMmol(){
+      const acrDirect = parseFloat(document.getElementById("acrDirect").value);
+      const acrUnit   = document.getElementById("acrUnit").value;
+      const uAlb      = parseFloat(document.getElementById("uAlb").value);
+      const uCr       = parseFloat(document.getElementById("uCr").value);
+
+      if (!isNaN(acrDirect) && acrDirect > 0) {
+        return (acrUnit === "mg_per_mmol") ? acrDirect : acrDirect / G_PER_MMOL_CR; // mg/g → mg/mmol
+      }
+      if (!isNaN(uAlb) && uAlb > 0 && !isNaN(uCr) && uCr > 0) {
+        return uAlb / uCr; // mg/L ÷ mmol/L = mg/mmol
+      }
+      return null;
+    }
+
+    function acrToAStage(acr){
+      if (acr == null) return null;
+      if (acr < 3)   return { a: "A1", desc: "Normal to mildly increased" };
+      if (acr <= 30) return { a: "A2", desc: "Moderately increased" };
+      return { a: "A3", desc: "Severely increased" };
+    }
+
+    function kdigoRiskTier(gStage, aStage){
+      const red="Very High", orange="High", yellow="Moderate", green="Low";
+      if (gStage === "G4" || gStage === "G5") return red;
+      if (gStage === "G3b") return (aStage === "A1") ? orange : red;
+      if (gStage === "G3a") return (aStage === "A1") ? yellow : (aStage === "A2" ? orange : red);
+      // G1–G2
+      if (aStage === "A1") return green;
+      if (aStage === "A2") return yellow;
+      return orange;
+    }
+
+    function classForTier(tier){
+      return tier === "Low" ? "risk-low"
+           : tier === "Moderate" ? "risk-mod"
+           : tier === "High" ? "risk-high"
+           : "risk-vhigh";
+    }
+
+    function fillHeatmap(){
+      const combos = [
+        ["G1A1","Low"],["G1A2","Moderate"],["G1A3","High"],
+        ["G2A1","Low"],["G2A2","Moderate"],["G2A3","High"],
+        ["G3aA1","Moderate"],["G3aA2","High"],["G3aA3","Very High"],
+        ["G3bA1","High"],["G3bA2","Very High"],["G3bA3","Very High"],
+        ["G4A1","Very High"],["G4A2","Very High"],["G4A3","Very High"],
+        ["G5A1","Very High"],["G5A2","Very High"],["G5A3","Very High"]
+      ];
+      combos.forEach(([id,tier])=>{
+        const el = document.getElementById(id);
+        el.className = `hm-cell ${classForTier(tier)}`;
+        el.textContent = "";
+      });
+      document.querySelectorAll('.hm-selected').forEach(n=>n.classList.remove('hm-selected'));
+    }
+
+    function highlightCell(gStage, aStage, tier){
+      const id = `${gStage}A${aStage.slice(1)}`;
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hm-selected');
+      document.getElementById("riskNote").textContent = `KDIGO risk tier: ${tier}`;
+    }
+
+    function calculateEGFR(){
+      const creaVal = parseFloat(document.getElementById("creatinine").value);
+      const unit    = document.getElementById("creaUnit").value;
+      const age     = parseInt(document.getElementById("age").value);
+      const gender  = document.getElementById("gender").value;
+
+      const resultEl = document.getElementById("result");
+      const stageEl  = document.getElementById("stage");
+      const aStageEl = document.getElementById("aStage");
+      const comboEl  = document.getElementById("combo");
+      const heatWrap = document.getElementById("heatmapWrap");
+
+      if (isNaN(creaVal) || creaVal <= 0 || isNaN(age) || age <= 0) {
+        resultEl.textContent = "Please enter valid positive numbers for creatinine and age.";
+        [stageEl,aStageEl,comboEl,heatWrap].forEach(e=>{ e.style.display="none"; if(e.id!=="heatmapWrap") e.innerHTML=""; });
+        return;
+      }
+
+      const scrMgdl = (unit === "umol") ? (creaVal / UMOL_PER_MGDL) : creaVal;
+
+      const k       = (gender === "male") ? 0.9 : 0.7;
+      const alpha   = (gender === "male") ? -0.302 : -0.241;
+      const femaleM = (gender === "female") ? 1.012 : 1.000;
+
+      const ratio = scrMgdl / k;
+      const eGFR  = 142 * Math.pow(Math.min(ratio, 1), alpha)
+                        * Math.pow(Math.max(ratio, 1), -1.200)
+                        * Math.pow(0.9938, age)
+                        * femaleM;
+
+      const e = Math.max(0, Math.min(eGFR, 200));
+      resultEl.textContent = `Estimated GFR: ${e.toFixed(1)} mL/min/1.73m²`;
+
+      const g = gfrToStage(e);
+      stageEl.innerHTML = `<div><strong>CKD G-Stage:</strong> ${g.stage} — ${g.desc}
+        <div class="small" style="margin-top:6px;">
+          Final CKD classification also requires albuminuria (A1–A3) and chronicity (≥3 months).
+        </div></div>`;
+      stageEl.style.display = "block";
+
+      const acr = computeAcrMgPerMmol();
+      if (acr != null){
+        const a = acrToAStage(acr);
+        aStageEl.innerHTML = `<div><strong>Albuminuria A-Stage:</strong> ${a.a} — ${a.desc}
+          <div class="small">ACR ≈ ${acr.toFixed(2)} mg/mmol (${(acr*8.84).toFixed(0)} mg/g)</div>
+        </div>`;
+        aStageEl.style.display = "block";
+
+        comboEl.innerHTML = `<div><strong>Combined CKD Classification:</strong> ${g.stage} / ${a.a}
+          <div class="small" style="margin-top:6px;">
+            Use the KDIGO heat-map (G × A) to guide prognosis & follow-up intensity.
+          </div>
+        </div>`;
+        comboEl.style.display = "block";
+
+        fillHeatmap();
+        const tier = kdigoRiskTier(g.stage, a.a);
+        highlightCell(g.stage, a.a, tier);
+        heatWrap.style.display = "block";
+      } else {
+        aStageEl.style.display = "none"; aStageEl.innerHTML = "";
+        comboEl.style.display  = "none"; comboEl.innerHTML  = "";
+        heatWrap.style.display = "none";
+      }
+    }
+
+    ["creatinine","creaUnit","age","gender","acrDirect","acrUnit","uAlb","uCr"].forEach(id=>{
+      document.getElementById(id).addEventListener("input", ()=>{
+        if (document.getElementById("creatinine").value && document.getElementById("age").value){
+          calculateEGFR();
+        }
+      });
+    });
+
+    function resetForm(){
+      document.getElementById("egfrForm").reset();
+      document.getElementById("result").textContent = "Result will appear here";
+      ["stage","aStage","combo"].forEach(id=>{
+        const el = document.getElementById(id);
+        el.style.display = "none";
+        el.innerHTML = "";
+      });
+      document.getElementById("heatmapWrap").style.display = "none";
+    }
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

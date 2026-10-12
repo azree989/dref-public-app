@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ramadan Risk Stratification — Diabetes (DRef)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Header font (suite-standard) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --text:#333;
+      --muted:#6b7280;
+      --surface:#ffffff;
+      --ring:#e5e7eb;
+      --primary:#00509e;
+      --primary-700:#003f7d;
+      --good:#e6f7ff;
+      --warn:#ffe6e6;
+      --radius:12px;
+      --shadow:0 4px 10px rgba(0,0,0,.08);
+    }
+
+    /* Resets */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      padding: 14px;
+    }
+
+    /* Standard header / footer */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin:4px auto 12px;
+      padding:4px 12px;
+      max-width:90%;
+    }
+    .container{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .card{
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:22px 18px 24px;
+    }
+    h1{
+      text-align:center;
+      color:var(--primary);
+      font-weight:700;
+      font-size: clamp(1.3rem,1.1rem + 1.2vw,1.75rem);
+      margin: 6px 0 10px;
+      line-height: 1.2;
+    }
+    p.lead{
+      text-align:center;
+      color:#4b5563;
+      margin-bottom: 16px;
+    }
+
+    /* Image strip */
+    .image-container{
+      display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin:6px 0 18px;
+    }
+    .image-container img{
+      max-width:420px;width:100%;height:auto;border-radius:10px;
+      box-shadow:0 3px 8px rgba(0,0,0,.12);cursor:default;transition:none;user-select:none;touch-action:manipulation;
+    }
+   /* Floating progress bar */
+    .progress-container{
+  position:sticky; top:6px; z-index:5;
+  width:100%;                 /* <-- full width of page content */
+  max-width:960px;            /* cap it on large screens */
+  margin:0 auto 8px;
+  background:#e0e0e0; border-radius:25px; height:18px; overflow:hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.08);
+    }
+    .progress-bar{ height:100%; width:0%; background:var(--primary); transition:width .3s ease; }
+    html, body { overflow-x:hidden; }
+    /* Form */
+    form{ margin-top:8px; }
+    .risk-section{
+      margin-bottom:14px; padding:14px 12px; border-radius:8px; border:1px solid var(--ring);
+      background:#fff; transition: border .2s, background .2s;
+    }
+    .risk-section h3{
+      color:var(--primary); font-size:1.05rem; margin-bottom:8px;
+    }
+    .risk-section label{
+      display:block; margin-bottom:8px; cursor:pointer; padding:8px 10px; border-radius:6px;
+      transition: background-color .2s;
+    }
+    .risk-section label:hover{ background:#f0f7ff; }
+    .risk-section input[type="radio"]{ margin-right:10px; }
+
+    /* Tooltip */
+    .tooltip{ position:relative; display:inline-block; border-bottom:1px dotted var(--primary); }
+    .tooltip .tooltiptext{
+      position:absolute; left:50%; transform:translateX(-50%); bottom:125%;
+      background:#111827; color:#fff; border-radius:6px; width:230px; padding:6px 8px;
+      font-size:.85rem; opacity:0; visibility:hidden; transition:opacity .2s;
+      box-shadow:0 6px 18px rgba(0,0,0,.25);
+    }
+    .tooltip .tooltiptext::after{
+      content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+      border-width:6px; border-style:solid; border-color:#111827 transparent transparent transparent;
+    }
+    .tooltip:hover .tooltiptext{ opacity:1; visibility:visible; }
+
+    /* Buttons */
+    .button-group{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+    button{
+      background:var(--primary); color:#fff; border:none; padding:12px 16px;
+      font-size:16px; border-radius:8px; cursor:pointer; transition: background .2s, opacity .2s;
+      flex:1; min-width: 160px;
+    }
+    button:hover{ background:var(--primary-700); }
+    button:disabled{ opacity:.6; cursor:not-allowed; }
+    .reset-button{ background:#9ca3af; }
+    .reset-button:hover{ background:#6b7280; }
+
+    /* Results */
+    .result{
+      display:none; margin-top:14px; padding:16px 14px; border-radius:8px;
+      background: var(--good); border-left:5px solid var(--primary);
+    }
+    .result p{ margin: 6px 0; }
+    .inline-ref{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px dashed var(--ring);
+  font-size:.9rem;
+  color:var(--muted);
+  line-height:1.45;
+  text-align:center;  
+}
+
+    /* Unanswered highlight */
+    .unanswered{ border:2px solid #dc2626; background:var(--warn); animation:shake .45s;}
+    .error-message{ color:#dc2626; font-size:.9em; display:none; margin-top:4px;}
+    .risk-section.unanswered .error-message{ display:block; }
+
+    @keyframes shake{
+      0%{transform: translateX(1px)} 20%{transform: translateX(-3px)}
+      40%{transform: translateX(3px)} 60%{transform: translateX(-1px)}
+      80%{transform: translateX(2px)} 100%{transform: translateX(0)}
+    }
+
+    /* Footer */
+    .app-footer{
+      text-align:center; font-size:.92rem; color:var(--muted);
+      background:#f7fafc; border:1px solid var(--ring);
+      border-radius:10px; padding:12px; box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 40px; max-width: 960px; line-height:1.45;
+    }
+
+    @media (max-width:600px){
+      .image-container{gap:12px}
+      button{ font-size:15px }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <!-- Floating Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar" aria-label="Completion progress"></div>
+  </div>
+
+  <div class="container">
+    <!-- Reference images -->
+    <div class="card" style="padding-bottom:14px;">
+      <div class="image-container" aria-label="IDF-DAR guideline snapshots">
+        <img src="https://lh3.googleusercontent.com/d/1l3laQDUGty_OzO6F4EQJzX3fkU8Wqs9s"
+     alt="IDF-DAR Guidelines (panel 1)" draggable="false" />
+<img src="https://lh3.googleusercontent.com/d/1bScLiGtorxFmFMs2xvzrtIi9ixzEnB1L"
+     alt="IDF-DAR Guidelines (panel 2)" draggable="false" />
+      </div>
+<div class="button-group" style="justify-content:center; margin-top:10px;">
+  <button type="button" id="download-btn" style="flex:0 0 auto;" onclick="downloadGuidelineImages()">
+    Download Pamplet Penjagaan Diabetes
+  </button>
+</div>
+    </div>
+
+     <div class="card" style="margin-top:14px;">
+      <h1>Ramadan Risk Stratification Tool<br/>for People with Diabetes</h1>
+      <p class="lead">Please select the most appropriate option for each criterion, then calculate the total risk score.</p>
+
+      <form id="riskForm" novalidate>
+        <!-- 1 -->
+        <div class="risk-section" id="section-q1">
+          <h3>1. Diabetes Type</h3>
+          <label><input type="radio" name="q1" value="1">Type 1 Diabetes (Score 1)</label>
+          <label><input type="radio" name="q1" value="0">Type 2 Diabetes (Score 0)</label>
+          <span class="error-message" id="error-q1">This question is required.</span>
+        </div>
+
+        <!-- 2 -->
+        <div class="risk-section" id="section-q2">
+          <h3>2. Duration of Diabetes (years)</h3>
+          <label><input type="radio" name="q2" value="1">&ge; 10 years (Score 1)</label>
+          <label><input type="radio" name="q2" value="0">&lt; 10 years (Score 0)</label>
+          <span class="error-message" id="error-q2">This question is required.</span>
+        </div>
+
+        <!-- 3 -->
+        <div class="risk-section" id="section-q3">
+          <h3>3. Presence of Hypoglycemia</h3>
+          <label><input type="radio" name="q3" value="6.5">Hypoglycemia unawareness (Score 6.5)</label>
+          <label><input type="radio" name="q3" value="5.5">Recent severe hypoglycemia (Score 5.5)</label>
+          <label><input type="radio" name="q3" value="3.5">Multiple weekly hypoglycemia (Score 3.5)</label>
+          <label><input type="radio" name="q3" value="1">Hypoglycemia &lt; 1 time/week (Score 1)</label>
+          <label><input type="radio" name="q3" value="0">No hypoglycemia (Score 0)</label>
+          <span class="error-message" id="error-q3">This question is required.</span>
+        </div>
+
+        <!-- 4 -->
+        <div class="risk-section" id="section-q4">
+          <h3>4. Level of Glycemic Control (HbA1c)</h3>
+          <label><input type="radio" name="q4" value="3">HbA1c &gt; 9% (Score 3)</label>
+          <label><input type="radio" name="q4" value="1">HbA1c 7.5–9% (Score 1)</label>
+          <label><input type="radio" name="q4" value="0">HbA1c &lt; 7.5% (Score 0)</label>
+          <span class="error-message" id="error-q4">This question is required.</span>
+        </div>
+
+        <!-- 5 -->
+        <div class="risk-section" id="section-q5">
+          <h3>5. Type of Treatment</h3>
+          <label><input type="radio" name="q5" value="3">Multiple daily mixed insulin injections (Score 3)</label>
+          <label><input type="radio" name="q5" value="2.5">Basal–bolus / Insulin pump (Score 2.5)</label>
+          <label><input type="radio" name="q5" value="2">Once-daily mixed insulin (Score 2)</label>
+          <label><input type="radio" name="q5" value="1.5">Basal insulin (Score 1.5)</label>
+          <label><input type="radio" name="q5" value="1">Glibenclamide (Score 1)</label>
+          <label><input type="radio" name="q5" value="0.5">Gliclazide/MR or Glimepiride or Repaglinide (Score 0.5)</label>
+          <label><input type="radio" name="q5" value="0">Other therapy (not incl. SU or insulin) (Score 0)</label>
+          <span class="error-message" id="error-q5">This question is required.</span>
+        </div>
+
+        <!-- 6 -->
+        <div class="risk-section" id="section-q6">
+          <h3>6. Self-Monitoring of Blood Glucose (SMBG)</h3>
+          <label><input type="radio" name="q6" value="2">Indicated but not conducted (Score 2)</label>
+          <label><input type="radio" name="q6" value="1">Indicated but conducted sub-optimally (Score 1)</label>
+          <label><input type="radio" name="q6" value="0">Conducted as indicated (Score 0)</label>
+          <span class="error-message" id="error-q6">This question is required.</span>
+        </div>
+
+        <!-- 7 -->
+        <div class="risk-section" id="section-q7">
+          <h3>7. Acute Complications (<span class="tooltip">DKA<span class="tooltiptext">Diabetic Ketoacidosis</span></span> / <span class="tooltip">HONC<span class="tooltiptext">Hyperglycaemic Hyperosmolar Nonketotic Coma</span></span>)</h3>
+          <label><input type="radio" name="q7" value="3">DKA/HONC in the last 3 months (Score 3)</label>
+          <label><input type="radio" name="q7" value="2">DKA/HONC in the last 6 months (Score 2)</label>
+          <label><input type="radio" name="q7" value="1">DKA/HONC in the last 12 months (Score 1)</label>
+          <label><input type="radio" name="q7" value="0">No DKA/HONC (Score 0)</label>
+          <span class="error-message" id="error-q7">This question is required.</span>
+        </div>
+
+        <!-- 8 -->
+        <div class="risk-section" id="section-q8">
+          <h3>8. <span class="tooltip">MVD<span class="tooltiptext">Macrovascular Disease</span></span> Complications / Comorbidities</h3>
+          <label><input type="radio" name="q8" value="6.5">Unstable MVD (Score 6.5)</label>
+          <label><input type="radio" name="q8" value="2">Stable MVD (Score 2)</label>
+          <label><input type="radio" name="q8" value="0">No MVD (Score 0)</label>
+          <span class="error-message" id="error-q8">This question is required.</span>
+        </div>
+
+        <!-- 9 -->
+        <div class="risk-section" id="section-q9">
+          <h3>9. Renal Complications / Comorbidities <span class="tooltip">(eGFR)<span class="tooltiptext">Estimated Glomerular Filtration Rate</span></span></h3>
+          <label><input type="radio" name="q9" value="6.5">eGFR &lt; 30 mL/min (Score 6.5)</label>
+          <label><input type="radio" name="q9" value="4">eGFR 30–45 mL/min (Score 4)</label>
+          <label><input type="radio" name="q9" value="2">eGFR 45–60 mL/min (Score 2)</label>
+          <label><input type="radio" name="q9" value="0">eGFR &ge; 60 mL/min (Score 0)</label>
+          <span class="error-message" id="error-q9">This question is required.</span>
+        </div>
+
+        <!-- 10 -->
+        <div class="risk-section" id="section-q10">
+          <h3>10. Pregnancy</h3>
+          <label><input type="radio" name="q10" value="6.5">Pregnant not within targets (Score 6.5)</label>
+          <label><input type="radio" name="q10" value="3.5">Pregnant within targets (Score 3.5)</label>
+          <label><input type="radio" name="q10" value="0">Not pregnant (Score 0)</label>
+          <span class="error-message" id="error-q10">This question is required.</span>
+        </div>
+
+        <!-- 11 -->
+        <div class="risk-section" id="section-q11">
+          <h3>11. Frailty and Cognitive Function</h3>
+          <label><input type="radio" name="q11" value="6.5">Impaired cognitive function or Frail (Score 6.5)</label>
+          <label><input type="radio" name="q11" value="3.5">&gt; 70 years old with no home support (Score 3.5)</label>
+          <label><input type="radio" name="q11" value="0">No frailty or loss in cognitive function (Score 0)</label>
+          <span class="error-message" id="error-q11">This question is required.</span>
+        </div>
+
+        <!-- 12 -->
+        <div class="risk-section" id="section-q12">
+          <h3>12. Physical Labour</h3>
+          <label><input type="radio" name="q12" value="4">Highly intense physical labour (Score 4)</label>
+          <label><input type="radio" name="q12" value="2">Moderate intense physical labour (Score 2)</label>
+          <label><input type="radio" name="q12" value="0">No physical labour (Score 0)</label>
+          <span class="error-message" id="error-q12">This question is required.</span>
+        </div>
+
+        <!-- 13 -->
+        <div class="risk-section" id="section-q13">
+          <h3>13. Previous Ramadan Experience</h3>
+          <label><input type="radio" name="q13" value="1">Overall negative experience (Score 1)</label>
+          <label><input type="radio" name="q13" value="0">No negative or positive experience (Score 0)</label>
+          <span class="error-message" id="error-q13">This question is required.</span>
+        </div>
+
+        <!-- 14 -->
+        <div class="risk-section" id="section-q14">
+          <h3>14. Fasting Hours (Location)</h3>
+          <label><input type="radio" name="q14" value="1">&ge; 16 hours (Score 1)</label>
+          <label><input type="radio" name="q14" value="0">&lt; 16 hours (Score 0)</label>
+          <span class="error-message" id="error-q14">This question is required.</span>
+        </div>
+
+        <div class="button-group">
+          <button type="button" id="calculate-button" onclick="calculateRisk()" disabled>
+            Calculate Total Risk Score
+          </button>
+          <button type="button" class="reset-button" onclick="resetForm()">Reset</button>
+        </div>
+      </form>
+
+      <div id="result" class="result" role="status" aria-live="polite"></div>
+<div id="inline-ref" class="inline-ref">
+  Reference: International Diabetes Federation &amp; DAR International Alliance —
+  <em>Diabetes and Ramadan: Practical Guidelines</em>, 2021.
+</div>
+    </div>
+  </div>
+
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+
+  <script>
+   async function fetchAndDownload(url, filename){
+  try{
+    const res = await fetch(url, {mode:'cors'});   // will throw on some hosts
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    const obj = URL.createObjectURL(blob);
+    a.href = obj; a.download = filename;
+    document.body.appendChild(a); a.click();
+    a.remove(); URL.revokeObjectURL(obj);
+  }catch(e){
+    // Fallback: just open the image; user can long-press / save
+    window.open(url, '_blank', 'noopener');
+  }
+}
+
+function downloadGuidelineImages(){
+  const imgs = [
+    { url: 'https://lh3.googleusercontent.com/d/1l3laQDUGty_OzO6F4EQJzX3fkU8Wqs9s', name: 'idf-dar-panel-1.jpg' },
+    { url: 'https://lh3.googleusercontent.com/d/1bScLiGtorxFmFMs2xvzrtIi9ixzEnB1L', name: 'idf-dar-panel-2.jpg' }
+  ];
+  imgs.forEach(i => fetchAndDownload(i.url, i.name));
+}
+
+    // -------- Progress & Enablement --------
+    const totalQuestions=14;
+    const form=document.getElementById('riskForm');
+    const progressBar=document.getElementById('progress-bar');
+    const calculateButton=document.getElementById('calculate-button');
+
+    function updateProgressBar(){
+      let answered=0;
+      for(let i=1;i<=totalQuestions;i++){
+        const radios=form.elements['q'+i];
+        if(!radios) continue;
+        for(let j=0;j<radios.length;j++){ if(radios[j].checked){ answered++; break; } }
+      }
+      const pct=(answered/totalQuestions)*100;
+      progressBar.style.width=pct+'%';
+      if(answered===totalQuestions){
+        calculateButton.disabled=false;
+      }else{
+        calculateButton.disabled=true;
+      }
+    }
+
+    // Attach change listeners to all radios to drive progress + clear errors
+    form.querySelectorAll('input[type="radio"]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        updateProgressBar();
+        const qNum=inp.name.replace('q','');
+        const section=document.getElementById('section-q'+qNum);
+        if(section && section.classList.contains('unanswered')){
+          section.classList.remove('unanswered');
+          const err=document.getElementById('error-q'+qNum);
+          if(err) err.textContent='';
+        }
+      });
+    });
+    // Init
+    updateProgressBar();
+
+    // -------- Calculation (logic unchanged) --------
+    function calculateRisk(){
+      let totalScore=0;
+      const unanswered=[];
+
+      // Clear prior flags
+      for(let i=1;i<=totalQuestions;i++){
+        const sec=document.getElementById('section-q'+i);
+        if(sec){ sec.classList.remove('unanswered'); const e=document.getElementById('error-q'+i); if(e) e.textContent=''; }
+      }
+
+      // Aggregate
+      for(let i=1;i<=totalQuestions;i++){
+        const radios=form.elements['q'+i];
+        let selected=null;
+        if(radios){
+          for(let j=0;j<radios.length;j++){
+            if(radios[j].checked){ selected=parseFloat(radios[j].value); break; }
+          }
+        }
+        if(selected===null){
+          unanswered.push(i);
+          const sec=document.getElementById('section-q'+i);
+          if(sec) sec.classList.add('unanswered');
+        }else{
+          totalScore+=selected;
+        }
+      }
+
+      if(unanswered.length>0){
+        alert("Please answer all questions before calculating the risk score.\n\nUnanswered Questions:\n- " + unanswered.join("\n- "));
+        return;
+      }
+
+      // Categorize
+      let category="", recommendation="";
+      if(totalScore<=3){
+        category="LOW RISK";
+        recommendation="May fast. Lower estimated risk; still reassess annually and stop fasting if symptoms arise.";
+      }else if(totalScore>3 && totalScore<=6){
+        category="MODERATE RISK";
+        recommendation="Advised NOT to fast. If choosing to fast, do so only after consultation, apply risk-reduction strategies, and stop if problems occur.";
+      }else{
+        category="HIGH RISK";
+        recommendation="Should NOT fast. If insisting, only under close medical supervision and with utmost caution.";
+      }
+
+      const resultDiv=document.getElementById('result');
+      resultDiv.style.display='block';
+      resultDiv.innerHTML =
+        `<p>Total Risk Score: <strong>${totalScore.toFixed(1)}</strong></p>`+
+        `<p>Risk Category: <strong>${category}</strong></p>`+
+        `<p>${recommendation}</p>`;
+      resultDiv.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+
+    // -------- Reset --------
+    function resetForm(){
+      form.reset();
+      document.getElementById('result').style.display='none';
+      // remove unanswered flags
+      for(let i=1;i<=totalQuestions;i++){
+        const sec=document.getElementById('section-q'+i);
+        if(sec){ sec.classList.remove('unanswered'); }
+      }
+      updateProgressBar();
+    }
+  </script>
+</body>
+</html>

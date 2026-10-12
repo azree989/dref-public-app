@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>DSM-5-TR Major Depressive Episode</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --accent: #005b96;
+      --accent-light: rgba(0,91,150,0.08);
+      --bg: #f9fafb;
+      --text: #2c3e50;
+      --border: #e0e2e5;
+      --radius: 6px;
+      --gap: 20px;
+      --gap-sm: 10px;
+      --fz: 1rem;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font: var(--fz)/1.6 'Roboto', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+    header {
+      background: white;
+      padding: var(--gap-sm);
+      text-align: center;
+      font-size: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10;
+    }
+    main {
+      flex: 1;
+      padding: var(--gap);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: var(--gap-sm);
+      padding-bottom: var(--gap-sm);
+      border-bottom: 1px solid var(--border);
+      text-align: justify;
+    }
+    p.note {
+      margin: var(--gap-sm) 0;
+      text-align: justify;
+      font-style: italic;
+      color: #555;
+    }
+    /* Highlighted Criterion A */
+    #sectionA {
+      background: var(--accent-light);
+      border-left: 6px solid var(--accent);
+      border-radius: var(--radius);
+      padding: var(--gap);
+      margin-bottom: var(--gap);
+    }
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-sm);
+      margin-top: var(--gap-sm);
+    }
+    .checkbox-list label {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      padding: var(--gap-sm);
+      border-radius: var(--radius);
+      transition: background .2s;
+      text-align: justify;
+    }
+    .checkbox-list label:hover {
+      background: var(--accent-light);
+    }
+    .checkbox-list label span {
+      display: block;
+    }
+    input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--accent);
+      margin-top: 3px;
+    }
+    .actions {
+      display: flex;
+      gap: var(--gap);
+      justify-content: center;
+      margin-top: var(--gap);
+    }
+    button {
+      flex: 1;
+      padding: var(--gap-sm);
+      font-size: var(--fz);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    button:hover { transform: translateY(-1px) }
+    .evaluate {
+      background: var(--accent);
+      color: white;
+    }
+    .reset {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+    /* Prominent result */
+    #result {
+      margin-top: var(--gap);
+      padding: var(--gap);
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    #result.meets {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-left: 8px solid #2e7d32;
+      box-shadow: 0 2px 6px rgba(46,125,50,0.3);
+    }
+    #result.fails {
+      background: #ffebee;
+      color: #c62828;
+      border-left: 8px solid #c62828;
+      box-shadow: 0 2px 6px rgba(198,40,40,0.3);
+    }
+    #result ul {
+      text-align: left;
+      margin-top: var(--gap-sm);
+      list-style: disc inside;
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+
+<header>DSM-5-TR MDD Diagnosis Tool</header>
+
+<main>
+
+  <!-- Criterion A -->
+  <section id="sectionA">
+    <h2>A. Five (or more) of the following symptoms have been present during the same two-week period and 
+    represent a change from previous functioning; at least one of the symptoms is either (1) depressed mood or 
+    (2) loss of interest or pleasure.</h2>
+
+    <p class="note">NOTE: Do not include symptoms that are clearly attributable to another medical condition.</p>
+
+    <div class="checkbox-list" id="critA">
+      <label>
+        <input type="checkbox" value="1">
+        <span>1) Depressed mood most of the day, nearly every day, as indicated by either subjective report 
+        (eg, feels sad, empty, hopeless) or observations made by others (eg, appears tearful).</span>
+      </label>
+      <p class="note">(NOTE: In children and adolescents, can be irritable mood.)</p>
+
+      <label>
+        <input type="checkbox" value="2">
+        <span>2) Markedly diminished interest or pleasure in all, or almost all, activities most of the day, 
+        nearly every day (as indicated by either subjective account or observation).</span>
+      </label>
+
+      <label>
+        <input type="checkbox" value="3">
+        <span>3) Significant weight loss when not dieting or weight gain (eg, a change of more than 5% of body 
+        weight in a month), or decrease or increase in appetite nearly every day.</span>
+      </label>
+      <p class="note">(NOTE: In children, consider failure to make expected weight gain.)</p>
+
+      <label>
+        <input type="checkbox" value="4">
+        <span>4) Insomnia or hypersomnia nearly every day.</span>
+      </label>
+
+      <label>
+        <input type="checkbox" value="5">
+        <span>5) Psychomotor agitation or retardation nearly every day (observable by others, not merely subjective 
+        feelings of restlessness or being slowed down).</span>
+      </label>
+
+      <label>
+        <input type="checkbox" value="6">
+        <span>6) Fatigue or loss of energy nearly every day.</span>
+      </label>
+
+      <label>
+        <input type="checkbox" value="7">
+        <span>7) Feelings of worthlessness or excessive or inappropriate guilt (which may be delusional) nearly 
+        every day (not merely self-reproach or guilt about being sick).</span>
+      </label>
+
+      <label>
+        <input type="checkbox" value="8">
+        <span>8) Diminished ability to think or concentrate, or indecisiveness, nearly every day (either by their 
+        subjective account or as observed by others).</span>
+      </label>
+
+      <label>
+        <input type="checkbox" value="9">
+        <span>9) Recurrent thoughts of death (not just fear of dying), recurrent suicidal ideation without a 
+        specific plan, or a suicide attempt or a specific plan for committing suicide.</span>
+      </label>
+    </div>
+  </section>
+
+  <!-- Criteria B–E -->
+  <section>
+    <h2>B. The symptoms cause clinically significant distress or impairment in social, occupational, or 
+    other important areas of functioning.</h2>
+    <div class="checkbox-list">
+      <label>
+        <input type="checkbox" id="critB">
+        <span>B) Clinically significant distress or impairment in social, occupational, or other important 
+        areas of functioning.</span>
+      </label>
+    </div>
+
+    <h2>C. The episode is not attributable to the direct physiological effects of a substance or to another 
+    medical condition.</h2>
+    <p class="note">NOTE: Criteria A through C represent a major depressive episode.</p>
+
+    <p class="note">NOTE: Responses to a significant loss (eg, bereavement…) may include the feelings of intense 
+    sadness… This decision inevitably requires the exercise of clinical judgement based on the individual's 
+    history and the cultural norms for the expression of distress in the context of loss.</p>
+
+    <h2>D. The occurrence of the major depressive episode is not better explained by schizoaffective disorder, 
+    schizophrenia, schizophreniform disorder, delusional disorder, or other specified and unspecified 
+    schizophrenia spectrum and other psychotic disorders.</h2>
+
+    <h2>E. There has never been a manic or hypomanic episode.</h2>
+    <p class="note">NOTE: This exclusion does not apply if all of the manic-like or hypomanic-like episodes are 
+    substance-induced or are attributable to the physiological effects of another medical condition.</p>
+  </section>
+
+  <!-- Specifiers -->
+  <section>
+    <h2>Specify (check all that apply):</h2>
+    <div class="checkbox-list" id="specifiers">
+      <label><input type="checkbox" value="With anxious distress"><span>With anxious distress</span></label>
+      <label><input type="checkbox" value="With mixed features"><span>With mixed features</span></label>
+      <label><input type="checkbox" value="With melancholic features"><span>With melancholic features</span></label>
+      <label><input type="checkbox" value="With atypical features"><span>With atypical features</span></label>
+      <label><input type="checkbox" value="With psychotic features"><span>With psychotic features</span></label>
+      <label><input type="checkbox" value="With catatonia"><span>With catatonia</span></label>
+      <label><input type="checkbox" value="With peripartum onset"><span>With peripartum onset</span></label>
+      <label><input type="checkbox" value="With seasonal pattern"><span>With seasonal pattern</span></label>
+    </div>
+  </section>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="evaluate" id="btnEvaluate">Evaluate</button>
+    <button class="reset"    id="btnReset">Reset</button>
+  </div>
+
+  <!-- Result -->
+  <div id="result"></div>
+</main>
+
+<script>
+  document.getElementById('btnEvaluate').addEventListener('click', () => {
+    // Criterion A
+    const checkedA = Array.from(
+      document.querySelectorAll('#critA input:checked')
+    ).map(cb => cb.value);
+    const countA = checkedA.length;
+    const has1or2 = checkedA.includes('1') || checkedA.includes('2');
+    // Criterion B
+    const B = document.getElementById('critB').checked;
+
+    const resultEl = document.getElementById('result');
+    resultEl.className = '';
+    resultEl.innerHTML = '';
+
+    if (countA >= 5 && has1or2 && B) {
+      // Collect specifiers
+      const specs = Array.from(
+        document.querySelectorAll('#specifiers input:checked')
+      ).map(cb => cb.value).join(', ') || 'None';
+
+      resultEl.classList.add('meets');
+      resultEl.innerHTML = `
+        ✅ <strong>Meets DSM-5-TR criteria for a Major Depressive Episode.</strong><br>
+        <em>Specifiers:</em> ${specs}
+      `;
+    } else {
+      const issues = [];
+      if (countA < 5)
+        issues.push(`Only ${countA}/9 Criterion A symptoms selected.`);
+      else if (!has1or2)
+        issues.push('Criterion A must include symptom 1 or 2.');
+      if (!B) issues.push('Criterion B not met.');
+
+      resultEl.classList.add('fails');
+      resultEl.innerHTML = `
+        ❌ <strong>Does NOT meet criteria</strong>
+        <ul>${issues.map(i => `<li>${i}</li>`).join('')}</ul>
+      `;
+    }
+  });
+
+  document.getElementById('btnReset').addEventListener('click', () => {
+    document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    const r = document.getElementById('result');
+    r.className = '';
+    r.textContent = '';
+  });
+</script>
+
+</body>
+</html>

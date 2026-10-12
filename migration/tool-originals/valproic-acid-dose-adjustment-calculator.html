@@ -1,0 +1,249 @@
+<!-- Include Google Font: Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+<style>
+  /* Mobile responsiveness: force each card to 100% width under 600px */
+  @media (max-width: 600px) {
+    .va-card {
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+  }
+</style>
+
+<div style="font-family: 'Poppins', sans-serif; max-width: 900px; margin: auto; color: #333; padding: 10px;">
+  <h2 style="text-align:center; color:#1558b0; margin-bottom:20px;">
+    Valproic Acid: TDM Dose Adjustment Calculator
+  </h2>
+
+  <!-- ==============================
+       CARD #1: Input Current Dose & Measured Level
+       ============================== -->
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px;">
+    <div class="va-card" style="
+      width: 48%;
+      background: #f9fbff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      box-sizing: border-box;
+    ">
+      <h3 style="margin-top:0; margin-bottom:15px; color:#1558b0;">Current Regimen & Measured Level</h3>
+
+      <!-- Current Dose (mg) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Current Dose (mg)</label>
+      <input type="number" id="currentDose" placeholder="e.g. 500" step="1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Dosing Interval (hr) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Interval (hr)</label>
+      <input type="number" id="tdmInterval" value="12" step="1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Measured Concentration (mg/L) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Measured Css (mg/L)</label>
+      <input type="number" id="cssMeasured" placeholder="e.g. 45" step="0.1"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Salt Factor (S) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Salt Factor (S)</label>
+      <input type="number" id="saltTDM" value="1.0" step="0.01"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Bioavailability (F) -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Bioavailability (F)</label>
+      <input type="number" id="fTDM" value="1.0" step="0.01"
+             style="width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #cbd5e1;" />
+
+      <!-- Dropdown: Desired Target Css -->
+      <label style="font-weight:600; display:block; margin-bottom:6px;">Target Css (mg/L)</label>
+      <select id="targetCss" style="width:100%; padding:10px; margin-bottom:20px; border-radius:6px; border:1px solid #cbd5e1;">
+        <option value="75">Seizure (75 mg/L)</option>
+        <option value="87.5">Psychiatric (87.5 mg/L)</option>
+      </select>
+
+      <!-- TDM Calculate & Reset Buttons -->
+      <div style="display:flex; gap:10px;">
+        <button onclick="tdmCalculate()" style="
+          flex:1;
+          padding:12px;
+          background:#1a73e8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#1558b0';" onmouseout="this.style.background='#1a73e8';">
+          Adjust Dose
+        </button>
+        <button onclick="tdmReset()" style="
+          flex:1;
+          padding:12px;
+          background:#94a3b8;
+          color:#fff;
+          border:none;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+          transition:background 0.2s;
+        " onmouseover="this.style.background='#64748b';" onmouseout="this.style.background='#94a3b8';">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         CARD #2: Display Calculated CL, New MD & Recommendations
+         ============================== -->
+    <div class="va-card" style="
+      width: 48%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      box-sizing: border-box;
+    ">
+      <h3 style="margin-top:0; margin-bottom:15px; color:#1558b0;">Results & Recommendations</h3>
+
+      <!-- Estimated Clearance -->
+      <div style="margin-bottom:12px;">
+        <strong>Calculated CL (L/hr):</strong>
+        <span id="tdmCL">—</span>
+      </div>
+
+      <!-- New Maintenance Dose -->
+      <div style="margin-bottom:12px;">
+        <strong>New MD per Interval (mg):</strong>
+        <span id="tdmMD">—</span>
+      </div>
+
+      <!-- Recommendation Box -->
+      <div id="tdmRecommendation" style="
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 12px;
+        color: #334155;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        display: none;
+      ">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /**
+   * Estimates clearance (L/hr) and computes a new maintenance dose (mg per interval),
+   * then provides a recommendation based on the measured Css.
+   */
+  function tdmCalculate() {
+    // 1) Read inputs
+    const currentDose  = parseFloat(document.getElementById("currentDose").value);
+    const interval     = parseFloat(document.getElementById("tdmInterval").value);
+    const cssMeas      = parseFloat(document.getElementById("cssMeasured").value);
+    const S            = parseFloat(document.getElementById("saltTDM").value);
+    const F            = parseFloat(document.getElementById("fTDM").value);
+    const cssTarget    = parseFloat(document.getElementById("targetCss").value);
+
+    // 2) Simple validation
+    if ([currentDose, interval, cssMeas, S, F].some(x => isNaN(x) || x <= 0)) {
+      alert("Please fill in all fields with valid, positive numbers.");
+      return;
+    }
+
+    // 3) Estimate clearance (L/hr): CL = (S * F * Dose) / (Css_meas * Interval)
+    const clValue = (S * F * currentDose) / (cssMeas * interval);
+
+    // 4) Calculate new maintenance dose: MD = (CL * Css_target * Interval) / (S * F)
+    const newMD = (clValue * cssTarget * interval) / (S * F);
+
+    // 5) Display CL & new MD (rounded)
+    document.getElementById("tdmCL").textContent = clValue.toFixed(3);
+    document.getElementById("tdmMD").textContent = newMD.toFixed(1);
+
+    // 6) Build a recommendation based on measured Css
+    let recommendation = "";
+    if (cssMeas < 50) {
+      // Subtherapeutic
+      recommendation = `
+        <strong>Subtherapeutic (< 50 mg/L)</strong><br>
+        <em>Contributing Factors:</em><br>
+        &bull; Compliance issues<br>
+        &bull; Sampling at wrong time<br>
+        &bull; Insufficient dose<br>
+        &bull; Drug–drug interaction<br>
+        &bull; Hypoalbuminemia<br>
+        &bull; Renal failure<br><br>
+        <em>Recommendation:</em><br>
+        If compliance and sampling time are satisfactory, <strong>increase the dose appropriately</strong> 
+        and re‐sample. For an inpatient, consider converting to IV temporarily. If the patient’s clinical 
+        response is good despite a low level, you may continue the current dose but monitor closely.
+      `;
+    } 
+    else if (cssMeas <= 100) {
+      // Within therapeutic
+      recommendation = `
+        <strong>Within Therapeutic Range (50 – 100 mg/L)</strong><br><br>
+        <em>Recommendation:</em><br>
+        If the patient’s clinical response is good, <strong>continue the current dose</strong> and monitor. 
+        If response is poor (e.g. seizures not controlled), consider <strong>increasing dose</strong> (but not above the max recommended) 
+        and re‐sample.
+      `;
+    } 
+    else if (cssMeas > 120) {
+      // Potential toxic
+      recommendation = `
+        <strong>Potential Toxic (> 120 mg/L)</strong><br>
+        <em>Contributing Factors:</em><br>
+        &bull; Overdosage<br>
+        &bull; Underlying disease/factors (e.g., hepatic dysfunction)<br>
+        &bull; Possible drug–drug interaction<br><br>
+        <em>Toxic Effects May Include:</em><br>
+        Deep sleep, coma, confusion, hyponatremia, ataxia, arrhythmia, leukopenia<br><br>
+        <em>Recommendation:</em><br>
+        <strong>Withhold treatment</strong>, monitor serum levels, and treat signs/symptoms of toxicity. 
+        Once the patient stabilizes, <strong>adjust the dose downward</strong> accordingly and re‐sample.
+      `;
+    } 
+    else {
+      // 100 – 120 mg/L: borderline high but not overtly toxic
+      recommendation = `
+        <strong>Borderline High (100 – 120 mg/L)</strong><br><br>
+        <em>Recommendation:</em><br>
+        This level is above the usual target range but not yet severely toxic. If the patient is asymptomatic, 
+        consider <strong>maintaining dose</strong> and re‐sample. If any mild adverse effects (e.g. sedation), 
+        consider <strong>slight dose reduction</strong> and repeat level.
+      `;
+    }
+
+    // 7) Inject recommendation into the box and show it
+    const recDiv = document.getElementById("tdmRecommendation");
+    recDiv.innerHTML = recommendation.trim();
+    recDiv.style.display = "block";
+  }
+
+  // Reset all TDM inputs and hide results
+  function tdmReset() {
+    document.getElementById("currentDose").value   = "";
+    document.getElementById("tdmInterval").value  = 12;
+    document.getElementById("cssMeasured").value  = "";
+    document.getElementById("saltTDM").value      = 1.0;
+    document.getElementById("fTDM").value         = 1.0;
+    document.getElementById("targetCss").value    = "75";
+    document.getElementById("tdmCL").textContent  = "—";
+    document.getElementById("tdmMD").textContent  = "—";
+    document.getElementById("tdmRecommendation").style.display = "none";
+  }
+
+  // On page load, nothing is pre‐filled except defaults
+  window.onload = function() {
+    // No autofill necessary here; the TDM card starts with default S=1.0, F=1.0, interval=12, targetCss=75
+    document.getElementById("tdmRecommendation").style.display = "none";
+  };
+</script>

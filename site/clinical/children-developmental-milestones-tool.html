@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>Development Milestone for Normal Children</title>
+
+
+
+
+<style>
+  :root{
+    --gm-color:#AEDFF7; --fm-color:#F7D6AE; --sl-color:#D6F7AE; --sc-color:#F7AEDF;
+    --card-radius:8px; --gap:12px; --header-h:48px; --controls-h:40px;
+    --dial-width:240px; --font-base:.95rem; --font-small:.82rem;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; font-size:var(--font-base); overflow-x:hidden; }
+
+  body{
+    font-family:'Inter',sans-serif;
+    display:flex; flex-direction:column;
+    background:#f9f9f9; color:#333; height:100vh;
+  }
+
+  /* Banner */
+  .expert-banner{
+    font-family:"Josefin Sans",sans-serif;
+    color:#64748b; text-align:center;
+    font-size:.95rem; font-weight:400; letter-spacing:.03em;
+    margin:16px auto 12px; padding:4px 12px; max-width:90%;
+  }
+
+  /* Header */
+  header{
+    position:static; height:var(--header-h); background:#fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.05);
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+    padding:0 8px; z-index:1;
+  }
+  header h1{ grid-column:2; margin:0; font-size:1.25rem; font-weight:600; text-align:center; }
+  #flag-btn{ grid-column:3; justify-self:end; background:none; border:none; cursor:pointer; font-size:1.25rem; color:red; }
+
+  /* Controls (top bar) */
+  .controls{
+    position:sticky; top:var(--header-h); height:var(--controls-h);
+    background:linear-gradient(to bottom,#ffffffee,#f9f9f9ee);
+    backdrop-filter:blur(6px);
+    box-shadow:0 1px 4px rgba(0,0,0,.04);
+    display:flex; align-items:center; padding:0 var(--gap); z-index:15;
+  }
+  .controls.dim-age .left-half{ opacity:.4; pointer-events:none; }
+  .ctrl-half{ flex:1; display:flex; align-items:center; }
+  .left-half{ justify-content:flex-start; }
+  .center-half{ justify-content:center; }
+  .controls label{ font-weight:500; font-size:var(--font-small); margin-right:6px; }
+
+  /* Age selector (uses a 3-column grid wrapper) */
+  .selector-row{
+    display:grid;
+    grid-template-columns:34px minmax(140px,1fr) 34px;
+    align-items:center; column-gap:8px;
+    width:min(420px,100%);
+  }
+  .dial-btn{
+    width:32px; height:32px; border:none; border-radius:50%;
+    background:#eee; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:1rem;
+  }
+  #age-card, #skill-card{ width:100%; text-align:center; }
+  #age-card, #skill-card{
+    padding:6px 12px; border-radius:var(--card-radius);
+    background:#fff; border:1px solid #ccc;
+    font-weight:600; font-size:var(--font-small);
+    white-space:nowrap;
+  }
+
+  /* Search */
+  #search-input{
+    border-radius:999px; box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    transition:box-shadow .3s ease; font-size:16px;
+  }
+  #search-input:focus{ outline:none; box-shadow:0 0 0 3px rgba(100,150,250,.3); }
+
+  /* Main layout */
+  .content{ display:flex; flex-grow:1; margin-top:calc(var(--header-h) + var(--controls-h)); padding-bottom:80px; gap:12px; }
+  .panel{ flex:1; display:flex; flex-direction:column; background:#fff; padding:var(--gap); min-width:0; }
+  .panel.left{ border-right:1px solid #eee; }
+  .panel.left .cards{ display:grid; gap:var(--gap); padding-bottom:80px; }
+
+  .card{
+    background:#eee; border-radius:var(--card-radius);
+    padding:8px; font-size:var(--font-small); white-space:pre-line;
+  }
+  .card strong{ display:block; margin-bottom:4px; }
+
+  .panel.right{ display:flex; flex-direction:column; align-items:center; }
+
+  /* Skill selector — fixed arrow columns + flexible pill */
+  .skill-group{
+    display:grid;
+    grid-template-columns: auto 34px minmax(160px, 420px) 34px; /* label | ◀ | pill | ▶ */
+    align-items:center;
+    gap:12px;
+    margin-bottom:var(--gap);
+    width:100%;
+    justify-items:center;
+  }
+  .skill-group > label{ justify-self:start; }
+  .skill-group .dial-btn{ /* keep these fixed; no absolute positioning */
+    width:32px; height:32px; border:none; border-radius:50%;
+    background:#eee; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:1rem;
+  }
+  /* The pill grows and the arrows stay put */
+  #skill-card{ width:100%; text-align:center; }
+
+  /* Dial (right column) */
+  .dial{ width:min(var(--dial-width),100%); display:flex; flex-direction:column; align-items:center; gap:var(--gap); }
+  .dial-nav{ width:32px; height:32px; border:none; border-radius:50%; background:#eee; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+
+  .dial-window{
+    width:100%; height:var(--dial-width);
+    overflow:auto; position:relative;
+    background:#f0f0f0; border-radius:var(--card-radius);
+    scroll-behavior:smooth;
+  }
+  /* Remove the decorative ▲/▼ inside the dial window */
+  .dial-window::before, .dial-window::after{ content:none; }
+
+  .dial-track{ display:flex; flex-direction:column; padding:8px 0; }
+
+  .dial-card{
+    flex:0 0 auto;               /* variable height cards */
+    min-height:var(--dial-width);
+    margin:4px 8px; border-radius:var(--card-radius);
+    padding:10px; font-size:var(--font-small);
+    display:flex; flex-direction:column;
+    opacity:.4; transition:opacity .3s; cursor:pointer;
+  }
+  .dial-card strong{ margin-bottom:6px; font-size:var(--font-base); }
+  .dial-card p{ flex:1; margin:0; text-align:justify; overflow-wrap:anywhere; }
+  .dial-card.highlight{ opacity:1; }
+
+  /* Inline icons used in copy text */
+  .icon-circle{ display:inline-block; width:1em; height:1em; border:2px solid currentColor; border-radius:50%; vertical-align:middle; margin:0 .25em; }
+  .icon-plus{ position:relative; display:inline-block; width:1em; height:1em; vertical-align:middle; margin:0 .25em; }
+  .icon-plus::before,.icon-plus::after{ content:""; position:absolute; left:50%; top:0; width:2px; height:100%; background:currentColor; transform:translateX(-50%); }
+  .icon-plus::after{ transform:translateX(-50%) rotate(90deg); }
+
+  /* Footer */
+  footer{ text-align:center; font-size:var(--font-small); color:#555; padding:var(--gap); background:#fff; border-top:1px solid #ddd; }
+  .scroll-smooth{ scroll-behavior:smooth; }
+
+  /* Responsive */
+  @media (max-width:720px){
+    .controls{ position:static; top:auto; margin-bottom:6px; height:auto; padding:8px var(--gap); gap:8px; flex-wrap:wrap; }
+    .controls .ctrl-half{ flex:1 1 100%; min-width:0; justify-content:center; }
+    .controls .left-half{ order:1; justify-content:flex-start; }
+    .controls .center-half{ order:2; }
+
+    #search-input{ width:100%; max-width:none; }
+    .content{ display:flex; flex-grow:1; margin-top:0; padding-top:0; padding-bottom:80px; }
+
+    .skill-group{
+      grid-template-columns: auto 34px 1fr 34px; /* label | ◀ | pill flex | ▶ */
+    }
+  }
+
+  @media (max-width:480px){ :root{ --dial-width:220px; } }
+  @media (max-width:360px){ :root{ --dial-width:180px; } }
+</style>
+<meta name="dref-tool" content="children-developmental-milestones-tool"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+
+<body>
+  <div class="expert-banner">app crafted by our medical doctors for better patient care</div>
+
+  <header>
+    <h1>
+      Children Development Milestone Tool
+      <button id="flag-btn" aria-label="Show red flag">🚩</button>
+    </h1>
+  </header>
+
+  <!-- Red flag modal -->
+  <div id="flag-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+    <div style="position:relative; background:#fff; padding:12px; border-radius:8px; max-width:90%; max-height:90%;">
+      <button id="close-flag" style="position:absolute; top:12px; left:12px; background:#fff; border:none; font-size:1rem; cursor:pointer; padding:4px 8px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">✕</button>
+      <img src="../clinical-assets/90d2c66bd2ccea2772823ae2.png" alt="Red Flag" style="max-width:100%; max-height:100%; display:block;" />
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-half left-half">
+      <label for="age-card">Age</label>
+      <div class="selector-row">
+        <button class="dial-btn prev-age">‹</button>
+        <div id="age-card"></div>
+        <button class="dial-btn next-age">›</button>
+      </div>
+    </div>
+
+    <div class="ctrl-half center-half">
+      <input id="search-input" type="search" placeholder="Search skills…" />
+    </div>
+
+    <div class="ctrl-half right-half"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="panel left"><div class="cards"></div></div>
+
+    <div class="panel right">
+      <!-- Skill row: label | ◀ | pill | ▶ (arrows don’t move) -->
+      <div class="skill-group">
+        <label for="skill-card">Skill</label>
+        <button class="dial-btn prev-skill" aria-label="Previous skill">‹</button>
+        <div id="skill-card"></div>
+        <button class="dial-btn next-skill" aria-label="Next skill">›</button>
+      </div>
+
+      <!-- Dial -->
+      <div class="dial">
+        <button class="dial-nav prev-age" aria-label="Previous age">▲</button>
+        <div class="dial-window"><div class="dial-track"></div></div>
+        <button class="dial-nav next-age" aria-label="Next age">▼</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- DATA ---------- */
+    const milestones = {
+      "6 weeks": {
+        "Gross Motor": "Pulled to sit: Head lag and rounded back.\nVentral Suspension: Head held up momentarily in same plane as body.\nProne: Pelvis high but knees no longer under abdomen. Chin raised intermittently off couch. Head turned to one side.",
+        "Fine Motor": "Fixates on objects.\nIn supine, follows object from side to midline (90°).\nDefensive blink by 6–8 weeks.",
+        "Speech/Language": "Quietens to sound at 4 weeks.\nVocalises when talked to at 8 weeks.",
+        "Self-care, Social Behaviour & Play": "Social smile."
+      },
+      "3 months": {
+        "Gross Motor": "Pulled to sit: Only slight head lag. Head occasionally bobs forward.\nVentral Suspension: Head held up above plane of body.\nProne: Pelvis flat. Lifts head up 45°–90°, weight supported on forearms.",
+        "Fine Motor": "Hand regard.\nFollows dangling toy from side to side (180°).\nHands loosely open.\nHolds rattle placed in hand momentarily.",
+        "Speech/Language": "Squeals of pleasure.\nSays ‘aah’ or ‘naah’ when spoken to.\nTurns head to sound at the same level.",
+        "Self-care, Social Behaviour & Play": "Sustained social contact.\nResponds with pleasure to friendly handling."
+      },
+      "6 months": {
+        "Gross Motor": "Pulled to sit: Lifts head off couch.\nSits with support.\nBears full weight on legs.\nProne: Supports weight on hands with chest and upper part of abdomen off couch.\nRolls over from prone to supine at 5–6 mths, supine to prone at 6–7 mths.",
+        "Fine Motor": "Palmar grasp of cube.\nDrops one cube when another is given at 6 mths, retains one cube at hand when another is offered at 7 mths.\nTransfers object from one hand to another at 7 mths.\nEyes move together (any squint is abnormal).\nFollows activities across room with alertness.",
+        "Speech/Language": "Smiles and vocalises at mirror image.\nMonosyllabic babble.\nPolysyllabic sounds formed – ba, da, ka at 7 mths.\nTurns head towards a sound above the level (7 to 9 months).",
+        "Self-care, Social Behaviour & Play": "Mouthing.\nPlace hand on bottle and pats it.\nGrasps feet.\nStretches arms out to be carried.\nShows delighted response to rough and tumble play.\nStill friendly with strangers, becomes more reserved after 7 mths."
+      },
+      "9 months": {
+        "Gross Motor": "Sits steadily.\nLeans forward to pick toy without losing balance.\nPulls self to stand.\nStands holding on to furniture.\nProgresses on the floor by rolling, wriggling on abdomen or crawling.",
+        "Fine Motor": "Pokes at small object & begins to point at distant object with index finger.\nInferior pincer grasp.\nRelease toy by dropping or pressing against firm surface.\nLooks in correct direction for fallen toys.\nGrasp string to pull toy (causal understanding).",
+        "Speech/Language": "Babbles loudly in long repetitive syllables. Responds to name. Understands ‘No’ and ‘Bye-bye’.\nImitates playful sounds e.g. cough, ‘brrr’.\nLocalises sound above and below the ear level.",
+        "Self-care, Social Behaviour & Play": "Mouthing.\nHolds and bites small piece of food.\nStranger anxiety.\nPlays Peek-a-boo, imitates hand clapping.\nWaves bye-bye.\nUnderstands ‘object permanence’."
+      },
+      "12 months": {
+        "Gross Motor": "Gets from lying to sitting to crawling to standing.\nWalks on hands and feet like a bear.\nWalks with one hand held.\nStands alone.\nMay walk alone.",
+        "Fine Motor": "Neat pincer grasp.\nBangs 2 cubes.\nPoints with index finger at object of interest.",
+        "Speech/Language": "Knows and responds to name.\nBabbles in conversational cadences.\nUnderstands simple instructions.\n1–3 words with meaning.\nLocates sounds in all directions.",
+        "Self-care, Social Behaviour & Play": "Drinks from cup with assistance, helps with dressing.\nGives toys on request.\nFinds toys hidden from view.\nDemonstrates affection to family. Enjoys joint interactive play with adults.\nPlays “Pat-a-Cake”."
+      },
+      "15 months": {
+        "Gross Motor": "Creeps up stairs.\nWalks alone with broad based gait.",
+        "Fine Motor": "Tower of 2 cubes.\nHold 2 cubes in one hand.\nTo and fro scribble with palmar grasp.",
+        "Speech/Language": "Jargon.\n2–6 intelligible words.\nObeys simple commands.\nPoints to familiar persons, toys when requested.",
+        "Self-care, Social Behaviour & Play": "Holds and drinks from cup, attempts to hold spoon.\nFunctional play e.g. pushing toy car.\nRepeated casting."
+      },
+      "18 months": {
+        "Gross Motor": "Walks well, runs rather stiffly though seldom falls.\nCarry large doll or teddy while walking.\nWalks up and downstairs with help.\nSquats to pick up toy.",
+        "Fine Motor": "Tower of 3 cubes.\nEnjoys putting small objects in and out of containers.\nScribbles spontaneously.\nEnjoys picture books, turns few pages at a time.\nHand preference.",
+        "Speech/Language": "Jargon.\n6–20 intelligible words.\nPoints to 2–3 body parts.",
+        "Self-care, Social Behaviour & Play": "Imitates housework.\nUses spoon well.\nAssists with dressing.\nMouthing stops.\nCasting less often.\nPlays contently alone but likes to be near familiar adult."
+      },
+      "2 years": {
+        "Gross Motor": "Runs safely, avoiding obstacles.\nGoes up and down stairs alone, 2 feet per step.\nAble to walk backward pulling toy handle.\nWalks into large ball while trying to kick it.",
+        "Fine Motor": "Tower of 6–7 cubes.\nImitates train of cubes, without adding chimney.\nCircular scribbles.\nImitates vertical line.\nEnjoys picture books and turns pages singly.",
+        "Speech/Language": "Uses 50 or more words.\nUses 2–3 word phrases.\nPoints to 6 body parts.\nNames familiar objects and pictures.\nFollows a series of 2 simple but related commands.\nJoins in nursery rhymes and sings.",
+        "Self-care, Social Behaviour & Play": "Puts on shoes, socks, pants.\nDry by day.\nParallel play.\nWatches others play and plays near them, but not with them.\nPretend play.\nTantrums when frustrated but attention is usually easily distracted."
+      },
+      "2.5 years": {
+        "Gross Motor": "Jump with 2 feet together from a low step.\nStand on tiptoe if shown.\nKicks large ball gently.",
+        "Fine Motor": "Tower of 7–8 cubes.\nImitates train, adding chimney.\nRecognizes minute details in picture books.\nImitates ─── and │",
+        "Speech/Language": "Speaks in phrases.\nFrequently asks questions (What, Who).\nUses pronouns (I, me, you) correctly.\nKnows full name.\nCan select pictures of action e.g. which one is eating.",
+        "Self-care, Social Behaviour & Play": "May be dry by night, variable.\nEats skilfully.\nMore sustained role play e.g. putting dolls to bed, feeding them.\nTantrums when thwarted and is less distracted."
+      },
+      "3 years": {
+        "Gross Motor": "Goes up stairs one foot per step and down stairs 2 feet per step.\nWalk on tiptoe.\nStands on 1 foot momentarily.\nRides tricycle.\nKicks ball forcibly, throw a ball overhand.",
+        "Fine Motor": "Tower of 9–10 cubes.\nImitates bridge with 3 cubes.\nCopy <span class='icon-circle'></span>\nImitate <span class='icon-plus'></span>\nDraw a man on request (3–10 y).\nCuts with scissors",
+        "Speech/Language": "Gives full name, gender, sometimes age.\nUses personal pronouns and most prepositions correctly.\nAsk many questions (What, where, who)\nIdentify objects by function e.g. which one we drink from.\nCounts by rote up to 10 or more but does not appreciate quantity beyond 2 or 3.\nNames 2 colours.",
+        "Self-care, Social Behaviour & Play": "Eats independently, washes hands.\nMay be dry by night.\nJoins in active make believe play with other children.\nUnderstands sharing toys."
+      },
+      "4 years": {
+        "Gross Motor": "Walks or runs up and down stairs one foot per step.\nStand, walk and run on tiptoe.\nStands on one foot for 3–5 seconds and hops on one foot.",
+        "Fine Motor": "Builds 3 steps with 6 cubes after demonstration.\nHolds pencil with good control. Copies cross.\nDraws a person with head, legs and trunks.\nMatches 4 primary colours.",
+        "Speech/Language": "Speech grammatically correct and completely intelligible.\nNames 4 colours.\nGives full name, address and age.\nListens to and tells long stories.\nCounts by rote up to 20 and begins to count by word and touch up to 4 or 5.",
+        "Self-care, Social Behaviour & Play": "Brushes teeth, dresses independently except for laces, ties and back buttons.\nImaginative dressing up and make believe play.\nUnderstands need for turn taking in play.\nAppreciates past, present and future time."
+      },
+      "5 years": {
+        "Gross Motor": "Walks on narrow line.\nSkips on alternate feet.\nBalance on one foot for 8–10 seconds.\nDances to music.",
+        "Fine Motor": "Copies square at 5 years and a triangle at 5½ years.\nColours neatly, staying within outlines.\nDraws a man with head, trunk, legs, arms and features.\nCan cut a strip of paper neatly.",
+        "Speech/Language": "Names birthday and home address.\nDefines nouns by use.\nUses “first, then, last” (time and sequence concepts).\nEnjoys jokes and riddles.\nTells time.",
+        "Self-care, Social Behaviour & Play": "Dresses and undresses alone.\nEngages in elaborate make believe group play.\nChooses own friends.\nCooperative with companions and understands need for rules and fair play."
+      }
+    };
+
+    /* ---------- SETUP ---------- */
+    const rs = getComputedStyle(document.documentElement);
+    const skillColors = {
+      "Gross Motor": rs.getPropertyValue('--gm-color').trim(),
+      "Fine Motor": rs.getPropertyValue('--fm-color').trim(),
+      "Speech/Language": rs.getPropertyValue('--sl-color').trim(),
+      "Self-care, Social Behaviour & Play": rs.getPropertyValue('--sc-color').trim()
+    };
+    const ages = Object.keys(milestones);
+    const skills = Object.keys(skillColors);
+
+    let ageIdx = 0, skillIdx = 0;
+    let selectedAge = ages[ageIdx], selectedSkill = skills[skillIdx];
+
+    const ageCard = document.getElementById('age-card');
+    const skillCard = document.getElementById('skill-card');
+    const leftEl = document.querySelector('.cards');
+    const track = document.querySelector('.dial-track');
+    const panelRight = document.querySelector('.panel.right');
+    const searchInput = document.getElementById('search-input');
+
+    /* ---------- CONTROLS ---------- */
+    function changeAge(dir){
+      ageIdx = (ageIdx + dir + ages.length) % ages.length;
+      selectedAge = ages[ageIdx];
+      ageCard.textContent = selectedAge;
+      renderLeft(); renderDial();
+    }
+    document.querySelector('.prev-age').onclick = () => changeAge(-1);
+    document.querySelector('.next-age').onclick = () => changeAge(1);
+    document.querySelectorAll('.dial-nav').forEach(btn =>
+      btn.onclick = () => changeAge(btn.classList.contains('prev-age') ? -1 : 1)
+    );
+
+    function changeSkill(dir){
+      skillIdx = (skillIdx + dir + skills.length) % skills.length;
+      selectedSkill = skills[skillIdx];
+      skillCard.textContent = selectedSkill;
+      skillCard.style.background = skillColors[selectedSkill];
+      renderLeft(); renderDial();
+    }
+    document.querySelector('.prev-skill').onclick = () => changeSkill(-1);
+    document.querySelector('.next-skill').onclick = () => changeSkill(1);
+
+    /* ---------- SEARCH ---------- */
+    searchInput.oninput = () => {
+      const q = searchInput.value.trim().toLowerCase();
+      const controlsBar = document.querySelector('.controls');
+
+      if (!q){
+        controlsBar.classList.remove('dim-age');
+        panelRight.style.display = '';
+        renderLeft(); renderDial();
+      } else {
+        controlsBar.classList.add('dim-age');
+        panelRight.style.display = 'none';
+        leftEl.innerHTML = '';
+        const results = [];
+        ages.forEach(age => {
+          Object.entries(milestones[age]).forEach(([sk, txt]) => {
+            if (sk.toLowerCase().includes(q) || txt.toLowerCase().includes(q)) {
+              results.push({ age, skill: sk, text: txt });
+            }
+          });
+        });
+        results.forEach(r => {
+          const c = document.createElement('div'); c.className = 'card';
+          c.style.background = skillColors[r.skill] || '#eee';
+          c.innerHTML = `<strong>${r.age} – ${r.skill}</strong><p>${r.text}</p>`;
+          leftEl.append(c);
+        });
+      }
+    };
+
+    /* ---------- INITIAL RENDER ---------- */
+    ageCard.textContent = selectedAge;
+    skillCard.textContent = selectedSkill;
+    skillCard.style.background = skillColors[selectedSkill];
+    renderLeft(); renderDial();
+
+    function renderLeft(){
+      leftEl.innerHTML = '';
+      Object.entries(milestones[selectedAge]).forEach(([sk, txt]) => {
+        const c = document.createElement('div'); c.className = 'card';
+        c.style.background = skillColors[sk] || '#eee';
+        c.innerHTML = `<strong>${sk}</strong><p>${txt}</p>`;
+        leftEl.append(c);
+      });
+    }
+
+    function renderDial(){
+      track.innerHTML = '';
+      ages.forEach((age, i) => {
+        const c = document.createElement('div'); c.className = 'dial-card';
+        c.dataset.index = i;
+        c.style.background = skillColors[selectedSkill];
+        c.innerHTML = `<strong>${age}</strong><p>${milestones[age][selectedSkill]||''}</p>`;
+        c.onclick = () => {
+          ageIdx = i; selectedAge = ages[ageIdx]; ageCard.textContent = selectedAge;
+          searchInput.value = ''; panelRight.style.display = '';
+          renderLeft(); renderDial();
+        };
+        track.append(c);
+      });
+      highlightDial();
+    }
+
+    function highlightDial(){
+      const cards = [...document.querySelectorAll('.dial-card')];
+      cards.forEach(c => c.classList.toggle('highlight', +c.dataset.index === ageIdx));
+
+      const win = document.querySelector('.dial-window');
+      const chosen = cards[ageIdx];
+      if (!chosen || !win) return;
+
+      // Center the chosen card within the scrollable window
+      const top = chosen.offsetTop - Math.max(0, (win.clientHeight - chosen.offsetHeight)/2);
+      win.scrollTo({ top, behavior: 'smooth' });
+    }
+
+    /* ---------- FLAG MODAL ---------- */
+    const flagBtn = document.getElementById('flag-btn');
+    const flagModal = document.getElementById('flag-modal');
+    const closeBtn = document.getElementById('close-flag');
+
+    flagBtn.addEventListener('click', () => flagModal.style.display = 'flex');
+    closeBtn.addEventListener('click', () => flagModal.style.display = 'none');
+    flagModal.addEventListener('click', e => { if (e.target === flagModal) flagModal.style.display = 'none'; });
+  </script>
+
+  <footer>Any calculations must be rechecked and should not be used alone to guide patient care.</footer>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

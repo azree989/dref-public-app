@@ -1,4 +1,4 @@
-import {validatePayload,fields} from './formulary-logic.js';
+import {validatePayload,fields} from './formulary-logic.js?v=1.0';
 const CACHE_KEY='dref-formulary:published-v1';
 const DATA_URL=new URL('./formulary.json',import.meta.url);
 export function decodeSnapshot(raw){

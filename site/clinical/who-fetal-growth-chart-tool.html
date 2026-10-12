@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WHO Fetal Growth Chart Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="../vendor/48444a82d4edcb5bec0f1965.js"></script>
+  <script src="../vendor/e87e550794322e574a1fda0c.js"></script>
+  <script src="../vendor/98ccf17aa10c20bb13017626.js"></script>
+
+  <style>
+    body { font-family: 'Inter', Arial, sans-serif; background: #f7fafd; margin: 0; padding: 1.5rem;}
+    .panel { max-width: 1280px; margin: auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px #0002; padding: 2rem 2rem 1rem 2rem; }
+    h2 { text-align:center; margin-bottom: 0.8em;}
+    .controls { margin-bottom: 1.3em;}
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5em;}
+    .chartBox { background: #fafbff; border-radius: 1em; padding: 1em; box-shadow: 0 2px 8px #0001; max-width: 100%; margin-left: auto; margin-right: auto; overflow-x:auto;}
+    .chartBox h3 { text-align: center; margin-top: 0; margin-bottom: 0.8em; font-size: 1.1em; color: #1457b7;}
+    .caption { font-size: 0.95em; color: #888; margin-top: 2em;text-align: center;}
+    .quantileLegend { display: flex; gap: 1em; flex-wrap: wrap; font-size: 0.93em; margin-bottom: 1em; justify-content: center; align-items: center; text-align: center;}
+    .legendColor { display: inline-block; width: 1.1em; height: 1.1em; vertical-align: middle; margin-right: 0.4em; border-radius:3px;}
+   .user-scan-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2em;
+  justify-content: center;   /* Center horizontally */
+  align-items: center;       /* Center vertically */
+  /*background: #eef2fa;*/
+  /*padding: 1em 1.5em;*/
+  border-radius: 10px;
+}
+
+.user-scan-controls label {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 500;
+}
+
+.user-scan-controls input,
+.user-scan-controls select {
+  min-width: 70px;
+  max-width: 110px;
+  padding: 0.22em 0.7em;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #b4c7e7;
+  background: #f7fafd;
+}
+
+.user-scan-controls input[type="number"] {
+  width: 65px;
+}
+
+.user-scan-controls input[type="date"] {
+  width: 140px;
+}
+
+.user-scan-controls button {
+  padding: 0.44em 1.2em;
+  font-size: 1em;
+  border-radius: 7px;
+  background: #43a047;
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-left: 0.7em;
+}
+   
+    .download-btn { display: block; margin: 1.2em auto 0 auto; padding: 0.45em 1.3em; border-radius:7px; background:#1976d2; color:white; border:none; font-size:1em; cursor:pointer; }
+    .quantile-indicator { font-size: 0.75em; color: #1976d2; margin-top: 2px; min-height: 1.1em; font-weight: 500; text-align: center;}
+    .quantile-indicator.high { color: #c62828; }
+    .quantile-indicator.low { color: #1565c0; }
+    .quantile-indicator.mid { color: #388e3c; }
+    .quantile-indicator.low { color: #1565c0; }
+    .chartBox canvas { width: 100% !important; max-width: 420px; height: auto !important; aspect-ratio: 1.5 / 1 !important; }
+    .user-scan-controls input:disabled { background: #f3f3fa; color: #999; cursor: not-allowed; opacity: 0.85; }
+    #downloadAll { display: block; width: 100%; max-width: 400px; margin: 2em auto 0 auto; background: #1976d2; color: white; border: none; border-radius: 7px; padding: 0.65em 1.1em; font-size: 1.12em; font-weight: 600; cursor: pointer; }
+    input, select, textarea { font-size: 16px !important; }
+    #scanTable { overflow-x: auto; }
+    #scanTable table { min-width: 670px; width: 100%; border-collapse: collapse; font-size: 0.99em; }
+    #scanTable th, #scanTable td { padding: 4px 8px; }
+    #scanTable th { background: #e6f0ff;}
+.input-demographics-card {
+  display: flex;
+  gap: 1.2em;
+  background: #f4f7fa;
+  border-radius: 12px;
+  padding: 0.7em 1.2em;
+  margin-bottom: 1.2em;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.input-demographics-card label {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-bottom: 0;
+}
+.input-demographics-card input[type="text"],
+.input-demographics-card input[type="number"],
+.input-demographics-card input[type="date"] {
+  border-radius: 6px;
+  border: 1px solid #b4c7e7;
+  padding: 0.18em 0.7em;
+  font-size: 16px;
+  min-width: 80px;
+  max-width: 150px;
+}
+.fetal-sex-row {
+  margin-bottom: 0.9em;
+}
+.fetal-sex-row label {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.input-scan-card {
+  display: flex;
+  align-items: center;    /* aligns items on the same line */
+  gap: 1.1em;             /* space between items */
+  background: #f4f7fa;
+  border-radius: 12px;
+  padding: 1em 1.2em;
+  margin-bottom: 0.1em;
+}
+
+.input-scan-card label {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.input-scan-card input,
+.input-scan-card select {
+  padding: 0.27em 0.7em;
+  border: 1px solid #b4c7e7;
+  border-radius: 6px;
+  font-size: 16px;
+  min-width: 90px;
+  max-width: 120px;
+  background: #fff;
+}
+
+.input-scan-card input[type="number"] {
+  min-width: 90px;  /* or 100px for even more space */
+  max-width: 110px;
+}
+
+.input-scan-card button {
+  background: #43a047;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 0.45em 1.3em;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-left: 0.5em;
+}
+.chartjs-tooltip-custom {
+  pointer-events: none;
+  position: absolute;
+  z-index: 100;
+  background: #212121;
+  color: #fff;
+  border-radius: 6px;
+  padding: 12px 16px;
+  border-left: 6px solid #ff7f0e; /* Default, will be updated in JS */
+  font-size: 1em;
+  box-shadow: 0 6px 24px #0003;
+  min-width: 120px;
+  max-width: 95vw;    /* <-- Let tooltip use almost full viewport width if needed */
+  word-break: break-word;
+}
+#sex {
+  min-width: 120px; /* or 120px for more space */
+  padding-right: 2em; /* ensure arrow doesn't overlap text */
+  font-size: 16px;
+}
+#efw-title {
+  color: #ff9800 !important;  /* or #ff9500, #ff9800, or any orange you prefer */
+}
+
+.efw-card {
+  background: #f4f7fa;
+  border: 1px solid #c0c0c0;
+  border-radius: 8px;
+  padding: 0.7em 1.4em;
+  margin: 1.2em auto 1em auto;
+  max-width: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-size: 1.15em;
+  font-weight: 500;
+  box-shadow: none;
+}
+.efw-label {
+  font-weight: bold;
+  color: #222;
+}
+.efw-value {
+  color: #1976d2;
+  font-size: 1.28em;
+  font-weight: 700;
+  margin: 0 0.08em;
+}
+.efw-unit {
+  font-size: 0.97em;
+  color: #555;
+}
+.quantile-row {
+  display: flex;
+  justify-content: center;
+  gap: 3.6em;
+  margin-bottom: 0.5em;
+  font-size: 1em;
+}
+
+.param-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* stack label+input above quantile */
+  min-width: 80px;
+}
+.param-col label {
+  margin-bottom: 0;
+}
+.quantile-indicator {
+  margin-top: 3px;
+  font-size: 0.96em;
+  min-height: 1.2em;
+  width: 100%;  /* Optional, for alignment */
+  text-align: left; /* Or center */
+}
+
+.input-scan-card input,
+.input-scan-card select {
+  padding: 0.27em 0.7em;
+  border: 1px solid #b4c7e7;
+  border-radius: 6px;
+  font-size: 16px;
+  min-width: 56px;
+  max-width: 110px;   /* To match the AC input */
+  height: 36px;       /* Force same height for both select & input */
+  box-sizing: border-box;
+  background: #fff;
+  vertical-align: middle; /* Align with baseline */
+}
+
+.input-scan-card label {
+  display: flex;
+  align-items: center; /* Vertically center label and input/select */
+  gap: 0.4em;
+  font-weight: 500;
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .input-scan-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6em;
+    padding: 0.7em 0.4em;
+  }
+  .param-col {
+    width: 100%;
+    min-width: unset;
+    align-items: flex-start;
+  }
+  .param-col label {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .input-scan-card button {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0.6em;
+    padding: 0.55em;
+  }
+  .chartjs-tooltip-custom {
+    font-size: 0.95em !important;
+    padding: 7px 7px !important;
+    min-width: 90px !important;
+    max-width: 94vw !important;
+    border-radius: 4px !important;
+    line-height: 1.2 !important;
+  }
+}
+
+
+    @media (max-width: 900px) {
+      .panel { padding: 0.6rem;}
+      .charts-grid { grid-template-columns: 1fr;}
+      .chartBox { padding: 0.4em;}
+    }
+    @media (max-width: 600px) {
+      body { padding: 0.5rem; }
+      .panel { padding: 0.3rem; }
+      .charts-grid { gap: 0.7em;}
+      .user-scan-controls { padding: 0.3em 0.3em;}
+    }
+    .tooltip { border-bottom: 1px dotted #888; cursor: help; position: relative; display: inline-block;}
+    .tooltip .tooltiptext { visibility: hidden; width: 230px; background-color: #333; color: #fff; text-align: left; border-radius: 6px; padding: 8px 10px; position: absolute; z-index: 100; bottom: 125%; left: 50%; margin-left: -115px; opacity: 0; transition: opacity 0.2s; font-size: 0.97em; }
+    .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+#scanTable table th,
+#scanTable table td {
+  text-align: center;
+  vertical-align: middle;
+}
+  </style>
+<meta name="dref-tool" content="who-fetal-growth-chart-tool"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+  <div class="panel" id="printArea">
+    <h2>WHO Fetal Growth Charts Tool</h2>
+ 
+    <div class="input-demographics-card">
+  <label>Patient Name
+    <input id="patName" type="text" placeholder="Name" autocomplete="off">
+  </label>
+  <label>Patient ID
+    <input id="patID" type="text" placeholder="MRN/IC" autocomplete="off">
+  </label>
+  <label>Gestational Age
+    <input id="userGAw" type="number" min="14" max="40" step="1" style="width:56px;" required placeholder="week">
+    <span style="font-size:0.98em;">w</span>
+    <input id="userGAd" type="number" min="0" max="6" step="1" style="width:36px;" required placeholder="day">
+    <span style="font-size:0.98em;">d</span>
+    <div id="gaWeekError" style="color:#c62828;font-size:0.95em;height:1.2em;"></div>
+    <div id="gaDayError" style="color:#c62828;font-size:0.95em;height:1.2em;"></div>
+  </label>
+  <label>Scan Date
+    <input id="userDate" type="date" style="width:155px;" required>
+  </label>
+</div>
+
+    
+    <div id="gaHelpMsg" style="color:#b71c1c;font-weight:500;margin-bottom:0.7em;text-align:center;">
+      Enter <b>Gestational Age (weeks + days)</b> before growth parameter values.
+    </div>
+    <!-- User scan input controls -->
+    <form id="scanForm" class="user-scan-controls" autocomplete="off" onsubmit="return false;">
+
+<div class="input-scan-card">
+  <div class="param-col">
+<label>Fetal Sex
+    <select id="sex">
+      <option value="F">Female</option>
+      <option value="M">Male</option>
+      <option value="U">Unknown</option>
+    </select>
+  </label>
+</div>
+  <div class="param-col">
+    <label>AC <input id="userAC" type="number" placeholder="mm"step="0.1"min="0"></label>
+    <span class="quantile-indicator" id="AC-quantile"></span>
+  </div>
+  <div class="param-col">
+    <label>BPD <input id="userBPD" type="number" placeholder="mm"step="0.1"min="0"></label>
+    <span class="quantile-indicator" id="BPD-quantile"></span>
+  </div>
+  <div class="param-col">
+    <label>FL <input id="userFL" type="number" placeholder="mm"step="0.1"min="0"></label>
+    <span class="quantile-indicator" id="FL-quantile"></span>
+  </div>
+  <div class="param-col">
+    <label>HC <input id="userHC" type="number" placeholder="mm"step="0.1"min="0"></label>
+    <span class="quantile-indicator" id="HC-quantile"></span>
+  </div>
+  <div class="param-col">
+    <label>HL <input id="userHL" type="number" placeholder="mm"step="0.1"min="0"></label>
+    <span class="quantile-indicator" id="HL-quantile"></span>
+  </div>
+  <button id="plotScan" type="submit" aria-label="Plot scan values">Plot</button>
+  <button id="resetScan" type="button" style="background:#b0b5be;">Reset</button>
+</div>   
+    </form>
+    <div class="efw-card">
+  <span class="efw-label">Calculated EFW:</span>
+  <span id="autoEFW" class="efw-value">–</span>
+  <span class="efw-unit">g</span>
+  <span class="quantile-indicator" id="EFW-quantile"></span>
+  <span id="efw-unknown-msg" style="color:#b71c1c;font-size:0.98em;display:none;margin-left:1em;">EFW centiles shown use female reference.</span>
+</div>
+<div class="quantileLegend" id="quantileLegend"></div>
+    <div class="charts-grid">
+      <div class="chartBox"><h3>AC (Abdominal Circumference, mm)</h3><canvas id="chart-AC" width="440" height="300"></canvas></div>
+      <div class="chartBox"><h3>BPD (Biparietal Diameter, mm)</h3><canvas id="chart-BPD" width="440"height="300"></canvas></div>
+      <div class="chartBox"><h3 id="efw-title">EFW (Estimated Fetal Weight, g) – <span id="efw-sex-label">Female</span></h3><canvas id="chart-EFW" width="440"height="300"></canvas></div>
+      <div class="chartBox"><h3>FL (Femur Length, mm)</h3><canvas id="chart-FL" width="440"height="300"></canvas></div>
+      <div class="chartBox"><h3>HC (Head Circumference, mm)</h3><canvas id="chart-HC" width="440"height="300"></canvas></div>
+      <div class="chartBox"><h3>HL (Humerus Length, mm)</h3><canvas id="chart-HL" width="440"height="300"></canvas></div>
+    </div>
+    <div id="scanTable" style="margin-top:2em;"></div>
+    <button id="downloadAll" class="download-btn" style="margin-top:2em;">Download All Graphs as PNG</button>
+    <button id="downloadPDF" class="download-btn" style="margin-top:1.2em;">Download Report as PDF</button>
+    <div class="caption">
+      Each graph displays WHO fetal growth reference curves for all 9 quantiles (2.5th, 5th, 10th, 25th, 50th, 75th, 90th, 95th, 97.5th) from 14–40 weeks gestation.<br>
+      <b>EFW is sex-specific.</b> If sex is unknown, EFW reference is for females (actual percentile may be higher if fetus is male).<br>
+      Formula: log(y)=b0+b1·t+b2·t²+b3·t³+b4·t⁴ &nbsp;|&nbsp;
+      <a href="https://srhr.org/fetalgrowthcalculator/#/" target="_blank">Source/Reference</a>
+    </div>
+  </div>
+<script>
+// === Data/Config ===
+let scanPoints = [];
+const quantiles = ["0.025","0.05","0.1","0.25","0.5","0.75","0.9","0.95","0.975"];
+const quantileColors = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22"];
+const quantileLabels = ["2.5th","5th","10th","25th","50th","75th","90th","95th","97.5th"];
+const parameters = [
+  { key: "AC", label: "AC", sex: null, unit: "mm" },
+  { key: "BPD", label: "BPD", sex: null, unit: "mm" },
+  { key: "FL", label: "FL", sex: null, unit: "mm" },
+  { key: "HC", label: "HC", sex: null, unit: "mm" },
+  { key: "HL", label: "HL", sex: null, unit: "mm" },
+  { key: "EFW", label: "EFW", sex: "both", unit: "g" }
+];
+const coefficients = {
+  AC: {
+    "0.01": [1.19682766661905,0.309985569982485,-0.00779821008212983,0.0000721601862187339,0],
+    "0.025":[1.19202778944614,0.314756681991964,-0.00801581308902169,0.0000751395976546808,0],
+    "0.05":[1.09869954558741,0.330079995799838,-0.00862095843727276,0.0000825440120054722,0],
+    "0.1": [1.24418122481299,0.316315401650234,-0.00814092689297361,0.0000772501495178619,0],
+    "0.25":[1.44520878528145,0.299433786203949,-0.00759672485585945,0.000071668993412344,0],
+    "0.5": [1.58552931028045,0.289936781915424,-0.00732651929135797,0.000069261631643994,0],
+    "0.75":[1.71452506914277,0.281367067786763,-0.00708195596502471,0.000067086230433841,0],
+    "0.9": [1.78078382317074,0.279278890414784,-0.0070643788983289,0.0000675104548969352,0],
+    "0.95":[1.83213806223649,0.277106952998102,-0.00703388540291938,0.0000676124200964958,0],
+    "0.975":[2.03674472691951,0.257138461817474,-0.00634918788914223,0.000060053745113196,0],
+    "0.99":[2.12378932803127,0.248505815693966,-0.00601677942684253,0.0000562286023490798,0]
+  },
+  BPD: {
+    "0.01":[5.91008401542612e-1,2.51833515513537e-1,-5.82602136865785e-3,4.85842528593502e-5,0e+0],
+    "0.025":[5.8340478243682e-1,2.57706867351367e-1,-6.08380366281251e-3,5.16940376186165e-5,0e+0],
+    "0.05":[6.40086541374477e-1,2.5352855332296e-1,-5.91651627062447e-3,4.94614232987744e-5,0e+0],
+    "0.1":[6.7586050811029e-1,2.5343383445191e-1,-5.95606903884204e-3,5.03055604381436e-5,0e+0],
+    "0.25":[7.69315103415485e-1,2.49927024175735e-1,-5.92399444708251e-3,5.076548429269e-5,0e+0],
+    "0.5":[8.72984231314326e-1,2.43385003540798e-1,-5.71172523683453e-3,4.82880035733658e-5,0e+0],
+    "0.75":[9.83298265402666e-1,2.36071116567572e-1,-5.48348083012818e-3,4.58419655773418e-5,0e+0],
+    "0.9":[1.01351909208103e+0,2.37088857953509e-1,-5.5421492813894e-3,4.65258350076297e-5,0e+0],
+    "0.95":[1.11401192681678e+0,2.28258457814188e-1,-5.24271052970102e-3,4.31665697359201e-5,0e+0],
+    "0.975":[1.17917438634649e+0,2.24245686901115e-1,-5.13638678692311e-3,4.21401138788865e-5,0e+0],
+    "0.99":[1.18876528083144e+0,2.2624188722951e-1,-5.22504825833189e-3,4.31577122241698e-5,0e+0]
+
+  },
+  EFW: {
+    "0.01":[-5.01496264869835e-2,3.74471599175392e-1,-5.34930256943893e-3,2.3744363684445e-5,0e+0],
+    "0.025":[-2.30518383014592e-1,4.00511116318458e-1,-6.17993235833267e-3,3.16595762972649e-5,0e+0],
+    "0.05":[-1.62057103557898e-1,3.93965369913166e-1,-5.79733056422172e-3,2.55319128239087e-5,0e+0],
+    "0.1":[-4.55887642525626e-2,3.89314052082164e-1,-5.74527674062641e-3,2.65557891064333e-5,0e+0],
+    "0.25":[-1.2258767992062e-2,3.93836404898322e-1,-5.92304885519551e-3,2.8863017896588e-5,0e+0],
+    "0.5":[1.57310086966445e-1,3.83067935520509e-1,-5.54046846639963e-3,2.46570062800598e-5,0e+0],
+    "0.75":[2.93297386426919e-1,3.76096229210412e-1,-5.29255036113726e-3,2.18372277641981e-5,0e+0],
+    "0.9":[3.53142227490073e-1,3.76486874470206e-1,-5.28742945785833e-3,2.14760212556463e-5,0e+0],
+    "0.95":[2.85025055968914e-1,3.90621472299378e-1,-5.82929182402995e-3,2.79088693116937e-5,0e+0],
+    "0.975":[4.08170594889372e-1,3.81068214664342e-1,-5.50913922743603e-3,2.46713147783532e-5,0e+0],
+    "0.99":[7.9584342596075e-1,3.42142215761221e-1,-4.14863204456851e-3,1.02097735855226e-5,0e+0]
+  },
+  FL:{
+    "0.01":[-7.63357391915398e+0,1.32616480908407e+0,-6.03406386286656e-2,1.27059302964739e-3,-1.01590910980777e-5],
+    "0.025":[-7.27187176976836e+0,1.28298928826162e+0,-5.80601892487905e-2,1.21314319801879e-3,-9.60171505470123e-6],
+    "0.05":[-7.07052933404414e+0,1.26780052700097e+0,-5.77556347769781e-2,1.21608381996396e-3,-9.70361787292646e-6],
+    "0.1":[-6.69175407354157e+0,1.22500911064189e+0,-5.5920618206786e-2,1.18320191905997e-3,-9.50365006831978e-6],
+    "0.25":[-6.07953118554742e+0,1.15245170563351e+0,-5.25510654314434e-2,1.11418613323875e-3,-8.9802280974713e-6],
+    "0.5":[-5.54922620776446e+0,1.09559990166124e+0,-5.01310925949098e-2,1.0678072569586e-3,-8.63970606288493e-6],
+    "0.75":[-4.68666987282664e+0,9.78111793398168e-1,-4.39319069083821e-2,9.2346644003072e-4,-7.39427758542544e-6],
+    "0.9":[-4.31219596825529e+0,9.4038705308254e-1,-4.24709867520927e-2,8.9977742409265e-4,-7.26284658350453e-6],
+    "0.95":[-4.12398207550525e+0,9.20344210800571e-1,-4.15728969581384e-2,8.81055511995407e-4,-7.10843959625547e-6],
+    "0.975":[-3.64483930811801e+0,8.57028131514986e-1,-3.84005685481303e-2,8.12062784461527e-4,-6.55932416998498e-6],
+    "0.99":[-3.40004123807778e+0,8.34596760116344e-1,-3.76568882663223e-2,8.03601513837836e-4,-6.55323852770109e-6]
+},
+HC:{
+"0.01":[1.51782795874402e+0,2.99296859125438e-1,-7.52376152126206e-3,6.7179373384666e-5,0e+0],
+"0.025":[1.59317517131532e+0,2.9459800552433e-1,-7.3860372566707e-3,6.56951770216148e-5,0e+0],
+"0.05":[1.74883945698398e+0,2.78405280785763e-1,-6.77990950687641e-3,5.83587774721548e-5,0e+0],
+"0.1":[1.83059537388222e+0,2.7244251174974e-1,-6.59546864496838e-3,5.63957469365128e-5,0e+0],
+"0.25":[1.94181945227701e+0,2.6584757167445e-1,-6.44544904011178e-3,5.54517813431795e-5,0e+0],
+"0.5":[2.09924879247164e+0,2.53373656106037e-1,-6.05647816678282e-3,5.14256072059917e-5,0e+0],
+"0.75":[2.20777451923048e+0,2.45212320927953e-1,-5.78557948587613e-3,4.83972618799514e-5,0e+0],
+"0.9":[2.31776999721364e+0,2.36651510200538e-1,-5.50781288608926e-3,4.53975879344267e-5,0e+0],
+"0.95":[2.39550106176494e+0,2.29586666082063e-1,-5.25318141633775e-3,4.23738937924844e-5,0e+0],
+"0.975":[2.50074069629423e+0,2.20067854715719e-1,-4.93623111462443e-3,3.89066000946519e-5,0e+0],
+"0.99":[2.50189533265806e+0,2.23785148311865e-1,-5.14245402239348e-3,4.20117020605557e-5,0e+0]
+},
+HL:{
+"0.01":[-7.78349846701959e+0,1.38492965874312e+0,-6.52780187735718e-2,1.4150928034733e-3,-1.16119076226422e-5],
+"0.025":[-7.47910160663101e+0,1.35204523406865e+0,-6.36532992863844e-2,1.37481173675706e-3,-1.12101330502122e-5],
+"0.05":[-6.90099057209008e+0,1.27054553137824e+0,-5.91262450111552e-2,1.2637456183417e-3,-1.02071740374974e-5],
+"0.1":[-6.53608302749862e+0,1.2272413635898e+0,-5.71034895407674e-2,1.22207225813435e-3,-9.88852986676249e-6],
+"0.25":[-5.42815715796469e+0,1.07352977734643e+0,-4.89087664932973e-2,1.0293053840563e-3,-8.20541048892881e-6],
+"0.5":[-4.85748536478029e+0,1.00813558857801e+0,-4.60077781702957e-2,9.73401688196724e-4,-7.81084345942064e-6],
+"0.75":[-4.3140683823838e+0,9.43595032408634e-1,-4.2967382499428e-2,9.09706728731155e-4,-7.31114518318759e-6],
+"0.9":[-3.70486556990912e+0,8.6055314135122e-1,-3.85250212654406e-2,8.04666353059272e-4,-6.3896725175013e-6],
+"0.95":[-3.34494754486814e+0,8.13134285208091e-1,-3.61206171893883e-2,7.51920643315549e-4,-5.96785208299362e-6],
+"0.975":[-3.54703721492887e+0,8.51835316341919e-1,-3.85210544307558e-2,8.15301857140939e-4,-6.57662126778699e-6],
+"0.99":[-3.41073389554318e+0,8.45833777301508e-1,-3.86831969965017e-2,8.28259625010723e-4,-6.74931990585841e-6]
+},
+  EFW: {
+    F: {
+"0.01":[-1.89823055117316e+0,6.94217690139681e-1,-2.49755007746458e-2,5.33634489533981e-4,-4.7692763424938e-6],
+"0.025":[-9.15523725804273e-1,5.29374415518249e-1,-1.47446585943781e-2,2.69201219853759e-4,-2.3537061714461e-6],
+"0.05":[-3.56552265566936e-2,3.76064209229977e-1,-4.96950115937874e-3,1.00880399508847e-5,8.87897379966417e-8],
+"0.1":[1.55170122624531e-1,3.56594762998776e-1,-4.01282727802378e-3,-1.14891004630409e-5,2.91905926442287e-7],
+"0.25":[-6.17926685323766e-3,3.91489315579454e-1,-5.83983363713264e-3,2.74701265932854e-5,1.25218741602196e-8],
+"0.5":[2.47277418113423e-1,3.70440200280727e-1,-5.07278668575342e-3,1.79658724333519e-5,3.17102018612384e-8],
+"0.75":[3.76784712355285e-1,3.61976162764535e-1,-4.63535949504953e-3,8.51326693543256e-6,1.04436638183705e-7],
+"0.9":[2.86538459425835e-1,3.87048945293849e-1,-6.06592437416756e-3,4.19335923075893e-5,-1.64397771502855e-7],
+"0.95":[3.81320788764689e-1,3.76613696575359e-1,-5.28117982372732e-3,1.81818929490566e-5,7.60085577423407e-8],
+"0.975":[3.2551154984358e-1,4.0214557617585e-1,-7.4145176202411e-3,8.8196644838898e-5,-7.1015932637436e-7],
+"0.99":[5.179331809046e-1,3.8992943582849e-1,-7.0512841081792e-3,8.0249588088078e-5,-5.8757835323298e-7]
+
+    },
+    M: {
+"0.01":[1.0676868754174e+0,1.8916289014035e-1,5.7574178248425e-3,-2.5890835282806e-4,2.5773765651089e-6],
+"0.025":[-5.2610096513854e-1,4.4906549056954e-1,-8.9009550762548e-3,9.868293523919e-5,-6.1862373692705e-7],
+"0.05":[-2.64562353403465e-1,4.12210701662848e-1,-6.59353966698675e-3,3.87085414793403e-5,-5.92167006518022e-8],
+"0.1":[-6.31025226657407e-2,3.90993877846881e-1,-5.60764189001381e-3,1.90944627895524e-5,8.84241803692905e-8],
+"0.25":[-1.36872920737678e-1,4.11385471212291e-1,-6.62710457053528e-3,4.01078967104191e-5,-6.09266544869339e-8],
+"0.5":[2.22999048464601e-1,3.72888830200871e-1,-4.82835487505679e-3,5.38927935557086e-6,1.72630247811947e-7],
+"0.75":[2.74568726691847e-1,3.81231662554576e-1,-5.57248890309729e-3,2.934934995138e-5,-8.27628809790136e-8],
+"0.9":[2.40213697127957e-1,3.91178494734445e-1,-5.79538706713982e-3,2.75733050639858e-5,-1.90970772277149e-8],
+"0.95":[2.38080920038937e-1,3.94765675971259e-1,-5.81267491399174e-3,2.31531669574572e-5,6.85345268671191e-8],
+"0.975":[7.9018076483077e-1,3.2585025131141e-1,-2.5559098706069e-3,-4.2038969571238e-5,5.4228420412733e-7],
+"0.99":[-6.3894706453018e-1,5.9827236973175e-1,-2.0501971506261e-2,4.566509905005e-4,-4.407018817356e-6]
+
+    }
+  }
+ };
+
+
+// === Helpers ===
+function getGAdecimal() {
+  const w = parseInt(document.getElementById('userGAw').value, 10);
+  const d = parseInt(document.getElementById('userGAd').value, 10);
+  if (isNaN(w) || isNaN(d) || w < 14 || w > 40 || d < 0 || d > 6) return null;
+  return w + d / 7;
+}
+function formatGA(gaDecimal) {
+  const weeks = Math.floor(gaDecimal);
+  const days = Math.round((gaDecimal - weeks) * 7);
+  return `${weeks}w ${days}d`;
+}
+function polyEval(coeffs, t) {
+  return coeffs[0] + coeffs[1]*t + coeffs[2]*t*t + coeffs[3]*t*t*t + coeffs[4]*t*t*t*t;
+}
+// Helper to add small jitter to overlapping points (same GA and value)
+function applyJitterToPoints(points) {
+  // Group points by t (GA) and value (to find overlaps)
+  let map = {};
+  points.forEach((pt, idx) => {
+    // Key: t-GA rounded to 2 decimals + value (rounded)
+    let key = pt.t + "|" + pt.y;
+    if (!map[key]) map[key] = [];
+    map[key].push(idx);
+  });
+
+  // For each group of overlapping points, apply offset
+  let jittered = points.map((pt, idx) => ({...pt}));
+  Object.values(map).forEach(indices => {
+    if (indices.length > 1) {
+      // Spread points vertically using a small jitter
+      let jitterStep = 2; // pixels or chart units, adjust as needed
+      let mid = (indices.length - 1) / 2;
+      indices.forEach((ptIdx, i) => {
+        // Offset only the y value (vertical spread)
+        jittered[ptIdx].y += (i - mid) * jitterStep;
+      });
+    }
+  });
+  return jittered;
+}
+
+// === Core functions ===
+function plotAllGrowthCharts(sexSel = "F") {
+  let sex = (sexSel === "U") ? "F" : sexSel;
+  const tMin = 14, tMax = 40, step = 0.25;
+  const labels = [];
+  for (let t = tMin; t <= tMax; t += step) labels.push(Number(t.toFixed(2)));
+  parameters.forEach((param, idx) => {
+    let datasets = [];
+    quantiles.forEach((q, qi) => {
+      let coeff;
+      if (param.key === "EFW") coeff = coefficients.EFW[sex][q];
+      else coeff = coefficients[param.key][q];
+      if (!coeff) return;
+      const data = labels.map(t => Number(Math.exp(polyEval(coeff, t)).toFixed(1)));
+      datasets.push({
+        label: quantileLabels[qi],
+        data,
+        borderColor: quantileColors[qi],
+        borderWidth: 1,
+        fill: false,
+        tension: 0.23,
+        pointRadius: 0
+      });
+    });
+
+    // User points (with jitter)
+    let rawUserPoints = scanPoints
+      .filter(pt => pt[param.key] != null && pt.t >= tMin && pt.t <= tMax)
+      .map(pt => ({
+        x: pt.t,
+        y: pt[param.key],
+        date: pt.date || ""
+      }));
+
+    let jitteredPoints = applyJitterToPoints(rawUserPoints);
+
+    if (jitteredPoints.length > 0) {
+      datasets.push({
+        label: "Your Scans",
+        data: jitteredPoints,
+        borderColor: "#e53935",
+        backgroundColor: "#e53935",
+        pointRadius: 6,
+        pointStyle: 'star',
+        type: 'scatter',
+        fill: false,
+        showLine: false,
+        borderWidth: 1
+      });
+    }
+
+    const canvasId = 'chart-' + param.key;
+    if (window.chartInstances && window.chartInstances[canvasId]) window.chartInstances[canvasId].destroy();
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    if (!window.chartInstances) window.chartInstances = {};
+    window.chartInstances[canvasId] = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1.5,
+        layout: { padding: { left: 12, right: 12, top: 16, bottom: 18 } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: false,
+            external: function(context) {
+              let tooltipEl = document.getElementById('chartjs-custom-tooltip');
+              if (!tooltipEl) {
+                tooltipEl = document.createElement('div');
+                tooltipEl.id = 'chartjs-custom-tooltip';
+                tooltipEl.className = 'chartjs-tooltip-custom';
+                document.body.appendChild(tooltipEl);
+              }
+              const tooltipModel = context.tooltip;
+
+              // Hide if not visible
+              if (tooltipModel.opacity === 0) {
+                tooltipEl.style.opacity = 0;
+                return;
+              }
+
+              let html = '';
+              if (tooltipModel.dataPoints && tooltipModel.dataPoints.length) {
+                const pt = tooltipModel.dataPoints[0];
+                if (pt.dataset.label === "Your Scans") {
+                  // --- Format gestational age as weeks+days ---
+                  const ga = pt.raw.x;
+                  const weeks = Math.floor(ga);
+                  const days = Math.round((ga - weeks) * 7);
+                  const gaStr = `${weeks}w ${days}d`;
+
+                  // --- Quantile value (numeric + th) ---
+                  const chartId = context.chart.canvas.id.replace('chart-', '');
+                  const param = chartId.toUpperCase();
+                  const sex = document.getElementById('sex').value || "F";
+                  let quantileNum = '';
+                  if (typeof getExactQuantileForValue === 'function') {
+                    const q = getExactQuantileForValue(param, ga, pt.raw.y, sex);
+                    if (q && q.quantile) quantileNum = `${q.quantile.toFixed(1)}th`;
+                  }
+
+                  // --- Value with unit ---
+                  let unit = "";
+                  const paramObj = parameters.find(p => p.key === param);
+                  if (paramObj) unit = ` ${paramObj.unit}`;
+                  const valueStr = `${pt.raw.y}${unit}`;
+                  // 3 lines: Title, GA, value+unit+(quantile)
+                  // Check if on mobile
+const isMobile = window.innerWidth < 600;
+html = `
+  <div style="font-weight:600;font-size:${isMobile ? '1em' : '1.14em'};text-align:center;">
+    Your Scan
+  </div>
+  <div style="font-size:${isMobile ? '0.98em' : '1em'};text-align:center;margin:1px 0;">
+    ${gaStr}
+  </div>
+  <div style="font-size:${isMobile ? '1em' : '1.06em'};font-weight:500;text-align:center;margin-top:1px;">
+    ${valueStr}
+    ${quantileNum ? `<span style='color:#ffb300;font-weight:600'>(${quantileNum})</span>` : ""}
+  </div>
+`;
+
+                } else {
+                  html = `<div style="font-weight:600;font-size:1.1em;text-align:center;">${pt.dataset.label}: ${pt.formattedValue}</div>`;
+                }
+              }
+              tooltipEl.innerHTML = html;
+
+              // Color
+              let quantileColor = "#212121";
+              if (tooltipModel.dataPoints && tooltipModel.dataPoints.length) {
+                const dp = tooltipModel.dataPoints[0];
+                let qIdx = quantileLabels.indexOf(dp.dataset.label);
+                if (qIdx !== -1) quantileColor = quantileColors[qIdx];
+                if (dp.dataset.label === "Your Scans") quantileColor = "#e53935";
+              }
+              tooltipEl.style.borderLeft = `7px solid ${quantileColor}`;
+
+              // Position: Responsive/mobile-proof!
+              const canvas = context.chart.canvas;
+              const rect = canvas.getBoundingClientRect();
+              const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+              const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+              const tooltipWidth = tooltipEl.offsetWidth || 180;
+              const tooltipHeight = tooltipEl.offsetHeight || 60;
+              let left = rect.left + scrollX + tooltipModel.caretX + 15;
+              let top = rect.top + scrollY + tooltipModel.caretY - 20;
+
+              // --- Prevent overflow on mobile/small screens ---
+              const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+              const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+              if (left + tooltipWidth > viewportWidth - 6) { // right overflow
+                left = viewportWidth - tooltipWidth - 6;
+              }
+              if (left < 4) left = 4; // left overflow
+
+              if (top + tooltipHeight > viewportHeight - 6) { // bottom overflow
+                top = viewportHeight - tooltipHeight - 6;
+              }
+              if (top < 4) top = 4;
+
+              tooltipEl.style.opacity = 1;
+              tooltipEl.style.left = left + 'px';
+              tooltipEl.style.top = top + 'px';
+            }
+          },
+        },
+        scales: {
+          x: {
+            type: "linear",
+            title: { display: true, text: 'Gestational Age (weeks)' },
+            min: tMin,
+            max: tMax,
+            suggestedMin: tMin,
+            suggestedMax: tMax,
+            ticks: {
+              stepSize: 2,
+              min: tMin,
+              max: tMax,
+              padding: 20,
+              callback: function(val) {
+                return (val % 2 === 0) ? val : '';
+              }
+            }
+          },
+          y: { title: { display: true, text: `${param.label} (${param.unit})` }, beginAtZero: false }
+        }
+      }
+    });
+  });
+  document.getElementById('efw-sex-label').textContent = (sexSel === "M") ? "Male" : ((sexSel === "F") ? "Female" : "Unknown");
+  document.getElementById('efw-unknown-msg').style.display = (sexSel === "U") ? "inline" : "none";
+}
+
+function renderQuantileLegend() {
+  const el = document.getElementById('quantileLegend');
+  el.innerHTML = quantileLabels.map((q, i) => (
+    `<span><span class="legendColor" style="background:${quantileColors[i]}"></span>${q}</span>`
+  )).join("");
+}
+function renderScanTable() {
+  if (!scanPoints.length) {
+    document.getElementById('scanTable').innerHTML = "";
+    return;
+  }
+  let ths = parameters.map(p => `<th>${p.key} (${p.unit})</th>`).join("");
+  let rows = scanPoints.map((pt, i) => {
+    let gaStr = formatGA(pt.t);
+    let cells = parameters.map(p =>
+      `<td>${pt[p.key] != null ? (p.key === 'EFW' ? pt[p.key].toFixed(1) : pt[p.key]) : ""}</td>`
+    ).join("");
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${pt.date || ''}</td>
+        <td>${gaStr}</td>
+        ${cells}
+        <td><button onclick="removeScan(${i})" style="color:#fff;background:#d32f2f;border:none;border-radius:3px;padding:0.3em 0.7em;cursor:pointer;">✗</button></td>
+      </tr>
+    `;
+  }).join("");
+  document.getElementById('scanTable').innerHTML =
+    `<b>All Serial Scan Points</b>
+    <div style="overflow-x:auto;">
+      <table border="1" cellpadding="4" style="margin-top:0.8em;">
+        <tr><th>#</th><th>Date</th><th>GA</th>${ths}<th></th></tr>${rows}
+      </table>
+    </div>`;
+}
+window.removeScan = function(idx) {
+  scanPoints.splice(idx, 1);
+  plotAllGrowthCharts(document.getElementById('sex').value);
+  renderScanTable();
+};
+function setParamInputsEnabled(enabled) {
+  parameters.forEach(p => {
+    if (p.key === "EFW") return;
+    document.getElementById('user' + p.key).disabled = !enabled;
+  });
+}
+function getExactQuantileForValue(param, t, value, sexSel = "F") {
+  // Get all quantile keys (sorted low-to-high)
+  let qKeys, qVals, quantilesNumeric;
+  if (param === "EFW") {
+    sexSel = (sexSel === "U") ? "F" : sexSel;
+    qKeys = Object.keys(coefficients.EFW[sexSel]).sort((a, b) => parseFloat(a) - parseFloat(b));
+    quantilesNumeric = qKeys.map(Number);
+    qVals = qKeys.map(q => Math.exp(polyEval(coefficients.EFW[sexSel][q], t)));
+  } else {
+    qKeys = Object.keys(coefficients[param]).sort((a, b) => parseFloat(a) - parseFloat(b));
+    quantilesNumeric = qKeys.map(Number);
+    qVals = qKeys.map(q => Math.exp(polyEval(coefficients[param][q], t)));
+  }
+
+  // Out-of-bounds: below min or above max
+  if (value <= qVals[0]) return { quantile: quantilesNumeric[0] * 100, extreme: true, text: `<${quantilesNumeric[0] * 100}% (<${(quantilesNumeric[0] * 100).toFixed(1)}th percentile)` };
+  if (value >= qVals[qVals.length-1]) return { quantile: quantilesNumeric[qVals.length-1] * 100, extreme: true, text: `>${quantilesNumeric[qVals.length-1] * 100}% (>${(quantilesNumeric[qVals.length-1] * 100).toFixed(1)}th percentile)` };
+
+  // Find two quantiles y0 < value < y1
+  let idx = qVals.findIndex((qv, i) => value < qv && i > 0);
+  if (idx === -1) return { quantile: null, extreme: false, text: "" };
+  let y0 = qVals[idx-1], y1 = qVals[idx];
+  let alpha0 = quantilesNumeric[idx-1], alpha1 = quantilesNumeric[idx];
+  // Linear interpolation on log scale
+  let logy0 = Math.log(y0), logy1 = Math.log(y1), logvalue = Math.log(value);
+  let alpha = (alpha1 - alpha0) * (logvalue - logy0) / (logy1 - logy0) + alpha0;
+  // Format result as "2.9th percentile"
+  let pct = (alpha * 100).toFixed(1).replace(/\.0$/, "");
+  return { quantile: alpha * 100, extreme: (alpha < 1 || alpha > 99), text: `${pct}th percentile` };
+}
+function getQuantileForValue(param, t, value, sexSel = "F") {
+  if (!t || isNaN(value)) return "";
+  let sex = (sexSel === "U") ? "F" : sexSel;
+  let qVals = [];
+  if (param === "EFW") {
+    for (let q of quantiles) {
+      let coeff = coefficients.EFW[sex][q];
+      if (!coeff) continue;
+      qVals.push(Math.exp(polyEval(coeff, t)));
+    }
+  } else {
+    for (let q of quantiles) {
+      let coeff = coefficients[param][q];
+      if (!coeff) continue;
+      qVals.push(Math.exp(polyEval(coeff, t)));
+    }
+  }
+  let idx = qVals.findIndex(qv => value < qv);
+  if (idx === -1) return `> ${quantileLabels[quantileLabels.length-1]}`;
+  if (idx === 0) return `< ${quantileLabels[0]}`;
+  return `${quantileLabels[idx-1]} - ${quantileLabels[idx]}`;
+}
+function updateQuantileIndicators() {
+  const t = getGAdecimal();
+  let extremeFound = false;
+  const sex = document.getElementById('sex').value;
+  parameters.forEach(p => {
+    if (p.key === "EFW") return;
+    const inp = document.getElementById('user'+p.key);
+    const val = parseFloat(inp.value);
+    let quantileInfo = null;
+    if (!isNaN(val)) quantileInfo = getExactQuantileForValue(p.key, t, val, sex);
+    const quantileDiv = document.getElementById(`${p.key}-quantile`);
+    quantileDiv.textContent = quantileInfo ? quantileInfo.text : "";
+    quantileDiv.className = 'quantile-indicator';
+    if (quantileInfo && quantileInfo.extreme) {
+      quantileDiv.classList.add('high');
+      extremeFound = true;
+    } else if (quantileInfo && quantileInfo.quantile >= 40 && quantileInfo.quantile <= 60) {
+      quantileDiv.classList.add('mid');
+    } else {
+      quantileDiv.classList.remove('high', 'mid');
+    }
+  });
+  
+}
+function updateAutoEFW() {
+  const AC = parseFloat(document.getElementById('userAC').value);
+  const FL = parseFloat(document.getElementById('userFL').value);
+  const HC = parseFloat(document.getElementById('userHC').value);
+  let efw = null;
+  if (!isNaN(AC) && !isNaN(FL) && !isNaN(HC)) {
+    efw = calculateEFW_HadlockC(HC, AC, FL);
+    efw = Number(efw.toFixed(1));
+  }
+  document.getElementById('autoEFW').textContent = (efw !== null && !isNaN(efw)) ? efw.toFixed(1) : "–";
+  const t = getGAdecimal();
+  const sex = document.getElementById('sex').value;
+  if (!isNaN(efw) && !isNaN(t)) {
+    const quantile = getQuantileForValue("EFW", t, efw, sex);
+    document.getElementById('EFW-quantile').textContent = quantile;
+    document.getElementById('EFW-quantile').className = 'quantile-indicator' +
+      (quantile.startsWith('>') || quantile.endsWith('97.5th') ? ' high' :
+      (quantile.startsWith('<') || quantile.endsWith('2.5th') ? ' low' :
+      (quantile.match(/50th|25th|75th/) ? ' mid' : '')));
+  } else {
+    document.getElementById('EFW-quantile').textContent = "";
+    document.getElementById('EFW-quantile').className = 'quantile-indicator';
+  }
+}
+function calculateEFW_HadlockC(HC, AC, FL) {
+  HC = HC / 10; AC = AC / 10; FL = FL / 10;
+  const log10EFW = 1.326 + 0.0107 * HC + 0.0438 * AC + 0.158 * FL - 0.00326 * AC * FL;
+  return Math.pow(10, log10EFW);
+}
+
+// === Event Handlers & Page Setup ===
+window.onload = function () {
+  // Download All Button
+  document.getElementById('downloadAll').onclick = function () {
+    const area = document.getElementById('printArea');
+    html2canvas(area, {
+      backgroundColor: "#fff",
+      useCORS: true,
+      scale: 2
+    }).then(canvas => {
+      let link = document.createElement('a');
+      link.download = 'fetal_growth_report.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  };
+
+  // Download PDF Button
+ document.getElementById('downloadPDF').onclick = async function () {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+
+  const marginX = 30; // horizontal left margin
+  const marginY = 26; // vertical top margin
+  const colGap = 22; // gap between columns
+  const rowGap = 10; // gap between chart rows
+  const chartWidth = 240; // chart image width
+  const chartHeight = 120; // chart image height
+
+  // --- Header ---
+  let y = marginY;
+
+// Letterhead: Klinik Kesihatan Mahligai, centered
+pdf.setFontSize(18);
+pdf.setFont('helvetica', 'bold');
+const clinicName = "Klinik Kesihatan Mahligai";
+const pageWidth = pdf.internal.pageSize.getWidth();
+const textWidth = pdf.getTextWidth(clinicName);
+pdf.text(clinicName, (pageWidth - textWidth) / 2, y);
+
+y += 22; // add more space under the letterhead
+
+// Report Title (left-aligned as before)
+pdf.setFontSize(15);
+pdf.setFont('helvetica', 'bold');
+pdf.text("Fetal Growth Scan Report", marginX, y);
+y += 18;
+
+const now = new Date();
+const dateStr = now.toLocaleDateString('en-GB', {
+  year: 'numeric', month: 'long', day: 'numeric'
+});
+const timeStr = now.toLocaleTimeString('en-GB', {
+  hour: '2-digit', minute: '2-digit'
+});
+pdf.setFontSize(10);
+pdf.setFont('helvetica', 'normal');
+pdf.text(`Report generated: ${dateStr}, ${timeStr}`, marginX, y);
+y += 12;
+
+// Only Name and ID at the top
+const name = document.getElementById('patName').value || '';
+const id = document.getElementById('patID').value || '';
+
+let line1 = [];
+if (name) line1.push(`Name: ${name}`);
+if (id) line1.push(`ID: ${id}`);
+if (line1.length) {
+  pdf.text(line1.join('    '), marginX, y);
+  y += 13;
+}
+
+  
+  // --- Chart Grid ---
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(11);
+  pdf.text("Fetal Growth Charts:", marginX, y);
+  y += 10;
+
+  // 2 columns × 3 rows grid positions
+  const chartPositions = [
+    // [col, row, title, chartID]
+    [0, 0, 'AC (Abdominal Circumference)', 'chart-AC'],
+    [1, 0, 'BPD (Biparietal Diameter)', 'chart-BPD'],
+    [0, 1, 'EFW (Estimated Fetal Weight)', 'chart-EFW'],
+    [1, 1, 'FL (Femur Length)', 'chart-FL'],
+    [0, 2, 'HC (Head Circumference)', 'chart-HC'],
+    [1, 2, 'HL (Humerus Length)', 'chart-HL'],
+  ];
+
+  for (let i = 0; i < chartPositions.length; i++) {
+    const [col, row, title, id] = chartPositions[i];
+    const x = marginX + col * (chartWidth + colGap);
+    const yPos = y + row * (chartHeight + rowGap + 12);
+
+    // Title above chart
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(9.2);
+    pdf.text(title, x, yPos + 9);
+
+    // Render chart image
+    const chartBox = document.getElementById(id).parentElement;
+    const chartCanvas = await html2canvas(chartBox, {
+      backgroundColor: "#fff",
+      scale: 2,
+      useCORS: true
+    });
+    const imgData = chartCanvas.toDataURL('image/png');
+    pdf.addImage(
+      imgData,
+      'PNG',
+      x,
+      yPos + 12,
+      chartWidth,
+      chartHeight
+    );
+  }
+
+  // --- Serial Scan Table: new page ---
+  pdf.addPage();
+  let tableY = marginY;
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('Serial Scan Points', marginX, tableY);
+  tableY += 14;
+
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(9);
+  const tableHeaders = ['#', 'Date', 'GA', 'AC', 'BPD', 'FL', 'HC', 'HL', 'EFW'];
+  const tableColWidths = [18, 54, 38, 34, 34, 34, 34, 34, 38];
+  let x = marginX;
+  tableHeaders.forEach((header, idx) => {
+    pdf.text(header, x, tableY);
+    x += tableColWidths[idx];
+  });
+  tableY += 10;
+
+  scanPoints.forEach((pt, i) => {
+    x = marginX;
+    let ga = pt.t !== undefined ? formatGA(pt.t) : '';
+ // Helper to get quantile text for each parameter
+function scanQuantile(param, t, value, sex) {
+  if (value == null || isNaN(value)) return '';
+  let qinfo = getExactQuantileForValue(param, t, value, sex);
+  return qinfo && qinfo.text ? qinfo.text : '';
+}
+let sex = document.getElementById('sex').value || "F";
+let vals = [
+  `${i + 1}`,
+  pt.date || '',
+  ga,
+  pt.AC != null ? pt.AC + " mm" : '',
+  pt.BPD != null ? pt.BPD + " mm" : '',
+  pt.FL != null ? pt.FL + " mm" : '',
+  pt.HC != null ? pt.HC + " mm" : '',
+  pt.HL != null ? pt.HL + " mm" : '',
+  pt.EFW != null ? pt.EFW.toFixed(1) + " g" : ''
+];
+
+    vals.forEach((v, idx) => {
+      pdf.text(String(v), x, tableY);
+      x += tableColWidths[idx];
+    });
+    tableY += 9;
+    if (tableY > 785) {
+      pdf.addPage();
+      tableY = marginY;
+    }
+  });
+
+  pdf.save('fetal_growth_report.pdf');
+};
+
+
+document.getElementById('userGAw').addEventListener('input', function() {
+  let val = parseInt(this.value, 10);
+  const errorDiv = document.getElementById('gaWeekError');
+  if (isNaN(val)) {
+    this.style.background = "";
+    errorDiv.textContent = "";
+    return;
+  }
+  if (val < 14 || val > 40) {
+    this.style.background = "#fff3cd";
+    errorDiv.textContent = "Please enter a value between 14 and 40 weeks.";
+  } else {
+    this.style.background = "";
+    errorDiv.textContent = "";
+  }
+});
+
+document.getElementById('userGAd').addEventListener('input', function() {
+  let val = parseInt(this.value, 10);
+  const errorDiv = document.getElementById('gaDayError');
+  if (isNaN(val)) {
+    this.style.background = "";
+    errorDiv.textContent = "";
+    return;
+  }
+  if (val < 0 || val > 6) {
+    this.style.background = "#fff3cd";
+    errorDiv.textContent = "Please enter a value between 0 and 6 days.";
+  } else {
+    this.style.background = "";
+    errorDiv.textContent = "";
+  }
+});
+
+  document.getElementById('resetScan').onclick = function() {
+    ['AC','BPD','FL','HC','HL'].forEach(p => {
+      document.getElementById('user'+p).value = '';
+    });
+    updateQuantileIndicators();
+    updateAutoEFW();
+    document.getElementById('userAC').focus();
+  };
+
+  document.getElementById('sex').addEventListener('change', function () {
+    plotAllGrowthCharts(this.value);
+    updateQuantileIndicators();
+    updateAutoEFW();
+  });
+
+  document.getElementById('userGAw').addEventListener('input', function () {
+    const t = getGAdecimal();
+    setParamInputsEnabled(!isNaN(t) && t >= 14 && t <= 40);
+    updateQuantileIndicators();
+    updateAutoEFW();
+  });
+
+  document.getElementById('userGAd').addEventListener('input', function () {
+    const t = getGAdecimal();
+    setParamInputsEnabled(!isNaN(t) && t >= 14 && t <= 40);
+    updateQuantileIndicators();
+    updateAutoEFW();
+  });
+
+  parameters.forEach(p => {
+    if (p.key === "EFW") return;
+    const inp = document.getElementById('user' + p.key);
+
+    inp.addEventListener('input', function () {
+      if (this.value && parseFloat(this.value) < 0) this.value = "";
+
+      updateQuantileIndicators();
+
+      if (p.key === "AC" || p.key === "FL" || p.key === "HC") {
+        updateAutoEFW();
+      }
+    });
+  });
+
+  document.getElementById('scanForm').onsubmit = function (e) {
+    e.preventDefault();
+    const t = getGAdecimal();
+    if (!t) return;
+    let point = { t };
+    point.date = document.getElementById('userDate').value || '';
+    parameters.forEach(p => {
+      if (p.key === "EFW") return;
+      let val = document.getElementById('user' + p.key).value;
+      if (val !== "") {
+        let floatVal = parseFloat(val);
+        if (isNaN(floatVal) || floatVal < 0) floatVal = null;
+        if (floatVal !== null) floatVal = Math.round(floatVal * 10) / 10;
+        point[p.key] = floatVal;
+      } else {
+        point[p.key] = null;
+      }
+    });
+    const AC = point.AC, FL = point.FL, HC = point.HC;
+    point.EFW = (!isNaN(AC) && !isNaN(FL) && !isNaN(HC) && AC != null && FL != null && HC != null)
+      ? Number(calculateEFW_HadlockC(HC, AC, FL).toFixed(1))
+      : null;
+    scanPoints.push(point);
+    plotAllGrowthCharts(document.getElementById('sex').value);
+    renderScanTable();
+    if (point.EFW && !isNaN(point.EFW)) {
+      document.getElementById('autoEFW').textContent = point.EFW.toFixed(1);
+      document.getElementById('EFW-quantile').textContent = getQuantileForValue("EFW", point.t, point.EFW, document.getElementById('sex').value);
+    } else {
+      document.getElementById('autoEFW').textContent = "–";
+      document.getElementById('EFW-quantile').textContent = "< 2.5th";
+    }
+  };
+
+  const today = new Date().toISOString().substr(0,10);
+  document.getElementById('userDate').value = today;
+  setParamInputsEnabled(false);
+  renderQuantileLegend();
+  plotAllGrowthCharts("F");
+  renderScanTable();
+  updateAutoEFW();
+}; 
+</script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

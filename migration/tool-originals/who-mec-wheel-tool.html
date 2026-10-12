@@ -1,0 +1,453 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>WHO MEC Contraceptive Wheel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin:0; padding:0;
+      font-family: Arial, sans-serif;
+      background:#f9f9f9;
+      text-align:center;
+      overflow-x: hidden;       /* ✅ block horizontal scroll */
+      max-width: 100vw;         /* ✅ ensure body doesn’t stretch wider */
+    }
+    .wheel-container {
+      position:relative;
+      width:95vw; max-width:600px;
+      aspect-ratio:1/1;
+      margin:2rem auto 0.5rem auto;
+      touch-action:none;
+    }
+    .wheel.outer {
+      position:absolute; top:50%; left:50%;
+      width:100%; height:100%;
+      transform:translate(-50%,-50%);
+      transform-origin:center center;
+      z-index:1;
+      cursor:grab;
+      transition: transform 0.3s ease-out;
+    }
+    .wheel.outer:active {
+      cursor:grabbing;
+      transition:none;
+    }
+    .highlight {
+      position:absolute; top:0; left:0;
+      width:100%; height:100%;
+      z-index:2;
+      pointer-events:none;
+    }
+    .wheel.inner {
+      position:absolute; top:50%; left:50%;
+      width:75.86%; height:75.86%;
+      transform:translate(-50%,-50%) rotate(0deg) !important;
+      transform-origin:center center;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    /* Zoom effect for both wheels together */
+    .wheel-container.zoomed {
+      transform: scale(2.2) translateY(-2%);
+      transform-origin: center top;
+      transition: transform 0.4s ease;
+    }
+    .zoom-remark {
+      font-size: 0.8rem;
+      font-family: 'Lato', sans-serif;
+      color: #444;
+      margin-top: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Info box styling (less boxy, no bold title, smaller font) */
+    #infoBox {
+      margin:2rem auto 1rem;
+      max-width:410px;
+      padding:0.8rem 1.1rem 0.7rem 1.1rem;
+      background:rgba(250,245,249,0.86);
+      border-radius: 22px;
+      color: #731644;
+      box-shadow: 0 2px 14px 0 rgba(60,30,90,0.07);
+      border: none;
+      font-size:0.98rem;
+      display:none;
+      position: relative;
+      transition: box-shadow 0.18s;
+      font-family:'Lato', Arial, sans-serif;
+    }
+    #infoBox .info-title {
+      font-size:1em;
+      font-weight: 400; /* not bold */
+      color: #a01f52;
+      margin-bottom: 0.16em;
+      letter-spacing:0.01em;
+      font-family:'Lato', Arial, sans-serif;
+      text-align:center;
+    }
+    #infoBox b {
+      display:block;
+      font-size:1.16em;
+      margin-bottom:0.05em;
+      font-family:'Lato', Arial, sans-serif;
+      color: #731644;
+      letter-spacing:0.01em;
+      font-weight: bold;
+    }
+    #infoBox .info-detail {
+      font-size:0.93em;
+      color:#7e0c3c;
+      margin-bottom:0;
+      font-family:'Lato', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing:0.01em;
+    }
+    #rotateBtn {
+      padding:0.48rem 1.1rem;
+      font-size:1rem;
+      background:#7e0c3c;
+      color:#fff;
+      border:none;
+      border-radius:7px;
+      cursor:pointer;
+      margin-top:0.2em;
+      font-family: 'Lato', Arial, sans-serif;
+      font-weight:600;
+      transition: background 0.18s;
+      box-shadow:0 1px 3px rgba(120,0,60,0.09);
+    }
+    #rotateBtn:hover {
+      background:#a01f52;
+    }
+    .legend-notes details {
+      max-width:600px;
+      margin:1.5rem auto;
+      font-family:'Lato',Arial,sans-serif;
+      font-size:1.05rem;
+      line-height:1.7;
+      background:#fff;
+      border-radius:8px;
+      box-shadow:0 2px 8px rgba(126,12,60,0.08);
+      padding: 0.1rem 0 0.6rem 0;
+      text-align:left;
+    }
+    .legend-notes summary {
+      cursor:pointer;
+      font-weight:bold;
+      color:#7e0c3c;
+      font-size:1.12rem;
+      padding: 0.7rem 1rem 0.4rem 0.7rem;
+      outline:none;
+    }
+    .legend-list {
+      margin:0.5rem 0 0.3rem 0.6rem;
+      padding:0;
+      list-style:none;
+      font-size:1rem;
+    }
+    .legend-list li {
+      display:flex;
+      align-items:flex-start;
+      margin-bottom:0.15rem;
+      gap:0.9rem;
+      font-size:1.01rem;
+    }
+    .legend-list b {
+      display:inline-block;
+      min-width:1.5em;
+      font-weight:bold;
+      color:#7e0c3c;
+      font-size:1.09em;
+      flex-shrink:0;
+    }
+    .notes-content {
+      font-size:1.03rem;
+      margin: 1.1rem 1.4rem 0.4rem 1.4rem;
+      line-height:1.7;
+      color:#222;
+    }
+    .notes-content .section-title {
+      font-weight:bold;
+      font-size:1.08em;
+      margin-top:1em;
+      margin-bottom:0.3em;
+      color:#222;
+    }
+    .abbr-list {
+      margin-top:1.3em;
+      margin-bottom:0.5em;
+      padding-left:0;
+      list-style:none;
+    }
+    .abbr-list li {
+      margin-bottom:0.12em;
+      display: flex;
+      gap: 0.5em;
+    }
+    .abbr-list .abbr {
+      font-weight: bold;
+      min-width: 4em;
+      color: #7e0c3c;
+      font-family: 'Lato', Arial, sans-serif;
+    }
+    @media(max-width:700px){
+      .wheel-container { width:99vw; }
+      #infoBox { font-size:0.94em; padding:0.45em 0.6em;}
+      .legend-notes details { width:97%; font-size:0.97rem; }
+      .legend-list li, .abbr-list li, .notes-content { font-size:0.97rem; }
+      .notes-content { margin:0.9rem 0.5rem 0.3rem 0.5rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wheel-container" style="margin-bottom:0;">
+    <img src="https://i.imgur.com/XagSLBD.png"
+         id="outerWheel" class="wheel outer">
+
+    <svg class="highlight" viewBox="0 0 100 100"
+         preserveAspectRatio="xMidYMid meet">
+      <path id="wedge"
+            fill="rgba(255,255,0,0.3)"
+            transform="rotate(-90 50 50)"
+            d="" />
+    </svg>
+
+    <img src="https://i.imgur.com/aMg5B2r.png"
+         id="innerWheel" class="wheel inner">
+  </div>
+  <div class="zoom-remark">🔍 Double click on the image to zoom</div>
+
+  <!-- Less boxy info box with non-bold title, smaller font -->
+  <div id="infoBox">
+    <div class="info-title">Medical conditions or characteristics in concern</div>
+    <b id="infoName"></b>
+    <div class="info-detail" id="infoDetail"></div>
+  </div>
+  <button id="rotateBtn">Rotate</button>
+
+  <!-- LEGEND & NOTES SECTION -->
+  <div class="legend-notes">
+    <!-- Code Legend -->
+    <details>
+      <summary>📖 Show code legend</summary>
+      <ul class="legend-list">
+        <li><b>A</b> If condition develops while using method, can continue using it during treatment.</li>
+        <li><b>B</b> If very high likelihood of exposure to gonorrhoea or chlamydia = 3.</li>
+        <li><b>C</b> If past pelvic inflammatory disease (PID) all methods = 1, including IUDs.</li>
+        <li><b>D</b> If &lt;3 wks, not breastfeeding &amp; no other VTE risk factors = 3.</li>
+        <li><b>E</b> If not breastfeeding = 1.</li>
+        <li><b>F</b> If 3 to &lt;6 wks, not breastfeeding &amp; no other VTE risk factors = 2, with other VTE risk factors = 3.</li>
+        <li><b>G</b> If &gt;6 wks &amp; not breastfeeding = 1.</li>
+        <li><b>H</b> If uterine cavity distorted preventing insertion = 4.</li>
+        <li><b>I</b> Refers to hepatocellular adenoma (benign) or carcinoma/hepatoma (malignant).</li>
+        <li><b>J</b> If adenoma CIC = 3, if carcinoma/hepatoma CIC = 3/4.</li>
+        <li><b>K</b> CIC = 3.</li>
+        <li><b>L</b> If established on anticoagulation therapy = 2.</li>
+        <li><b>M</b> If condition developed while on this method, consider switching to non-hormonal method.</li>
+        <li><b>N</b> Risk factors: older age, smoking, diabetes, hypertension, obesity &amp; known dyslipidaemia.</li>
+        <li><b>O</b> If cannot measure blood pressure &amp; no known history of hypertension, can use all methods. Either systolic or diastolic blood pressure may be elevated.</li>
+        <li><b>P</b> If age &lt;18 yrs &amp; obese DMPA/NET-EN = 2.</li>
+        <li><b>Q</b> For insulin-dependent &amp; non-insulin-dependent. If complicated or &gt;20 yrs duration, COC/P/CVR, CIC = 3/4; DMPA, NET-EN = 3.</li>
+        <li><b>R</b> If &lt;15 cigarettes/day CIC = 2. If ≥15 cigarettes/day COC/P/CVR = 4.</li>
+        <li><b>S</b> Aura is focal neurological symptoms, such as flickering lights. If no aura &amp; age &lt;35 COC/P/CVR, CIC = 2, POP = 1. If no aura &amp; age ≥35 COC/P/CVR, CIC = 3, POP = 1.</li>
+        <li><b>T</b> Barbiturates, carbamazepine, oxcarbazepine, phenytoin, primidone, topiramate &amp; lamotrigine.</li>
+        <li><b>U</b> If barbiturates, carbamazepine, oxcarbazepine, phenytoin, primidone or topiramate CIC = 2.</li>
+        <li><b>V</b> If lamotrigine = 1.</li>
+        <li><b>W</b> DMPA = 1, NET-EN = 2.</li>
+        <li><b>X</b> CICs = 2.</li>
+        <li><b>Y</b> If antiretroviral therapy with EFV, NVP, ATV/r, LPV/r, DRV/r, RTV: COC/P/CVR, CIC, POP, NET-EN, Implants = 2; DMPA = 1. For all NRTIs, ETR, RPV, RAL each method = 1. See jacket for full names of medications.</li>
+        <li><b>Z</b> If WHO Stage 3 or 4 (severe or advanced HIV clinical disease) IUD = 3.</li>
+      </ul>
+    </details>
+    <!-- Additional Notes -->
+    <details>
+      <summary>📝 Additional Notes</summary>
+      <div class="notes-content">
+        <div class="section-title">Conditions that are category 1 and 2 for all methods (method can be used)</div>
+        <div>
+          <b>Reproductive Conditions:</b> Benign breast disease or undiagnosed mass &bull; Benign ovarian tumours, including cysts &bull; Dysmenorrhoea &bull; Endometriosis &bull; History of gestational diabetes &bull; History of high blood pressure during pregnancy &bull; History of pelvic surgery, including caesarean delivery &bull; Irregular, heavy or prolonged menstrual bleeding (explained) &bull; Past ectopic pregnancy &bull; Past pelvic inflammatory disease &bull; Post-abortion (no sepsis) &bull; Postpartum ≥6 months
+        </div>
+        <div style="margin-top:0.4em;">
+          <b>Medical Conditions:</b> Depression &bull; Epilepsy &bull; HIV asymptomatic or mild clinical disease (WHO Stage 1 or 2) &bull; Iron-deficiency anaemia, sickle-cell disease and thalassaemia &bull; Malaria &bull; Mild cirrhosis &bull; Schistosomiasis (bilharzia) &bull; Superficial venous disorders, including varicose veins &bull; Thyroid disorders &bull; Tuberculosis (non-pelvic) &bull; Uncomplicated valvular heart disease &bull; Viral hepatitis (carrier or chronic)
+        </div>
+        <div style="margin-top:0.4em;">
+          <b>Other:</b> Adolescents &bull; Breast cancer family history &bull; Venous thromboembolism (VTE) family history &bull; High risk for HIV &bull; Surgery without prolonged immobilization &bull; Taking antibiotics (excluding rifampicin/rifabutin)
+        </div>
+        <div style="margin-top:0.4em;">
+          With few exceptions, all women can safely use emergency contraception, barrier and behavioural methods of contraception, including lactational amenorrhoea method; for the complete list of recommendations, please see the full document.
+        </div>
+        <div class="section-title" style="margin-top:1.3em;">Abbreviations used in method codes</div>
+        <ul class="abbr-list">
+          <li><span class="abbr">Combined is a combination of ethinyl estradiol &amp; a progestogen.</span></li>
+          <li><span class="abbr">CIC:</span> combined injectable contraceptive</li>
+          <li><span class="abbr">COC:</span> combined oral contraceptive pill</li>
+          <li><span class="abbr">Cu-IUD:</span> copper intrauterine device</li>
+          <li><span class="abbr">CVR:</span> combined contraceptive vaginal ring</li>
+          <li><span class="abbr">DMPA (IM, SC):</span> depot medroxyprogesterone acetate, intramuscular or subcutaneous</li>
+          <li><span class="abbr">ETG:</span> etonogestrel</li>
+          <li><span class="abbr">LNG:</span> levonorgestrel</li>
+          <li><span class="abbr">LNG-IUD:</span> levonorgestrel intrauterine device</li>
+          <li><span class="abbr">NET-EN:</span> norethisterone enanthate</li>
+          <li><span class="abbr">P:</span> combined contraceptive patch</li>
+          <li><span class="abbr">POP:</span> progestogen-only pill</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+  <!-- END LEGEND & NOTES SECTION -->
+
+<script>
+const outer = document.getElementById("outerWheel");
+const wedge = document.getElementById("wedge");
+const infoBox = document.getElementById("infoBox");
+const btn = document.getElementById("rotateBtn");
+const infoName = document.getElementById("infoName");
+const infoDetail = document.getElementById("infoDetail");
+
+const segmentData = [
+  {name:"CERVICAL CANCER",              info:"Pre treatment"},
+  {name:"BREAST CANCER",                info:"Current"},
+  {name:"LIVER DISEASES",               info:"Liver tumor"},
+  {name:"LIVER DISEASES",               info:"Hepatitis acute/flare"},
+  {name:"VENOUS THROMBOEMBOLISM",       info:"History"},
+  {name:"VENOUS THROMBOEMBOLISM",       info:"Acute"},
+  {name:"VENOUS THROMBOEMBOLISM",       info:"Major surgery with prolonged immobilization"},
+  {name:"CARDIOVASCULAR DISEASE",       info:"Stroke"},
+  {name:"CARDIOVASCULAR DISEASE",       info:"Ischemic heart disease"},
+  {name:"CARDIOVASCULAR DISEASE",       info:"Multiple risk factors"},
+  {name:"HYPERTENSION",                 info:"140-159/90-99 or adequately controlled"},
+  {name:"HYPERTENSION",                 info:"≥160/≥100"},
+  {name:"OBESITY",                      info:"BMI ≥30kg/m²"},
+  {name:"DIABETES",                     info:"current"},
+  {name:"SMOKING",                      info:"Age <35"},
+  {name:"SMOKING",                      info:"Age ≥35"},
+  {name:"HEADACHE",                     info:"Non-migrainous"},
+  {name:"HEADACHE",                     info:"Migraine with aura"},
+  {name:"MEDICATIONS",                  info:"Certain anti-convulsants"},
+  {name:"MEDICATIONS",                  info:"Rifampicin/Rifabutin"},
+  {name:"MEDICATIONS",                  info:"Antiretroviral therapy"},
+  {name:"HIV",                          info:"WHO Stage 3 or 4"},
+  {name:"SEXUALLY TRANSMITTED INFECTIONS",info:"Gonorrhea Chlamydia"},
+  {name:"SEXUALLY TRANMITTED INFECTIONS",info:"Other STIs and vaginitis"},
+  {name:"SEXUALLY TRANMITTED INFECTIONS",info:"Increased risk of STIs"},
+  {name:"PID",                          info:"Current"},
+  {name:"SEPSIS",                       info:"Puerperal and post abortion"},
+  {name:"POSTPARTUM AND BREASTFEEDING", info:"<48 hours"},
+  {name:"POSTPARTUM AND BREASTFEEDING", info:"48 hours to <4 weeks"},
+  {name:"POSTPARTUM AND BREASTFEEDING", info:"4 weeks to <6 weeks"},
+  {name:"POSTPARTUM AND BREASTFEEDING", info:"6 weeks to <6 months"},
+  {name:"NULLIPARITY",                  info:"Nulliparity"},
+  {name:"ADOLESCENTS",                  info:"Menarche to age <18 years"},
+  {name:"VAGINAL BLEEDINGS",            info:"Unexplained"},
+  {name:"UTERINE FIBROIDS",             info:"Uterine fibroids"},
+  {name:"CERVICAL NEOPLASIA",           info:"Cervical Neoplasia"}
+];
+
+const ANG         = 360/segmentData.length;
+const HALF        = ANG/2;
+const WEDGE_START = -90 - HALF;
+
+(function drawWedge(){
+  const rO=50, rI=37.93, a=HALF*Math.PI/180;
+  const x1=50+rO*Math.cos(-a), y1=50+rO*Math.sin(-a);
+  const x2=50+rO*Math.cos( a), y2=50+rO*Math.sin( a);
+  const x3=50+rI*Math.cos( a), y3=50+rI*Math.sin( a);
+  const x4=50+rI*Math.cos(-a), y4=50+rI*Math.sin(-a);
+  const d=`M${x1} ${y1} A${rO} ${rO} 0 0 1 ${x2} ${y2}
+           L${x3} ${y3} A${rI} ${rI} 0 0 0 ${x4} ${y4}Z`;
+  wedge.setAttribute("d", d.replace(/\s+/g," "));
+})();
+
+function getIndex(rot) {
+  let raw = (WEDGE_START - rot) / ANG;
+  raw = ((raw % segmentData.length) + segmentData.length) % segmentData.length;
+  return Math.round(raw);
+}
+
+function updateInfo() {
+  const rot = parseFloat(outer.dataset.rotation);
+  const idx = getIndex(rot);
+  const seg = segmentData[idx];
+  infoBox.style.display = "block";
+  infoName.innerHTML = seg.name;
+  infoDetail.innerHTML = seg.info;
+}
+
+function rotateBy(delta) {
+  const cur  = parseFloat(outer.dataset.rotation);
+  const next = cur + delta;
+  outer.dataset.rotation = next;
+  outer.style.transform   = `translate(-50%,-50%) rotate(${next}deg)`;
+  updateInfo();
+}
+btn.addEventListener("click", ()=> rotateBy(-ANG));
+let dragging=false, startA=0, startR=0;
+function angle(e, ctr){
+  return Math.atan2(e.clientY-ctr.y, e.clientX-ctr.x)*180/Math.PI;
+}
+outer.addEventListener("pointerdown", e=>{
+  dragging=true;
+  outer.setPointerCapture(e.pointerId);
+  const r=outer.getBoundingClientRect(),
+        c={x:r.left+r.width/2, y:r.top+r.height/2};
+  startA=angle(e,c);
+  startR=parseFloat(outer.dataset.rotation);
+});
+outer.addEventListener("pointermove", e=>{
+  if(!dragging) return;
+  const r=outer.getBoundingClientRect(),
+        c={x:r.left+r.width/2, y:r.top+r.height/2},
+        a=angle(e,c),
+        delta=a-startA;
+  outer.dataset.rotation = startR+delta;
+  outer.style.transform =
+    `translate(-50%,-50%) rotate(${startR+delta}deg)`;
+  updateInfo();
+});
+outer.addEventListener("pointerup", e=>{
+  dragging=false;
+  const cur = parseFloat(outer.dataset.rotation);
+  const idx = getIndex(cur);
+  const target = WEDGE_START - idx*ANG;
+  rotateBy(target - cur);
+});
+outer.addEventListener("pointerleave", ()=> dragging=false);
+
+// INITIALIZE at “Diabetes”
+const di = segmentData.findIndex(s=>s.name==="DIABETES");
+const initRot = WEDGE_START - di*ANG;
+outer.dataset.rotation = initRot;
+outer.style.transform   = `translate(-50%,-50%) rotate(${initRot}deg)`;
+updateInfo();
+
+// Zoom behavior (treat both inner and outer as one unit)
+const wheelContainer = document.querySelector('.wheel-container');
+const innerWheel = document.getElementById('innerWheel');
+const outerWheel = document.getElementById('outerWheel');
+
+let isZoomed = false;
+let lastTap = 0;
+
+function toggleZoom() {
+  isZoomed = !isZoomed;
+  wheelContainer.classList.toggle("zoomed", isZoomed);
+}
+
+wheelContainer.addEventListener("click", (e) => {
+  const currentTime = new Date().getTime();
+  const tapLength = currentTime - lastTap;
+
+  if (tapLength < 300 && tapLength > 0) {
+    toggleZoom();
+  }
+
+  lastTap = currentTime;
+});
+
+</script>
+</body>
+</html>

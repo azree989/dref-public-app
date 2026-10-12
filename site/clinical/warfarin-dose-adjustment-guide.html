@@ -1,0 +1,911 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Warfarin Dose Adjustment Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Shared header/footer font (same as other apps) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  <!-- App font (unchanged for main UI) -->
+  
+
+  <style>
+    /* === Shared variables for header/footer (same as previous apps) === */
+    :root {
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+    }
+
+    /* === Standard header (same formatting as previous apps) === */
+    .app-header {
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin-top:16px;
+      margin-bottom:12px;
+      padding:4px 12px;
+      max-width:90%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* === Standard footer (same formatting as previous apps) === */
+    .app-footer {
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 18px;
+      max-width:800px;
+      line-height:1.4;
+    }
+  .ref-note{
+  text-align:center;
+  font-size:.9rem;
+  color:var(--muted);
+  margin:10px auto 18px;  /* space above and below */
+  line-height:1.5;
+  background:none;
+  border:none;
+  box-shadow:none;
+  padding:0;
+}
+.ref-note .label{
+  font-weight:600;
+  font-style:italic;
+  color:#374151;
+  margin-right:.25rem;
+}
+
+    @media (max-width:600px) {
+      .app-header { padding:6px 16px; max-width:94%; }
+      .app-footer { font-size:.85rem; padding:8px 10px; }
+    }
+
+    /* ===================== Your existing styles (untouched) ===================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #B22222;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 2em;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto 1.5rem auto;
+      max-width: 100%;
+      height: auto;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .info-text {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    .info-text strong {
+      color: #B22222;
+    }
+
+    .short-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-block {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-block label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .form-block input,
+    .form-block select {
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 100%;
+      transition: border-color 0.3s, background-color 0.3s, opacity 0.3s;
+    }
+
+    .form-block input:disabled,
+    .form-block select:disabled {
+      background-color: #e9ecef;
+      border-color: #ced4da;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .form-block input:focus,
+    .form-block select:focus {
+      border-color: #B22222;
+      outline: none;
+      box-shadow: 0 0 5px rgba(178,34,34,0.3);
+    }
+
+    .pct-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    .recommendation-note {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #006600;
+      font-style: italic;
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
+
+    .button-row {
+      text-align: center;
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .button-row button,
+    .button-row a {
+      background-color: #B22222;
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-decoration: none;
+    }
+
+    .button-row button:hover,
+    .button-row a:hover {
+      background-color: #DC143C;
+      transform: translateY(-2px);
+    }
+
+    .button-row button:active,
+    .button-row a:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .button-row button:disabled {
+      background-color: #bbb;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .result {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .highlight {
+      font-weight: 700;
+      color: #B22222;
+    }
+
+    .schedule-block {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .schedule-block p { margin-bottom: 0.5rem; }
+
+    .decision-area {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .decision-area p { margin-bottom: 1rem; font-size: 1rem; }
+
+    .decision-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .decision-buttons button {
+      flex: 1;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+
+    .btn-yes { background-color: #28a745; color: #fff; }
+    .btn-yes:hover { background-color: #218838; }
+
+    .btn-no { background-color: #dc3545; color: #fff; }
+    .btn-no:hover { background-color: #c82333; }
+
+    /* Responsive adjustments */
+    @media (max-width: 800px) {
+      .short-row { flex-direction: column; }
+      .form-block { flex: 1 1 100%; }
+      .pct-container { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 600px) {
+      .button-row button, .button-row a { width: 100%; }
+      .decision-buttons { flex-direction: column; }
+      .decision-buttons button { width: 100%; }
+    }
+  </style>
+<meta name="dref-tool" content="warfarin-dose-adjustment-guide"><link rel="stylesheet" href="../tool-theme.css?v=1.0"></head>
+<body>
+
+  <!-- Standard header -->
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <div class="container">
+    <h2>Warfarin Dose Adjustment Guide</h2>
+    <img 
+      src="../clinical-assets/eb03c236151830c215fd0190.png" 
+      alt="Warfarin Dose Adjustment Guideline"
+    />
+
+    <p class="info-text">
+      <strong>Target INR = 2.5</strong> (Therapeutic Range: 2.0 – 3.0)
+    </p>
+
+    <!-- Inputs row -->
+    <div class="short-row">
+      <!-- Block 1: INR -->
+      <div class="form-block">
+        <label for="inrValue">Today's INR:</label>
+        <input
+          id="inrValue"
+          type="number"
+          step="0.01"
+          min="0.01"
+          placeholder="e.g. 2.50"
+          aria-describedby="inrHelp"
+        />
+        <p id="recommendedPct" class="recommendation-note" aria-live="polite"></p>
+      </div>
+
+      <!-- Block 2: Current Weekly Dose -->
+      <div class="form-block">
+        <label for="currentWeeklyDose">Current Weekly Dose (mg):</label>
+        <input
+          id="currentWeeklyDose"
+          type="number"
+          step="0.1"
+          min="0.1"
+          placeholder="e.g. 25.5"
+          aria-describedby="doseHelp"
+          disabled
+        />
+      </div>
+
+      <!-- Block 3: % Change -->
+      <div class="form-block">
+        <label for="pctChange">% Change:</label>
+        <div class="pct-container">
+          <select id="pctChange" aria-describedby="pctHelp" disabled>
+            <option value="">Please select</option>
+            <optgroup label="No Change">
+              <option value="nochange-0">No Change (0%)</option>
+            </optgroup>
+            <optgroup label="Increase Dose">
+              <option value="increase-5">Increase by 5%</option>
+              <option value="increase-8">Increase by 8%</option>
+              <option value="increase-10">Increase by 10%</option>
+              <option value="increase-13">Increase by 13%</option>
+              <option value="increase-15">Increase by 15%</option>
+            </optgroup>
+            <optgroup label="Decrease Dose">
+              <option value="decrease-5">Decrease by 5%</option>
+              <option value="decrease-8">Decrease by 8%</option>
+              <option value="decrease-10">Decrease by 10%</option>
+              <option value="decrease-13">Decrease by 13%</option>
+              <option value="decrease-15">Decrease by 15%</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button row -->
+    <div class="button-row">
+      <button id="computeButton" disabled>Compute New Dose &amp; Schedule</button>
+      <a 
+        id="overAnticoagButton"
+        href="https://sites.google.com/moh.gov.my/albumubatkkmahligai/information/patient-over-anticoagulated-with-warfarin"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="display:none;"
+      >
+        Warfarin Overanticoagulation Guide
+      </a>
+    </div>
+    
+    <!-- Results -->
+    <div id="resultArea" class="result" style="display:none;">
+      <p id="finalWeeklyDose"></p>
+      <div id="scheduleOutput"></div>
+      <p id="nextINR"></p>
+    </div>
+
+    <!-- Decision Area -->
+    <div id="decisionArea" class="decision-area" style="display:none;">
+      <p>
+        No exact match found for the calculated weekly dose.
+        The nearest available dose is <strong id="nearestDose"></strong> mg/week.
+      </p>
+      <p>Would you like to use this nearest dose?</p>
+      <div class="decision-buttons">
+        <button class="btn-yes" id="useNearestButton">Yes</button>
+        <button class="btn-no" id="declineNearestButton">No</button>
+      </div>
+    </div>
+  </div>
+  <div class="ref-note" role="note" aria-label="Reference">
+  <span class="label">Reference:</span>
+  <em>Anticoagulant Quick Guide (1st Edition, 2023) — Pharmaceutical Services Programme, Ministry of Health Malaysia.</em>
+  <br/>
+  <em>Malaysia CPG: Prevention and Treatment of Venous Thromboembolism (2013).</em>
+</div
+  <!-- Standard footer -->
+  <div class="app-footer">
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+    
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      /* ==================== Your existing logic (unchanged) ==================== */
+
+      const warfarinDosingTable = [
+        {dose: 3,days: [0.5,0.5,0.5,0.5,0.5,0.5,0]},
+        {dose: 3.5,days: [0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
+        {dose: 4,days: [0.5,0.5,0.5,0.5,0.5,0.5,1]},
+        {dose: 4.5,days: [0.5,0.5,0.5,0.5,0.5,1,1]},
+        {dose: 5,days: [0.5,0.5,0.5,0.5,1,1,1]},
+        {dose: 5.5,days: [0.5,0.5,0.5,1,1,1,1]},
+        {dose: 6,days: [1,1,1,1,1,0.5,0.5]},
+        {dose: 6.5,days: [1,1,1,1,1,1,0.5]},
+        {dose: 7,days: [1,1,1,1,1,1,1]},
+        {dose: 7.5,days: [1,1,1,1,1,1,1.5]},
+        {dose: 8,days: [1,1,1,1,1,1.5,1.5]},
+        {dose: 8.5,days: [1,1,1,1,1.5,1.5,1.5]},
+        {dose: 9,days: [1.5,1.5,1.5,1.5,1,1,1]},
+        {dose: 9.5,days: [1.5,1.5,1.5,1.5,1.5,1,1]},
+        {dose: 10,days: [1.5,1.5,1.5,1.5,1.5,1.5,1]},
+        {dose: 10.5,days: [1.5,1.5,1.5,1.5,1.5,1.5,1.5]},
+        {dose: 11,days: [1.5,1.5,1.5,1.5,1.5,1.5,2]},
+        {dose: 11.5,days: [1.5,1.5,1.5,1.5,1.5,2,2]},
+        {dose: 12,days: [1.5,1.5,1.5,1.5,2,2,2]},
+        {dose: 12.5,days: [2,2,2,2,1.5,1.5,1.5]},
+        {dose: 13,days: [2,2,2,2,2,1.5,1.5]},
+        {dose: 13.5,days: [2,2,2,2,2,2,1.5]},
+        {dose: 14,days: [2,2,2,2,2,2,2]},
+        {dose: 14.5,days: [2,2,2,2,2,2,2.5]},
+        {dose: 15,days: [2,2,2,2,2,2.5,2.5]},
+        {dose: 15.5,days: [2,2,2,2,2.5,2.5,2.5]},
+        {dose: 16,days: [2,2,2,2,2,3,3]},
+        {dose: 16.5,days: [2.5,2.5,2.5,2.5,2.5,2,2]},
+        {dose: 17,days: [2.5,2.5,2.5,2.5,2.5,2.5,2]},
+        {dose: 17.5,days: [2.5,2.5,2.5,2.5,2.5,2.5,2.5]},
+        {dose: 18,days: [2.5,2.5,2.5,2.5,2.5,2.5,3]},
+        {dose: 18.5,days: [2.5,2.5,2.5,2.5,2.5,3,3]},
+        {dose: 19,days: [2.5,2.5,2.5,2.5,3,3,3]},
+        {dose: 19.5,days: [3,3,3,3,2.5,2.5,2.5]},
+        {dose: 20,days: [3,3,3,3,3,2.5,2.5]},
+        {dose: 20,days: [3,3,3,3,3,3,2]},
+        {dose: 20.5,days: [3,3,3,3,3,3,2.5]},
+        {dose: 21,days: [3,3,3,3,3,3,3]},
+        {dose: 21.5,days: [3,3,3,3,3,3,3.5]},
+        {dose: 22,days: [3,3,3,3,3,3,4]},
+        {dose: 22,days: [3,3,3,3,3,3.5,3.5]},
+        {dose: 22.5,days: [3,3,3,3,3.5,3.5,3.5]},
+        {dose: 23,days: [3,3,3,3,3,4,4]},
+        {dose: 23.5,days: [3.5,3.5,3.5,3.5,3.5,3,3]},
+        {dose: 24,days: [3.5,3.5,3.5,3.5,3.5,3.5,3]},
+        {dose: 24,days: [4,4,4,4,4,2,2]},
+        {dose: 24,days: [3,3,3,3,3,4.5,4.5]},
+        {dose: 24,days: [4,4,4,3,3,3,3]},
+        {dose: 24.5,days: [3.5,3.5,3.5,3.5,3.5,3.5,3.5]},
+        {dose: 25,days: [4,4,4,4,4,2.5,2.5]},
+        {dose: 25,days: [3.5,3.5,3.5,3.5,3.5,3.5,4]},
+        {dose: 25,days: [4,4,4,4,3,3,3]},
+        {dose: 25.5,days: [3.5,3.5,3.5,3.5,3.5,4,4]},
+        {dose: 26,days: [3.5,3.5,3.5,3.5,4,4,4]},
+        {dose: 26,days: [4,4,4,4,4,3,3]},
+        {dose: 26.5,days: [4,4,4,4,3.5,3.5,3.5]},
+        {dose: 27,days: [4,4,4,4,4,4,3]},
+        {dose: 27.5,days: [4,4,4,4,4,4,3.5]},
+        {dose: 28,days: [4,4,4,4,4,4,4]},
+        {dose: 28.5,days: [4,4,4,4,4,4,4.5]},
+        {dose: 28.5,days: [4.5,4.5,4.5,4.5,4.5,3,3]},
+        {dose: 29,days: [4,4,4,4,4,4,5]},
+        {dose: 29,days: [4,4,4,4,4,4.5,4.5]},
+        {dose: 29,days: [3.5,3.5,3.5,3.5,5,5,5]},
+        {dose: 29.5,days: [4,4,4,4,4.5,4.5,4.5]},
+        {dose: 30,days: [4.5,4.5,4.5,4.5,4,4,4]},
+        {dose: 30,days: [4,4,4,4,4,5,5]},
+        {dose: 30.5,days: [4.5,4.5,4.5,4.5,4.5,4,4]},
+        {dose: 31,days: [4.5,4.5,4.5,4.5,4.5,4.5,4]},
+        {dose: 31,days: [4,4,4,4,5,5,5]},
+        {dose: 31,days: [5,5,5,5,5,3,3]},
+        {dose: 31.5,days: [4.5,4.5,4.5,4.5,4.5,4.5,4.5]},
+        {dose: 32,days: [4.5,4.5,4.5,4.5,4.5,4.5,5]},
+        {dose: 32,days: [5,5,5,5,4,4,4]},
+        {dose: 32,days: [5,5,5,5,5,3.5,3.5]},
+        {dose: 32.5,days: [4.5,4.5,4.5,4.5,4.5,5,5]},
+        {dose: 33,days: [4.5,4.5,4.5,4.5,5,5,5]},
+        {dose: 33,days: [5,5,5,5,5,5,3]},
+        {dose: 33,days: [5,5,5,5,5,4,4]},
+        {dose: 33.5,days: [5,5,5,5,4.5,4.5,4.5]},
+        {dose: 34,days: [5,5,5,5,5,5,4]},
+        {dose: 34,days: [5,5,5,5,5,4.5,4.5]},
+        {dose: 34.5,days: [5,5,5,5,5,5,4.5]},
+        {dose: 34.5,days: [4.5,4.5,4.5,4.5,4.5,6,6]},
+        {dose: 35,days: [5,5,5,5,5,5,5]},
+        {dose: 35.5,days: [5,5,5,5,5,5,5.5]},
+        {dose: 36,days: [5,5,5,5,5,5,6]},
+        {dose: 36,days: [5,5,5,5,5,5.5,5.5]},
+        {dose: 36.5,days: [5,5,5,5,5.5,5.5,5.5]},
+        {dose: 37,days: [5.5,5.5,5.5,5.5,5,5,5]},
+        {dose: 37.5,days: [5.5,5.5,5.5,5.5,5.5,5,5]},
+        {dose: 38,days: [5.5,5.5,5.5,5.5,5.5,5.5,5]},
+        {dose: 38,days: [6,6,6,6,6,4,4]},
+        {dose: 38.5,days: [5.5,5.5,5.5,5.5,5.5,5.5,5.5]},
+        {dose: 39,days: [6,6,6,6,5,5,5]},
+        {dose: 39,days: [5.5,5.5,5.5,5.5,5.5,5.5,6]},
+        {dose: 39.5,days: [5.5,5.5,5.5,5.5,5.5,6,6]},
+        {dose: 40,days: [5.5,5.5,5.5,5.5,6,6,6]},
+        {dose: 40,days: [6,6,6,6,6,5,5]},
+        {dose: 40,days: [6,6,6,6,6,6,4]},
+        {dose: 40.5,days: [6,6,6,6,5.5,5.5,5.5]},
+        {dose: 40.5,days: [6,6,6,6,6,6,4.5]},
+        {dose: 41,days: [6,6,6,6,6,6,5]},
+        {dose: 41,days: [6,6,6,6,6,5.5,5.5]},
+        {dose: 41.5,days: [6,6,6,6,6,6,5.5]},
+        {dose: 41.5,days: [5.5,5.5,5.5,5.5,5.5,7,7]},
+        {dose: 42,days: [6,6,6,6,6,6,6]},
+        {dose: 42.5,days: [6,6,6,6,6,6,6.5]},
+        {dose: 43,days: [6,6,6,6,6,6,7]},
+        {dose: 43,days: [6,6,6,6,6,6.5,6.5]},
+        {dose: 43.5,days: [6,6,6,6,6.5,6.5,6.5]},
+        {dose: 44,days: [6,6,6,6,6,7,7]},
+        {dose: 44.5,days: [6.5,6.5,6.5,6.5,6.5,6,6]},
+        {dose: 45,days: [6.5,6.5,6.5,6.5,6.5,6.5,6]},
+        {dose: 45,days: [7,7,7,7,7,5,5]},
+        {dose: 45.5,days: [6.5,6.5,6.5,6.5,6.5,6.5,6.5]},
+        {dose: 46,days: [6.5,6.5,6.5,6.5,6.5,6.5,7]},
+        {dose: 46.5,days: [6.5,6.5,6.5,6.5,6.5,7,7]},
+        {dose: 47,days: [6.5,6.5,6.5,6.5,7,7,7]},
+        {dose: 47,days: [7,7,7,7,7,7,5]},
+        {dose: 47.5,days: [7,7,7,7,6.5,6.5,6.5]},
+        {dose: 48,days: [7,7,7,7,7,7,6]},
+        {dose: 48,days: [7,7,7,7,7,6.5,6.5]},
+        {dose: 48.5,days: [7,7,7,7,7,7,6.5]},
+        {dose: 48.5,days: [6.5,6.5,6.5,6.5,6.5,8,8]},
+        {dose: 49,days: [7,7,7,7,7,7,7]},
+        {dose: 49.5,days: [7,7,7,7,7,7,7.5]},
+        {dose: 50,days: [7,7,7,7,7,7,8]},
+        {dose: 50,days: [7,7,7,7,7,7.5,7.5]},
+        {dose: 50,days: [7.5,7.5,7.5,7.5,7.5,7.5,5]},
+        {dose: 50.5,days: [7,7,7,7,7.5,7.5,7.5]},
+        {dose: 51,days: [7,7,7,7,7,8,8]},
+        {dose: 51,days: [7.5,7.5,7.5,7.5,7,7,7]},
+        {dose: 51.5,days: [7.5,7.5,7.5,7.5,7.5,7,7]},
+        {dose: 52,days: [7.5,7.5,7.5,7.5,7.5,7.5,7]},
+        {dose: 52.5,days: [7.5,7.5,7.5,7.5,7.5,7.5,7.5]},
+        {dose: 53,days: [7.5,7.5,7.5,7.5,7.5,7.5,8]},
+        {dose: 53.5,days: [7.5,7.5,7.5,7.5,7.5,8,8]},
+        {dose: 54,days: [7.5,7.5,7.5,7.5,8,8,8]},
+        {dose: 54,days: [7.5,7.5,7.5,7.5,7.5,7.5,9]},
+        {dose: 55,days: [8,8,8,8,8,8,7]},
+        {dose: 55,days: [8,8,8,8,8,7.5,7.5]},
+        {dose: 55.5,days: [8,8,8,8,8,8,7.5]},
+        {dose: 56,days: [8,8,8,8,8,8,8]},
+        {dose: 56.5,days: [8,8,8,8,8,8,8.5]},
+        {dose: 57,days: [8,8,8,8,8,8,9]},
+        {dose: 57,days: [8,8,8,8,8,8.5,8.5]},
+        {dose: 57.5,days: [8,8,8,8,8.5,8.5,8.5]},
+        {dose: 58,days: [8,8,8,8,8,9,9]},
+        {dose: 58.5,days: [8.5,8.5,8.5,8.5,8.5,8,8]},
+        {dose: 59,days: [8.5,8.5,8.5,8.5,8.5,8.5,8]},
+        {dose: 59,days: [8,8,8,8,9,9,9]},
+        {dose: 59.5,days: [8.5,8.5,8.5,8.5,8.5,8.5,8.5]},
+        {dose: 60,days: [8.5,8.5,8.5,8.5,8.5,8.5,9]},
+        {dose: 60.5,days: [8.5,8.5,8.5,8.5,8.5,9,9]},
+        {dose: 61,days: [8.5,8.5,8.5,8.5,9,9,9]},
+        {dose: 61.5,days: [9,9,9,9,8.5,8.5,8.5]},
+        {dose: 62,days: [9,9,9,9,9,9,8]},
+        {dose: 62,days: [9,9,9,9,9,8.5,8.5]},
+        {dose: 62.5,days: [9,9,9,9,9,9,8.5]},
+        {dose: 63,days: [9,9,9,9,9,9,9]},
+        {dose: 63.5,days: [9,9,9,9,9,9,9.5]},
+        {dose: 64,days: [9,9,9,9,9,9.5,9.5]},
+        {dose: 64,days: [9,9,9,9,9,9,10]},
+        {dose: 64.5,days: [9,9,9,9,9.5,9.5,9.5]},
+        {dose: 65,days: [9,9,9,9,9,10,10]},
+        {dose: 65.5,days: [9.5,9.5,9.5,9.5,9.5,9,9]},
+        {dose: 66,days: [9.5,9.5,9.5,9.5,9.5,9.5,9]},
+        {dose: 66.5,days: [9.5,9.5,9.5,9.5,9.5,9.5,9.5]},
+        {dose: 67,days: [9.5,9.5,9.5,9.5,9.5,9.5,10]},
+        {dose: 67.5,days: [9.5,9.5,9.5,9.5,9.5,10,10]},
+        {dose: 68,days: [9.5,9.5,9.5,9.5,10,10,10]},
+        {dose: 68,days: [9.5,9.5,9.5,9.5,9.5,9.5,11]},
+        {dose: 68.5,days: [10,10,10,10,9.5,9.5,9.5]},
+        {dose: 69,days: [10,10,10,10,10,9.5,9.5]},
+        {dose: 69,days: [10,10,10,10,10,10,9]},
+        {dose: 69.5,days: [10,10,10,10,10,10,9.5]},
+        {dose: 70,days: [10,10,10,10,10,10,10]},
+        {dose: 70.5,days: [10,10,10,10,10,10,10.5]},
+        {dose: 71,days: [10,10,10,10,10,10,11]},
+        {dose: 71,days: [10,10,10,10,10,10,11]},
+        {dose: 71.5,days: [10,10,10,10,10,10.5,11]},
+        {dose: 72,days: [10,10,10,10,10,11,11]},
+        {dose: 72,days: [10,10,10,10,10,10,12]},
+        {dose: 72.5,days: [10,10,10.5,11,11,10,10]},
+        {dose: 73,days: [11,11,11,10,10,10,10]},
+        {dose: 73,days: [10,10,10,10,10,11,12]},
+        {dose: 73,days: [10,10,10,10,10,10,13]},
+        {dose: 73.5,days: [10,10,10,10.5,11,11,11]},
+        {dose: 74,days: [11,11,11,11,10,10,10]},
+        {dose: 74.5,days: [10,10,10.5,11,11,11,11]},
+        {dose: 75,days: [11,11,11,11,11,10,10]},
+        {dose: 75,days: [11,11,11,11,11,10,10]},
+        {dose: 75.5,days: [11,11,11,11,11,11,9.5]},
+        {dose: 76,days: [11,11,11,11,11,11,10]},
+        {dose: 76,days: [10,10,10,10,12,12,12]},
+        {dose: 76.5,days: [11,11,11,11,11,11,10.5]},
+        {dose: 77,days: [11,11,11,11,11,11,11]},
+        {dose: 77.5,days: [11,11,11,11,11,11,11.5]},
+        {dose: 78,days: [11,11,11,11,11,11,12]},
+        {dose: 78,days: [11,11,11,11,11,11,12]},
+        {dose: 78.5,days: [11,11,11,11,11,11.5,12]},
+        {dose: 79,days: [11,11,11,11,11,12,12]},
+        {dose: 79.5,days: [11,11,11.5,12,12,11,11]},
+        {dose: 80,days: [11,11,11,11,12,12,12]},
+        {dose: 80,days: [11,11,11,12,12,12,11]},
+        {dose: 80.5,days: [11,11,11,11.5,12,12,12]},
+        {dose: 81,days: [12,12,12,12,11,11,11]},
+        {dose: 81,days: [11,11,11,11,12,12,13]},
+        {dose: 81.5,days: [12,12,12,12,11.5,11,11]},
+        {dose: 82,days: [12,12,12,12,12,11,11]},
+        {dose: 82,days: [12,12,12,12,12,11,11]},
+        {dose: 82.5,days: [12,12,12,12,12,11.5,11]},
+        {dose: 83,days: [12,12,12,12,12,12,11]},
+        {dose: 83,days: [12,12,12,12,12,12,11]},
+        {dose: 83.5,days: [12,12,12,12,12,12,11.5]},
+        {dose: 84,days: [12,12,12,12,12,12,12]},
+        {dose: 84.5,days: [12,12,12,12,12,12,12.5]},
+        {dose: 85,days: [12,12,12,12,12,12,13]},
+        {dose: 85,days: [12,12,12,12,12,12,13]},
+        {dose: 85,days: [13,13,13,13,11,11,11]},
+        {dose: 85.5,days: [12,12,12,12,12,12.5,13]},
+        {dose: 86,days: [13,13,12,12,12,12,12]},
+        {dose: 86,days: [12,12,12,12,12,13,13]},
+        {dose: 86.5,days: [13,13,12.5,12,12,12,12]},
+        {dose: 87,days: [13,13,13,12,12,12,12]},
+        {dose: 87,days: [12,12,12,12,13,13,13]},
+        {dose: 87.5,days: [12,12,12,12.5,13,13,13]},
+        {dose: 88,days: [13,13,13,13,12,12,12]},
+        {dose: 88,days: [13,13,13,13,12,12,12]},
+        {dose: 88,days: [13,13,13,13,13,13,10]},
+        {dose: 88.5,days: [13,13,13,13,12.5,12,12]},
+        {dose: 89,days: [13,13,13,13,13,12,12]},
+        {dose: 89,days: [13,13,13,13,13,13,11]},
+        {dose: 89.5,days: [13,13,13,13,13,13,11.5]},
+        {dose: 90,days: [13,13,13,13,13,13,12]},
+        {dose: 90,days: [13,13,13,13,13,13,12]},
+        {dose: 90.5,days: [13,13,13,13,13,13,12.5]},
+        {dose: 91,days: [13,13,13,13,13,13,13]},
+        {dose: 91.5,days: [13,13,13,13,13,13,13.5]},
+        {dose: 92,days: [13,13,13,13,13,13,14]},
+        {dose: 92.5,days: [13,14,13,14,13,14,11.5]},
+        {dose: 93,days: [13,13,13,13,13,14,14]},
+        {dose: 93.5,days: [14,14,14,14,13.5,12,12]},
+        {dose: 94,days: [13,13,13,13,14,14,14]},
+        {dose: 94.5,days: [14,14,14,13.5,13,13,13]},
+        {dose: 95,days: [14,14,14,14,13,13,13]},
+        {dose: 95.5,days: [14,14,14,14,13.5,13,13]},
+        {dose: 96,days: [14,14,14,14,14,13,13]},
+        {dose: 96.5,days: [14,14,14,14,14,13.5,13]},
+        {dose: 97,days: [14,14,14,14,14,14,13]},
+        {dose: 97.5,days: [14,14,14,14,14,14,13.5]},
+        {dose: 98,days: [14,14,14,14,14,14,14]},
+        {dose: 98.5,days: [14,14,14,14,14,14,14.5]},
+        {dose: 99,days: [14,14,14,14,14,14,15]},
+        {dose: 99.5,days: [14,14,14,14,14,14.5,15]},
+        {dose: 100,days: [14,14,14,14,14,15,15]},
+        {dose: 100.5,days: [15,15,14.5,14,14,14,14]},
+        {dose: 101,days: [14,14,14,14,15,15,15]},
+        {dose: 101.5,days: [15,15,15,14.5,14,14,14]},
+        {dose: 102,days: [15,15,15,15,14,14,14]},
+      ];
+
+      let selectedNearestDose = null;
+
+      const inrInput            = document.getElementById('inrValue');
+      const recommendedPct      = document.getElementById('recommendedPct');
+      const currentDoseInput    = document.getElementById('currentWeeklyDose');
+      const pctChangeSelect     = document.getElementById('pctChange');
+      const computeButton       = document.getElementById('computeButton');
+      const overAnticoagButton  = document.getElementById('overAnticoagButton');
+
+      const resultArea          = document.getElementById('resultArea');
+      const finalWeeklyDose     = document.getElementById('finalWeeklyDose');
+      const scheduleOutput      = document.getElementById('scheduleOutput');
+      const nextINR             = document.getElementById('nextINR');
+
+      const decisionArea        = document.getElementById('decisionArea');
+      const nearestDoseSpan     = document.getElementById('nearestDose');
+      const useNearestButton    = document.getElementById('useNearestButton');
+      const declineNearestButton= document.getElementById('declineNearestButton');
+
+      function getRecommendedChange(inr) {
+        if (inr < 1.5) return "Increase 10–20%";
+        else if (inr >= 1.5 && inr < 2.0) return "Increase 5–10%";
+        else if (inr >= 2.0 && inr <= 3.0) return "In range (No Change)";
+        else if (inr > 3.0 && inr < 4.0) return "Decrease 5–10%";
+        else if (inr >= 4.0 && inr < 5.0) return "Hold 0 – 2 days & decrease 10%";
+        else return "INR ≥ 5: Overanticoagulation Protocol";
+      }
+
+      function updateRecommendation() {
+        const inrVal = parseFloat(inrInput.value);
+        recommendedPct.textContent = "";
+
+        if (!inrVal || inrVal < 0.01) {
+          disableDoseAdjustments();
+          computeButton.disabled = true;
+          computeButton.style.display = "inline-block";
+          overAnticoagButton.style.display = "none";
+          return;
+        }
+
+        if (inrVal >= 5) {
+          recommendedPct.textContent = "";
+          computeButton.style.display = "none";
+          overAnticoagButton.style.display = "inline-block";
+          disableDoseAdjustments();
+        } else {
+          overAnticoagButton.style.display = "none";
+          computeButton.style.display = "inline-block";
+          recommendedPct.textContent = `Recommended: ${getRecommendedChange(inrVal)}`;
+          enableDoseAdjustments();
+          checkIfComputeAllowed();
+        }
+      }
+
+      function checkIfComputeAllowed() {
+        const inrVal = parseFloat(inrInput.value);
+        const doseVal = parseFloat(currentDoseInput.value);
+        const pctVal = pctChangeSelect.value;
+
+        computeButton.disabled = !(inrVal && inrVal > 0 && inrVal < 5 && doseVal && doseVal > 0 && pctVal);
+      }
+
+      function disableDoseAdjustments() {
+        currentDoseInput.disabled = true;
+        pctChangeSelect.disabled = true;
+        currentDoseInput.value = "";
+        pctChangeSelect.value = "";
+      }
+
+      function enableDoseAdjustments() {
+        currentDoseInput.disabled = false;
+        pctChangeSelect.disabled = false;
+      }
+
+      function findNearestDoseValue(targetDose) {
+        let closestValue = warfarinDosingTable[0].dose;
+        let minDiff = Math.abs(targetDose - closestValue);
+        for (let i = 1; i < warfarinDosingTable.length; i++) {
+          const diff = Math.abs(targetDose - warfarinDosingTable[i].dose);
+          if (diff < minDiff) { minDiff = diff; closestValue = warfarinDosingTable[i].dose; }
+        }
+        return closestValue;
+      }
+
+      function getNextINRRecommendation(inr) {
+        if (inr < 1.5) return "Recheck INR in 3–8 days.";
+        else if (inr >= 1.5 && inr < 2.0) return "Recheck INR in 7–14 days.";
+        else if (inr >= 2.0 && inr <= 3.0) return "INR is therapeutic. Recheck in 5 – 14 days if first in-range.";
+        else if (inr > 3.0 && inr < 4.0) return "Recheck INR in 7–14 days.";
+        else if (inr >= 4.0 && inr < 5.0) return "Hold 0–2 days & decrease dose 10%; recheck in 3–8 days.";
+        else return "INR ≥ 5. See Overanticoagulation Guide.";
+      }
+
+      function calculateDose() {
+        const inrVal = parseFloat(inrInput.value);
+        const currentDose = parseFloat(currentDoseInput.value);
+        const pctChangeVal = pctChangeSelect.value;
+
+        if (!inrVal || inrVal >= 5) { alert("INR must be below 5 to compute a new dose."); return; }
+        if (!currentDose || currentDose <= 0) { alert("Please enter a valid current weekly dose > 0."); return; }
+        if (!pctChangeVal) { alert("Please select a % Change option."); return; }
+
+        const [direction, pctStr] = pctChangeVal.split("-");
+        const pct = parseFloat(pctStr) || 0;
+        let factor = 1;
+        if (direction === "increase") factor = 1 + pct/100;
+        else if (direction === "decrease") factor = 1 - pct/100;
+
+        const newWeeklyDose = currentDose * factor;
+
+        scheduleOutput.innerHTML = "";
+        nextINR.innerHTML = "";
+        decisionArea.style.display = "none";
+
+        finalWeeklyDose.innerHTML = `
+          New Total Weekly Dose:
+          <span class="highlight">${newWeeklyDose.toFixed(2)} mg</span>
+        `;
+
+        const exactMatches = warfarinDosingTable.filter(row => row.dose === newWeeklyDose);
+
+        if (exactMatches.length > 0) {
+          if (exactMatches.length === 1) {
+            const match = exactMatches[0];
+            scheduleOutput.innerHTML = `
+              <p><strong>Recommended daily dosing</strong> for ${newWeeklyDose.toFixed(2)} mg/week:</p>
+            `;
+            const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            const lines = match.days.map((d, idx) => `<strong>${dayNames[idx]}:</strong> ${d} mg`);
+            scheduleOutput.innerHTML += `
+              <div class="schedule-block"><p>${lines.join("<br>")}</p></div>
+            `;
+          } else {
+            scheduleOutput.innerHTML = `
+              <p><strong>Recommended daily dosing</strong> for ${newWeeklyDose.toFixed(2)} mg/week:</p>
+            `;
+            exactMatches.forEach((match, i) => {
+              const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+              const lines = match.days.map((d, idx) => `<strong>${dayNames[idx]}:</strong> ${d} mg`);
+              scheduleOutput.innerHTML += `
+                <div class="schedule-block" aria-label="Dose Option ${i+1}">
+                  <p><strong>Option ${i+1}:</strong></p>
+                  <p>${lines.join("<br>")}</p>
+                </div>
+              `;
+            });
+          }
+        } else {
+          selectedNearestDose = findNearestDoseValue(newWeeklyDose);
+          nearestDoseSpan.textContent = selectedNearestDose.toFixed(2);
+          decisionArea.style.display = "block";
+        }
+
+        nextINR.innerHTML = `<strong>Next INR Check Recommendation:</strong> ${getNextINRRecommendation(inrVal)}`;
+        resultArea.style.display = "block";
+        resultArea.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function useNearestDose() {
+        if (selectedNearestDose === null) return;
+        scheduleOutput.innerHTML = `
+          <p><strong>Using NEAREST total weekly dose: ${selectedNearestDose.toFixed(2)} mg/week</strong></p>
+        `;
+        const nearestRows = warfarinDosingTable.filter(row => row.dose === selectedNearestDose);
+        if (nearestRows.length === 1) {
+          const match = nearestRows[0];
+          const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+          const lines = match.days.map((d, idx) => `<strong>${dayNames[idx]}:</strong> ${d} mg`);
+          scheduleOutput.innerHTML += `<div class="schedule-block"><p>${lines.join("<br>")}</p></div>`;
+        } else {
+          nearestRows.forEach((match, i) => {
+            const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            const lines = match.days.map((d, idx) => `<strong>${dayNames[idx]}:</strong> ${d} mg`);
+            scheduleOutput.innerHTML += `
+              <div class="schedule-block" aria-label="Dose Option ${i+1}">
+                <p><strong>Option ${i+1}:</strong></p>
+                <p>${lines.join("<br>")}</p>
+              </div>
+            `;
+          });
+        }
+        decisionArea.style.display = "none";
+      }
+
+      function declineNearestDose() {
+        scheduleOutput.innerHTML = `
+          <p><strong>No exact match</strong> and you declined the nearest dose.</p>
+          <p>Please adjust the percentage or use a different approach.</p>
+        `;
+        decisionArea.style.display = "none";
+      }
+
+      function enforceTwoDecimalsINR() {
+        if (inrInput.value) {
+          const val = parseFloat(inrInput.value);
+          if (!Number.isNaN(val)) inrInput.value = val.toFixed(2);
+        }
+      }
+
+      function enforceOneDecimalDose() {
+        if (currentDoseInput.value) {
+          const val = parseFloat(currentDoseInput.value);
+          if (!Number.isNaN(val)) currentDoseInput.value = val.toFixed(1);
+        }
+      }
+
+      inrInput.addEventListener('input', updateRecommendation);
+      inrInput.addEventListener('blur', enforceTwoDecimalsINR);
+      currentDoseInput.addEventListener('input', checkIfComputeAllowed);
+      currentDoseInput.addEventListener('blur', enforceOneDecimalDose);
+      pctChangeSelect.addEventListener('change', checkIfComputeAllowed);
+      document.getElementById('computeButton').addEventListener('click', calculateDose);
+      document.getElementById('useNearestButton').addEventListener('click', useNearestDose);
+      document.getElementById('declineNearestButton').addEventListener('click', declineNearestDose);
+    })();
+  </script>
+<script src="../tool-adapter.js?v=1.0"></script></body>
+</html>

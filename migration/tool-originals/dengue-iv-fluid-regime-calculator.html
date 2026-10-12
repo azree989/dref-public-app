@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dengue IV Fluid Regime Calculator — DRef</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Header font (standard across apps) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --text:#333;
+      --muted:#6b7280;
+      --surface:#f7fafc;
+      --ring:#e5e7eb;
+      --primary:#1976d2;       /* unified primary (PEFR/eGFR) */
+      --primary-hover:#155a9c;
+      --radius:12px;
+    }
+
+    body { background: var(--bg); margin: 1rem; color: var(--text); }
+
+    /* Standard header / footer */
+    .app-header{
+      font-family:"Josefin Sans",sans-serif;
+      color:var(--muted);
+      text-align:center;
+      font-size:.95rem;
+      font-weight:400;
+      letter-spacing:.03em;
+      margin:4px auto 12px;
+      padding:4px 12px;
+      max-width:90%;
+    }
+    .app-footer{
+      text-align:center;
+      font-size:.9rem;
+      color:var(--muted);
+      background:var(--surface);
+      border:1px solid var(--ring);
+      border-radius:10px;
+      padding:10px 12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      margin:16px auto 12px;
+      max-width:900px;
+      line-height:1.4;
+    }
+    @media(max-width:600px){
+      .app-header{padding:6px 16px;max-width:94%}
+      .app-footer{font-size:.85rem;padding:8px 10px}
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+    .result-label { font-size: 1rem; font-weight: 500; }
+    .result-value { font-size: 1.35rem; font-weight: 700; color: var(--primary); }
+    .radio-row .form-check { margin-right: 1rem; }
+
+    /* Card framing */
+    .tool-card{
+      background:#fff;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+      padding: 18px 16px 22px;
+    }
+
+    /* Title styling to match suite */
+    .card-title{
+      text-align:center;
+      color:var(--primary);
+      font-size:1.6rem;
+      font-weight:600;
+      margin: 0.25rem 0 0.5rem;
+    }
+    .lead-muted{
+      color:#6c757d;
+      text-align:center;
+      margin-bottom: 1rem;
+    }
+
+    /* Unify button color with suite (override Bootstrap primary) */
+    .btn-primary{
+      background: var(--primary) !important;
+      border-color: var(--primary) !important;
+    }
+    .btn-primary:hover{
+      background: var(--primary-hover) !important;
+      border-color: var(--primary-hover) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-header">app crafted by our medical doctors, for better patient care</div>
+
+  <div class="container tool-card">
+    <h1 class="card-title">Dengue IV Fluid Regime Calculator</h1>
+    <p class="lead-muted">Enter patient data, then select an infusion rate to see the final ml/hour.</p>
+
+    <!-- Patient Data & BMI Calculation -->
+    <div class="row mb-2">
+      <div class="col-sm-4 mb-2">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" class="form-select">
+          <option value="">Select Gender</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </div>
+      <div class="col-sm-4 mb-2">
+        <label for="heightCm" class="form-label">Height (cm)</label>
+        <input type="number" class="form-control" id="heightCm" placeholder="e.g. 165" step="0.1" min="0.1"/>
+      </div>
+      <div class="col-sm-4 mb-2">
+        <label for="weightKg" class="form-label">Weight (kg)</label>
+        <input type="number" class="form-control" id="weightKg" placeholder="e.g. 70" step="0.1" min="0.1"/>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col text-center">
+        <button id="calculateBtn" class="btn btn-primary btn-sm px-4">
+          Calculate BMI &amp; Weights
+        </button>
+      </div>
+    </div>
+
+    <!-- Results: BMI & Weight Used -->
+    <div class="row mb-2">
+      <div class="col-sm-6 text-center">
+        <p class="result-label mb-1">BMI</p>
+        <p id="bmiValue" class="result-value">-</p>
+      </div>
+      <div class="col-sm-6 text-center">
+        <p id="weightUsedLabel" class="result-label mb-1">Weight Used for Calculation</p>
+        <p id="weightUsedVal" class="result-value">-</p>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- Infusion Rate Selection -->
+    <p class="section-title">Select Infusion Rate (ml/kg/hr):</p>
+    <div class="radio-row d-flex flex-wrap align-items-center mb-3">
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate1.2" value="1.2" disabled/>
+        <label class="form-check-label" for="rate1.2">1.2</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate1.5" value="1.5" disabled/>
+        <label class="form-check-label" for="rate1.5">1.5</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate3" value="3" disabled/>
+        <label class="form-check-label" for="rate3">3</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate5" value="5" disabled/>
+        <label class="form-check-label" for="rate5">5</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate7" value="7" disabled/>
+        <label class="form-check-label" for="rate7">7</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate10" value="10" disabled/>
+        <label class="form-check-label" for="rate10">10</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input rateRadio" type="radio" name="rateRadio" id="rate20" value="20" disabled/>
+        <label class="form-check-label" for="rate20">20</label>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- Final Infusion Rate -->
+    <div class="text-center mt-2">
+      <p class="result-label mb-1">IV Infusion Rate (ml/hour)</p>
+      <p id="result" class="result-value">-</p>
+    </div>
+  </div>
+
+  <div class="app-footer">
+    Reference: Malaysia CPG Management of Dengue Infection in Adults, 3rd Edition (2015).<br/>
+    Any calculations must be rechecked and should not be used alone to guide patient care.
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Logic unchanged -->
+  <script>
+    // Grab elements
+    const genderEl        = document.getElementById("gender");
+    const heightEl        = document.getElementById("heightCm");
+    const weightEl        = document.getElementById("weightKg");
+    const calculateBtn    = document.getElementById("calculateBtn");
+
+    const bmiValueEl      = document.getElementById("bmiValue");
+    const weightUsedValEl = document.getElementById("weightUsedVal");
+    const weightUsedLabel = document.getElementById("weightUsedLabel");
+    const resultEl        = document.getElementById("result");
+    const rateRadios      = document.querySelectorAll(".rateRadio");
+
+    let finalWeight       = null; // stores Actual or Adjusted weight
+    let userHasCalculated = false;
+
+    calculateBtn.addEventListener("click", () => {
+      // 1) Validate input
+      const gender   = genderEl.value;
+      const heightCm = parseFloat(heightEl.value);
+      const weightKg = parseFloat(weightEl.value);
+
+      if (!gender || !heightCm || !weightKg) {
+        alert("Please select gender and enter valid height & weight.");
+        resetOutputs();
+        return;
+      }
+
+      // 2) Calculate BMI
+      const heightM = heightCm / 100;
+      const bmi = weightKg / (heightM * heightM);
+
+      // 3) Decide if Actual or Adjusted
+      let noteSuffix = "";
+      if (bmi < 27.5) {
+        finalWeight = weightKg;
+        noteSuffix  = " (Actual)";
+      } else {
+        const ibw = (gender === "M")
+          ? 50.0 + 0.91 * (heightCm - 152)
+          : 45.5 + 0.91 * (heightCm - 152);
+
+        finalWeight = ibw + 0.4 * (weightKg - ibw);
+        noteSuffix  = " (Adjusted)";
+      }
+
+      // 4) Update Displays
+      bmiValueEl.textContent      = bmi.toFixed(1);
+      weightUsedValEl.textContent = finalWeight.toFixed(1);
+      weightUsedLabel.textContent = "Weight Used for Calculation" + noteSuffix;
+
+      // 5) Enable radio buttons
+      rateRadios.forEach(radio => {
+        radio.disabled = false;
+        radio.checked  = false;
+      });
+
+      // 6) Clear infusion rate
+      resultEl.textContent       = "-";
+      userHasCalculated          = true;
+    });
+
+    // When user selects a rate
+    rateRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (!userHasCalculated || !finalWeight) {
+          alert("Please calculate BMI & weights first.");
+          radio.checked = false;
+          return;
+        }
+        const chosenRate = parseFloat(radio.value);
+        if (!chosenRate || chosenRate <= 0) {
+          resultEl.textContent = "-";
+          return;
+        }
+        // compute final IV rate
+        const ivRate = finalWeight * chosenRate;
+        resultEl.textContent = ivRate.toFixed(1);
+      });
+    });
+
+    function resetOutputs() {
+      bmiValueEl.textContent      = "-";
+      weightUsedValEl.textContent = "-";
+      weightUsedLabel.textContent = "Weight Used for Calculation";
+      resultEl.textContent        = "-";
+      finalWeight                 = null;
+      userHasCalculated           = false;
+
+      // disable and uncheck radios
+      rateRadios.forEach(radio => {
+        radio.disabled = true;
+        radio.checked  = false;
+      });
+    }
+
+    // Init
+    resetOutputs();
+  </script>
+</body>
+</html>

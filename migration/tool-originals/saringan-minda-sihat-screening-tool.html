@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Saringan Minda Sihat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    :root {
+      --accent:#005b96; --bg:#f8f9fa; --surface:#fff;
+      --text:#2c3e50; --border:#dee2e6; --radius:4px;
+      --gap:24px; --gap-sm:12px;
+      --export: #f7941e;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body {
+      font:16px/1.4 'Roboto',sans-serif;
+      background:var(--bg); color:var(--text);
+      display:flex;flex-direction:column;min-height:100vh;
+    }
+    header {
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      padding:16px;
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:20;
+    }
+    header h1{font-size:1.25rem;font-weight:500}
+    .lang-toggle{display:flex;align-items:center;gap:4px}
+    .toggle-switch{position:relative;width:40px;height:20px}
+    .toggle-switch input{opacity:0;width:0;height:0}
+    .track{
+      position:absolute;inset:0;background:var(--border);
+      border-radius:10px;transition:background .2s;
+    }
+    .thumb{
+      position:absolute;top:2px;left:2px;
+      width:16px;height:16px;
+      background:var(--surface);border-radius:50%;
+      box-shadow:0 1px 2px rgba(0,0,0,0.2);
+      transition:transform .2s;
+    }
+    input:checked+.track{background:var(--accent)}
+    input:checked+.track+.thumb{transform:translateX(20px)}
+    main{flex:1;padding:var(--gap);overflow-y:auto}
+    .page{display:none}.page.active{display:block}
+    .tool-grid{display:flex;gap:var(--gap);justify-content:center}
+    .tool-btn{
+      flex:1;padding:16px;font:1rem/1.2 Roboto;
+      background:var(--surface);color:var(--accent);
+      border:2px solid var(--accent);border-radius:var(--radius);
+      cursor:pointer;transition:background .2s,color .2s;
+    }
+    .tool-btn:hover{background:var(--accent);color:#fff}
+    .question-block{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:var(--gap);
+      margin-bottom:var(--gap);
+    }
+    .radio-group{display:flex;gap:var(--gap);margin-top:var(--gap)}
+    .radio-label{
+      position:relative;cursor:pointer;font-weight:500;
+    }
+    .radio-label input{position:absolute;opacity:0;cursor:pointer}
+    .radio-label span{
+      display:inline-block;padding:8px 20px;
+      border:2px solid var(--accent);
+      border-radius:var(--radius);
+      transition:background .2s,color .2s;
+    }
+    .radio-label span:hover{background:rgba(0,91,150,0.1)}
+    .radio-label input:checked+span{
+      background:var(--accent);color:#fff;
+    }
+    .btn.back{
+      background:transparent;color:var(--accent);
+      text-decoration:underline;
+      display:inline-block;margin-top:var(--gap-sm);
+      font-size: 1rem;
+    }
+    .progress{font-size:0.9rem;color:gray;margin-bottom:12px}
+    .main-question{
+      font-size:1rem;font-weight:500;
+      margin-bottom:var(--gap);white-space:pre-line;
+    }
+    #remark{font-size:0.95rem;margin-bottom:var(--gap)}
+    .remark-risk{color:#c62828}
+    .remark-safe{color:var(--text)}
+    #proceedPHQ9{
+      display:none;margin-bottom:var(--gap-sm);
+      background:var(--accent);color:#fff;
+      border:none;padding:12px 24px;
+      border-radius:var(--radius);cursor:pointer;
+    }
+    .floating-legend{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:var(--gap-sm);margin-bottom:var(--gap-sm);
+      position:sticky;top:0;z-index:10;
+      background:var(--surface);
+      padding:var(--gap-sm) 0;
+    }
+    .floating-legend>div{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      text-align:center;
+      padding:0 var(--gap-sm);
+    }
+    .legend-text{font-size:0.85rem;margin-bottom:4px}
+    .legend-score{font-size:1rem;font-weight:500}
+    #phq9Page h2,
+    #gad2Page h2,
+    #gad7Page h2{
+      background:#2e7d32;color:#fff;
+      padding:8px;border-radius:var(--radius);
+      text-align:center;margin-bottom:var(--gap-sm);
+      font-size:1.05rem;
+    }
+    #phq9Page p[data-key="phq9Instr"],
+    #gad2Page p[data-key="gad2Instr"],
+    #gad7Page p[data-key="gad7Instr"]{
+      font-size:0.95rem;margin-bottom:var(--gap-sm);
+    }
+    .question-block.phq9{
+      display:flex;flex-direction:column;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:var(--gap-sm);
+      margin-bottom:var(--gap-sm);
+    }
+    .question-block.phq9 p{
+      font-size:0.9rem;line-height:1.3;margin-bottom:var(--gap-sm);
+    }
+    .question-block.phq9 .radio-group{
+      display:flex;gap:4px;justify-content:space-between;
+    }
+    .question-block.phq9 .radio-label span{
+      padding:10px 18px;font-size:0.9rem;
+      border:2px solid var(--accent);
+      border-radius:var(--radius);
+      transition:background .2s,color .2s;
+    }
+    .question-block.phq9 .radio-label span:hover{
+      background:rgba(0,91,150,0.1);
+    }
+    .question-block.phq9 .radio-label input:checked+span{
+      background:var(--accent);color:#fff;
+}
+    .suicide-remark{
+      margin-top:4px;font-size:0.9rem;
+      color:#c62828;font-style:italic;
+    }
+    #gad2Remark{font-size:0.95rem;margin:var(--gap) 0}
+    #proceedGAD7{
+      display:none;margin-bottom:var(--gap-sm);
+      background:var(--accent);color:#fff;
+      border:none;padding:12px 24px;
+      border-radius:var(--radius);cursor:pointer;
+    }
+    .phq9-actions{
+      display:flex;justify-content:center;gap:16px;
+      margin-bottom:var(--gap-sm);
+    }
+    #submitPHQ9,#resetPHQ9,
+    #submitGAD7,#resetGAD7{
+      padding:10px 20px;font-weight:500;
+      border-radius:var(--radius);cursor:pointer;
+      font-size:0.95rem;
+    }
+    #submitPHQ9,#submitGAD7{
+      background:var(--accent);color:#fff;border:none;
+    }
+    #resetPHQ9,#resetGAD7{
+      background:var(--surface);color:var(--accent);
+      border:2px solid var(--accent);
+    }
+    .result-card{
+      background:var(--surface);border-radius:var(--radius);
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
+      padding:var(--gap-sm);margin-bottom:var(--gap-sm);
+    }
+    .result-card table{
+      width:100%;border-collapse:collapse;
+      margin-bottom:var(--gap-sm);
+    }
+    .result-card td{padding:4px 0}
+    .result-card h3{
+      margin:0 0 var(--gap-sm);
+      font-size:1rem;color:var(--accent);
+    }
+    .result-card .note{
+      color:#c62828;font-style:italic;
+    }
+    /* Export Button Floating */
+    #exportArea {
+      position:fixed;
+      right:2vw;
+      bottom:2vw;
+      z-index:100;
+      background:transparent;
+      max-width:unset;
+      margin:0;
+      text-align:right;
+      pointer-events:none;
+    }
+    #btnExportCSV {
+      background:var(--export);
+      color:#fff;
+      border:none;
+      border-radius:32px;
+      padding:16px 26px;
+      font-weight:700;
+      font-size:1rem;
+      box-shadow:0 3px 18px rgba(0,0,0,0.11);
+      cursor:pointer;
+      pointer-events:auto;
+      transition:background 0.2s;
+      outline:none;
+    }
+    #btnExportCSV:hover, #btnExportCSV:focus {
+      background:#d77401;
+    }
+    @media (max-width:700px) {
+      #exportArea { right:8px; bottom:8px;}
+      #btnExportCSV{padding:12px 18px;font-size:0.98rem;}
+    }
+    /* ── In-page error banner ── */
+#errorBanner {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c62828;
+  color: #fff;
+  padding: .75rem 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+.hidden { display: none; }
+.collapsible-toggle {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 18px 20px 8px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #224;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0;
+}
+.collapsible-hint {
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: #888;
+  margin-left: 12px;
+}
+.arrow {
+  margin-left: 12px;
+  font-size: 1.1rem;
+  transition: transform 0.18s;
+}
+#pesakitForm {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height .3s, opacity .3s;
+}
+#pesakitForm.open {
+  max-height: 800px; /* or large enough */
+  opacity: 1;
+}
+
+ </style>
+</head>
+<body>
+<header>
+  <h1>Saringan Minda Sihat Screening Tool</h1>
+  <div class="lang-toggle">
+    <span class="material-icons">translate</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="langToggle">
+      <span class="track"></span>
+      <span class="thumb"></span>
+    </label>
+    <span class="material-icons">language</span>
+  </div>
+</header>
+  <!-- in-page error banner (initially hidden) -->
+<div id="errorBanner" class="hidden">
+  🌟 Sila jawab kesemua soalan sebelum meneruskan.
+</div>
+<main>
+  <!-- HOME PAGE -->
+  <div id="homePage" class="page active">
+  <!-- Collapsible Patient Info Start -->
+  <div class="collapsible-card" style="max-width:560px;margin:32px auto 0 auto;">
+    <button
+      type="button"
+      class="collapsible-toggle"
+      id="togglePatientInfo"
+      aria-controls="pesakitForm"
+      aria-expanded="false"
+      style="width:100%;"
+    >
+      Maklumat Pesakit <span class="collapsible-hint">(optional if data collection required)</span>
+      <span class="arrow" id="collapsibleArrow">▼</span>
+    </button>
+
+    <div id="pesakitForm" class="question-block">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+        <div>
+          <label>Nama Pesakit<br>
+            <input type="text" id="ptNama" style="width:100%;margin-top:4px;" autocomplete="off">
+          </label>
+        </div>
+        <div>
+          <label>No KP / ID<br>
+            <input type="text" id="ptID" style="width:100%;margin-top:4px;" autocomplete="off">
+          </label>
+        </div>
+        <div>
+          <label>Jantina<br>
+            <select id="ptSex" style="width:100%;margin-top:4px;">
+              <option value="">- Pilih -</option>
+              <option value="Lelaki">Lelaki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>Umur<br>
+            <input type="number" id="ptAge" min="0" max="120" style="width:100%;margin-top:4px;" autocomplete="off">
+          </label>
+        </div>
+        <div>
+          <label>Kategori Umur<br>
+            <input type="text" id="ptAgeCat" style="width:100%;margin-top:4px;background:#f4f4f4;" readonly>
+          </label>
+        </div>
+        <div>
+          <label>Warganegara<br>
+            <select id="ptNegara" style="width:100%;margin-top:4px;">
+              <option value="">- Pilih -</option>
+              <option value="Malaysia">Malaysia</option>
+              <option value="Bukan Malaysia">Bukan Malaysia</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>Kaum<br>
+            <select id="ptEtnik" style="width:100%;margin-top:4px;">
+              <option value="">- Pilih -</option>
+              <option value="Melayu">Melayu</option>
+              <option value="Cina">Cina</option>
+              <option value="India">India</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>Sejarah Perubatan<br>
+            <select id="ptHistYesNo" style="width:100%;margin-top:4px;">
+              <option value="">- Pilih -</option>
+              <option value="Tidak">Tidak</option>
+              <option value="Ya">Ya</option>
+            </select>
+          </label>
+          <div id="ptHistBlock" style="display:none;margin-top:12px;">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <label><input type="checkbox" value="DM" class="ptHistChk"> DM</label>
+              <label><input type="checkbox" value="HPT" class="ptHistChk"> HPT</label>
+              <label><input type="checkbox" value="HPL" class="ptHistChk"> HPL</label>
+              <label><input type="checkbox" value="Kanser" class="ptHistChk"> Kanser</label>
+              <label><input type="checkbox" value="Lain-lain" class="ptHistChk"> Lain-lain</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end #pesakitForm -->
+  </div> <!-- end .collapsible-card -->
+
+  <!-- Buttons Outside Collapsible -->
+  <div class="tool-grid" style="margin-top:24px;">
+    <button id="btnWhooley" class="tool-btn" data-key="whooley">Whooley</button>
+    <button id="btnGAD2" class="tool-btn" data-key="gad2">GAD-2</button>
+  </div>
+</div>
+    
+
+  <!-- WHOOLEY -->
+  <div id="whooleyPage" class="page">
+    <div class="progress" data-key="whooleyProg">1 / 2</div>
+    <div class="main-question" data-key="mainQ"></div>
+    <div class="question-block">
+      <p data-key="q1"></p>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="q1" value="yes">
+          <span data-key="optYes"></span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="q1" value="no">
+          <span data-key="optNo"></span>
+        </label>
+      </div>
+    </div>
+    <div class="question-block">
+      <p data-key="q2"></p>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="q2" value="yes">
+          <span data-key="optYes"></span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="q2" value="no">
+          <span data-key="optNo"></span>
+        </label>
+      </div>
+    </div>
+    <div id="remark"></div>
+    <button id="proceedPHQ9">Teruskan ke PHQ-9 →</button>
+    <button id="backHome"   class="btn back">← Kembali</button>
+  </div>
+
+  <!-- PHQ-9 -->
+  <div id="phq9Page" class="page">
+    <h2>Soal Selidik Kesihatan Pesakit (PHQ-9)</h2>
+    <p data-key="phq9Instr"></p>
+    <div class="floating-legend">
+      <div>
+        <div class="legend-text" data-key="opt0"></div>
+        <div class="legend-score">0</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt1"></div>
+        <div class="legend-score">1</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt2"></div>
+        <div class="legend-score">2</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt3"></div>
+        <div class="legend-score">3</div>
+      </div>
+    </div>
+    <div id="phq9Form"></div>
+    <div class="phq9-actions">
+      <button id="submitPHQ9" type="button">Hantar PHQ-9</button>
+      <button id="resetPHQ9" type="button">Set Semula</button>
+    </div>
+    <div id="phq9Result"></div>
+    <button id="backToWhooley" class="btn back">← Kembali</button>
+  </div>
+
+  <!-- GAD-2 -->
+  <div id="gad2Page" class="page">
+    <h2>Saringan Minda Sihat (GAD-2)</h2>
+    <p data-key="gad2Instr"></p>
+    <div class="floating-legend">
+      <div>
+        <div class="legend-text" data-key="opt0"></div>
+        <div class="legend-score">0</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt1"></div>
+        <div class="legend-score">1</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt2"></div>
+        <div class="legend-score">2</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt3"></div>
+        <div class="legend-score">3</div>
+      </div>
+    </div>
+    <div class="question-block phq9">
+      <p data-key="g2q1"></p>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="g2q1" value="0"><span>0</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="g2q1" value="1"><span>1</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="g2q1" value="2"><span>2</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="g2q1" value="3"><span>3</span>
+        </label>
+      </div>
+    </div>
+    <div class="question-block phq9">
+      <p data-key="g2q2"></p>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="g2q2" value="0"><span>0</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="g2q2" value="1"><span>1</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="g2q2" value="2"><span>2</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="g2q2" value="3"><span>3</span>
+        </label>
+      </div>
+    </div>
+    <div id="gad2Remark"></div>
+    <button id="proceedGAD7">Teruskan ke GAD-7 →</button>
+    <button id="backHomeFromGAD2" class="btn back">← Kembali</button>
+  </div>
+
+  <!-- GAD-7 -->
+  <div id="gad7Page" class="page">
+    <h2>Soal Selidik Gangguan Kebimbangan Umum (GAD-7)</h2>
+    <p data-key="gad7Instr"></p>
+    <div class="floating-legend">
+      <div>
+        <div class="legend-text" data-key="opt0"></div>
+        <div class="legend-score">0</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt1"></div>
+        <div class="legend-score">1</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt2"></div>
+        <div class="legend-score">2</div>
+      </div>
+      <div>
+        <div class="legend-text" data-key="opt3"></div>
+        <div class="legend-score">3</div>
+      </div>
+    </div>
+    <div id="gad7Form"></div>
+    <div class="phq9-actions">
+      <button id="submitGAD7" type="button">Hantar GAD-7</button>
+      <button id="resetGAD7" type="button">Set Semula</button>
+    </div>
+    <div id="gad7Result"></div>
+    <button id="backToGAD2" class="btn back">← Kembali</button>
+  </div>
+
+  <!-- EXPORT BUTTON: Always visible -->
+  <div id="exportArea">
+    <button id="btnExportCSV" type="button">Export Excel/CSV</button>
+  </div>
+</main>
+<footer style="text-align:center;padding:12px;color:#666;font-size:0.8rem;">
+  Rujukan: Garis Panduan Perkhidmatan Minda Sihat di Fasiliti Kesihatan Primer KKM Edisi 2/2022
+</footer>
+<script>
+  const errorBanner = document.getElementById('errorBanner');
+function showError(msg) {
+  errorBanner.textContent = msg;
+  errorBanner.classList.remove('hidden');
+  setTimeout(() => errorBanner.classList.add('hidden'), 3000);
+}
+  // PATIENT INFO LOGIC
+  function getAgeCat(age) {
+    age = parseInt(age);
+    if (isNaN(age)) return '';
+    if (age <= 19) return '13-19';
+    if (age <= 39) return '20-39';
+    if (age <= 59) return '40-59';
+    return '60+';
+  }
+  const ptAge = document.getElementById('ptAge');
+  const ptAgeCat = document.getElementById('ptAgeCat');
+  ptAge.addEventListener('input', e => {
+    ptAgeCat.value = getAgeCat(e.target.value);
+  });
+  const ptHistYesNo = document.getElementById('ptHistYesNo');
+  const ptHistBlock = document.getElementById('ptHistBlock');
+  ptHistYesNo.addEventListener('change', e => {
+    ptHistBlock.style.display = e.target.value === 'Ya' ? 'block' : 'none';
+  });
+
+  // CSV EXPORT LOGIC
+  function getResult(id, label) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  const rows = el.querySelectorAll('tr');
+  for (let row of rows) {
+    if (row.children[0]?.textContent?.includes(label)) 
+      return row.children[1]?.innerText || '';
+  }
+  return '';
+}
+function collectAllData() {
+    const name = document.getElementById('ptNama').value || '';
+    const id = document.getElementById('ptID').value || '';
+    const sex = document.getElementById('ptSex').value || '';
+    const age = document.getElementById('ptAge').value || '';
+    const agecat = document.getElementById('ptAgeCat').value || '';
+    const negara = document.getElementById('ptNegara').value || '';
+    const etnik = document.getElementById('ptEtnik').value || '';
+    const histYesNo = document.getElementById('ptHistYesNo').value || '';
+    let hist = '';
+    if (histYesNo === 'Ya') {
+      hist = Array.from(document.querySelectorAll('.ptHistChk:checked')).map(c => c.value).join(', ');
+    }
+    // Screening results (grab latest if available)
+     return {
+      
+  name, id, sex, age, agecat, negara, etnik, histYesNo, hist,
+  phq9_skor: getResult('phq9Result','Jumlah Skor'),
+  phq9_skala: getResult('phq9Result','Skala'),
+  phq9_tindakan: getResult('phq9Result','Tindakan'),
+  gad7_skor: getResult('gad7Result','Jumlah Skor'),
+  gad7_skala: getResult('gad7Result','Skala'),
+  gad7_tindakan: getResult('gad7Result','Tindakan')
+};
+  }
+  function downloadCSV(obj) {
+    const labels = [
+      'Nama Pesakit','No KP / ID','Jantina','Umur','Kategori Umur',
+      'Warganegara','Kaum','Sejarah Perubatan','Penyakit',
+      'PHQ-9 Skor','PHQ-9 Skala','PHQ-9 Tindakan',
+      'GAD-7 Skor','GAD-7 Skala','GAD-7 Tindakan'
+    ];
+    const keys = [
+      'name','id','sex','age','agecat','negara','etnik','histYesNo','hist',
+      'phq9_skor','phq9_skala','phq9_tindakan',
+      'gad7_skor','gad7_skala','gad7_tindakan'
+    ];
+    const header = labels.join(',');
+    const row = keys.map(k => `"${(obj[k]||'').replace(/"/g,'""')}"`).join(',');
+    const csv = header+'\r\n'+row;
+    const blob = new Blob([csv],{type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'saringan_minda_sihat.csv';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},200);
+  }
+  
+  document.getElementById('btnExportCSV').onclick = ()=>{
+    const data = collectAllData();
+    downloadCSV(data);
+  };
+
+  // LANGUAGE DICT, TRANSLATE, AND SCREENING LOGIC
+  const dict = {
+    en: {
+      whooley:'Whooley', gad2:'GAD-2',
+      whooleyProg:'1 / 2',
+      mainQ:'Over the past one month, have you been bothered by the following problems?',
+      q1:'1. Feeling down, depressed or hopeless?',
+      q2:'2. Having little interest or pleasure in doing things?',
+      optYes:'Yes', optNo:'No',
+      riskRemark:'Patient at risk and needs to answer the PHQ-9.',
+      safeRemark:'Patient not at risk. Provide health education & encourage healthy lifestyle practices.',
+      phq9Instr:'Over the last 2 weeks, how often have you been bothered by any of the following problems?',
+      opt0:'Not at all', opt1:'Several days', opt2:'More than half of the week', opt3:'Nearly every day',
+      suicideRemark:'❗ Question 9 indicates suicide risk – urgent referral.',
+      gad2Instr:'Over the last 2 weeks, how often have you been bothered by any of the following problems?',
+      g2q1:'1. Feeling nervous, anxious, or on edge.',
+      g2q2:'2. Not being able to stop or control worrying.',
+      g2RiskRemark:'Patient at risk and needs to answer the GAD-7.',
+      g2SafeRemark:'Patient not at risk. Provide health education & encourage healthy lifestyle practices.',
+      proceedGAD7:'Proceed to GAD-7 →',
+      gad7Instr:'Over the last 2 weeks, how often have you been bothered by any of the following problems?',
+      gad7Remark0:'Health education and encourage healthy lifestyle practices.',
+      gad7Remark1:'Refer to medical officer or paramedic for further evaluation.',
+      gad7Remark2:'Refer for specialist evaluation or therapy.',
+      gad7Remark3:'Urgent referral and crisis intervention.'
+    },
+    ms: {
+      whooley:'Whooley', gad2:'GAD-2',
+      whooleyProg:'1 / 2',
+      mainQ:'Dalam sebulan yang lepas, adakah anda terganggu oleh masalah berikut?',
+      q1:'1. Merasa murung, sedih atau tiada harapan?',
+      q2:'2. Kurang minat atau keseronokan dalam melakukan kerja-kerja?',
+      optYes:'Ya', optNo:'Tidak',
+      riskRemark:'Pesakit berisiko dan perlu menjawab soalan PHQ-9.',
+      safeRemark:'Pesakit tidak berisiko. Nasihati pendidikan kesihatan dan amalan cara hidup sihat.',
+      phq9Instr:'Dalam tempoh 2 minggu yang lepas, berapa kerap anda terganggu oleh masalah berikut?',
+      opt0:'Tidak pernah sama sekali', opt1:'Beberapa hari', opt2:'Lebih dari seminggu', opt3:'Hampir setiap hari',
+      suicideRemark:'❗ Soalan 9 menunjukkan risiko bunuh diri – rujuk segera.',
+      gad2Instr:'Dalam tempoh 2 minggu yang lepas, berapa kerap anda terganggu oleh masalah berikut?',
+      g2q1:'1. Berasa resah, gelisah atau tegang.',
+      g2q2:'2. Tidak dapat menghentikan atau mengawal kebimbangan.',
+      g2RiskRemark:'Pesakit berisiko dan perlu menjawab soalan GAD-7.',
+      g2SafeRemark:'Pesakit tidak berisiko. Nasihati pendidikan kesihatan dan amalan cara hidup sihat.',
+      proceedGAD7:'Teruskan ke GAD-7 →',
+      gad7Instr:'Dalam tempoh 2 minggu yang lepas, berapa kerap anda terganggu oleh masalah berikut?',
+      gad7Remark0:'Pendidikan kesihatan dan amalan cara hidup sihat.',
+      gad7Remark1:'Rujuk Pegawai Perubatan untuk penilaian sama ada pendidikan kesihatan oleh Pegawai Perubatan /Paramedik atau intervensi lanjut oleh Jurupulih Perubatan Carakerja/ Jurupulih Perubatan Fisioterapi',
+      gad7Remark2:'Rujuk kepada Pegawai Perubatan untuk penilaian lanjut atau intervensi sama ada: (a). Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi / Kaunselor; (b). Rujukan kepada Pakar Perubatan Keluarga. *Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi hanya untuk skor &lt;15.',
+      gad7Remark3:'Rujuk kepada Pegawai Perubatan untuk penilaian lanjut atau intervensi sama ada: (a). Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi / Kaunselor; (b). Rujukan kepada Pakar Perubatan Keluarga. *Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi hanya untuk skor &lt;15.',
+    }
+  };
+
+  let lang='ms';
+  const switchEl = document.getElementById('langToggle'),
+        transEls  = document.querySelectorAll('[data-key]');
+
+  function applyTrans(){
+    transEls.forEach(el=>{
+      el.textContent = dict[lang][el.dataset.key];
+    });
+  }
+  applyTrans();
+  switchEl.addEventListener('change', ()=>{
+    lang = switchEl.checked ? 'en' : 'ms';
+    applyTrans();
+    updateRemark(); updatePHQ9Questions(); updateSuicideRemark();
+    updateGAD2Remark(); updateGAD7Questions();
+  });
+
+  // Navigation logic (page swap)
+  const homePage    = document.getElementById('homePage'),
+        whooleyPage = document.getElementById('whooleyPage'),
+        phq9Page    = document.getElementById('phq9Page'),
+        gad2Page    = document.getElementById('gad2Page'),
+        gad7Page    = document.getElementById('gad7Page');
+
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    page.classList.add('active');
+    document.getElementById('exportArea').style.display = '';
+  }
+  document.getElementById('btnWhooley').onclick = ()=>{showPage(whooleyPage);};
+  document.getElementById('btnGAD2').onclick = ()=>{showPage(gad2Page);};
+  document.getElementById('backHome').onclick = ()=>{showPage(homePage);};
+  document.getElementById('backHomeFromGAD2').onclick = ()=>{showPage(homePage);};
+  document.getElementById('backToWhooley').onclick = ()=>{showPage(whooleyPage);};
+  document.getElementById('backToGAD2').onclick = ()=>{showPage(gad2Page);};
+
+  // WHOOLEY → PHQ-9
+  const remarkEl  = document.getElementById('remark'),
+        proceedPHQ9 = document.getElementById('proceedPHQ9');
+  document.querySelectorAll('#whooleyPage input').forEach(r=>
+    r.addEventListener('change', updateRemark)
+  );
+  function updateRemark(){
+    const y1 = document.querySelector('input[name=q1][value=yes]').checked,
+          y2 = document.querySelector('input[name=q2][value=yes]').checked;
+    if(y1||y2){
+      remarkEl.textContent = dict[lang].riskRemark;
+      remarkEl.className = 'remark-risk';
+      proceedPHQ9.style.display = 'block';
+    } else if(
+      document.querySelector('input[name=q1][value=no]').checked &&
+      document.querySelector('input[name=q2][value=no]').checked
+    ){
+      remarkEl.textContent = dict[lang].safeRemark;
+      remarkEl.className = 'remark-safe';
+      proceedPHQ9.style.display = 'none';
+    } else {
+      remarkEl.textContent = '';
+      remarkEl.className = '';
+      proceedPHQ9.style.display = 'none';
+    }
+  }
+  proceedPHQ9.onclick = ()=>{
+    whooleyPage.classList.remove('active');
+    phq9Page.classList.add('active');
+  };
+
+  // PHQ-9 build & logic
+  const msQ9 = [
+    'Sedikit minat atau keseronokan dalam melakukan kerja-kerja.',
+    'Merasa murung, sedih atau tiada harapan.',
+    'Masalah hendak tidur / semasa tidur, tidur terlalu banyak.',
+    'Merasa letih atau kurang bertenaga.',
+    'Kurang selera atau terlalu banyak makan.',
+    'Perasaan buruk terhadap diri sendiri – merasa gagal terhadap diri sendiri - ataupun merasa gagal terhadap diri sendiri ataupun menghampakan diri atau keluarga.',
+    'Masalah menumpukan perhatian terhadap perkara-perkara seperti membaca surat khabar atau menonton televisyen.',
+    'Bergerak atau bercakap terlalu lambat sehingga disedari oleh orang lain. Ataupun bertentangan - terlalu resah atau gelisah sehingga anda bergerak lebih dari biasa.',
+    'Berfikir bahawa lebih elok jika anda telah mati atau ingin mencederakan diri sendiri dalam sesuatu cara.'
+  ];
+  const enQ9 = [
+    'Little interest or pleasure in doing things.',
+    'Feeling down, depressed or hopeless.',
+    'Trouble falling asleep, staying asleep, or sleeping too much.',
+    'Feeling tired or having little energy.',
+    'Poor appetite or overeating.',
+    'Feeling bad about yourself – or that you are a failure or have let yourself or your family down.',
+    'Trouble concentrating on things, such as reading the newspaper or watching television.',
+    'Moving or speaking so slowly that other people could have noticed. Or the opposite – being so fidgety or restless that you have been moving around a lot more than usual.',
+    'Thoughts that you would be better off dead or of hurting yourself in some way.'
+  ];
+  const phq9Form = document.getElementById('phq9Form');
+  msQ9.forEach((_, i)=>{
+    const idx = i+1;
+    const block = document.createElement('div');
+    block.className = 'question-block phq9';
+    const p = document.createElement('p');
+    p.textContent = `${idx}. ${msQ9[i]}`;
+    block.append(p);
+
+    const rg = document.createElement('div');
+    rg.className = 'radio-group';
+    for(let v=0; v<4; v++){
+      const lbl = document.createElement('label');
+      lbl.className = 'radio-label';
+      const inp = document.createElement('input');
+      inp.type = 'radio';
+      inp.name = `phq9_q${idx}`;
+      inp.value = v;
+      inp.addEventListener('change', updateSuicideRemark);
+      const sp = document.createElement('span');
+      sp.textContent = v;
+      lbl.append(inp, sp);
+      rg.append(lbl);
+    }
+    block.append(rg);
+
+    if(idx===9){
+      const sr = document.createElement('div');
+      sr.className = 'suicide-remark';
+      block.append(sr);
+    }
+    phq9Form.append(block);
+  });
+ document.getElementById('submitPHQ9').onclick = ()=> {
+  for(let i=1;i<=9;i++){
+    if(!document.querySelector(`input[name=phq9_q${i}]:checked`)){
+     showError('Sila jawab kesemua 9 soalan PHQ-9.');
+      return;
+    }
+  }
+    let total=0;
+    for(let i=1;i<=9;i++){
+      total += +document.querySelector(`input[name=phq9_q${i}]:checked`).value;
+    }
+    let scale,action;
+    if(total<=4){
+      scale='NORMAL (0–4)';
+      action='Pendidikan kesihatan dan amalan cara hidup sihat.';
+    } else if(total<=9){
+      scale='RINGAN (5–9)';
+      action='Rujuk Pegawai Perubatan untuk penilaian sama ada Pendidikan kesihatan oleh Pegawai Perubatan/Paramedik atau intervensi lanjut oleh Jurupulih Perubatan Carakerja / Jurupulih Perubatan Fisioterapi';
+    } else if(total<=14){
+      scale='SEDERHANA (10–14)';
+      action='Rujuk kepada Pegawai Perubatan untuk penilaian lanjut atau intervensi sama ada: (a). Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi/ Pegawai Psikologi/ Kaunselor; (b). Rujukan kepada Pakar Perubatan Keluarga. *Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi hanya untuk skor <15';
+    } else if(total<=19){
+      scale='TERUK (15–19)';
+      action='Rujuk kepada Pegawai Perubatan untuk penilaian lanjut atau intervensi sama ada: (a). Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi/ Pegawai Psikologi/ Kaunselor; (b). Rujukan kepada Pakar Perubatan Keluarga. *Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi hanya untuk skor <15';
+    } else {
+      scale='SANGAT TERUK (20–27)';
+      action='Rujuk kepada Pegawai Perubatan untuk penilaian lanjut atau intervensi sama ada: (a). Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi/ Pegawai Psikologi/ Kaunselor; (b). Rujukan kepada Pakar Perubatan Keluarga. *Rujukan kepada Jurupulih Perubatan Carakerja/Jurupulih Perubatan Fisioterapi hanya untuk skor <15';
+    }
+  document.getElementById('phq9Result').innerHTML = `
+      <div class="result-card">
+        <h3>Keputusan PHQ-9</h3>
+        <table>
+          <tr><td><strong>Jumlah Skor:</strong></td><td>${total}</td></tr>
+          <tr><td><strong>Skala:</strong></td><td>${scale}</td></tr>
+          <tr><td><strong>Tindakan:</strong></td><td>${action}</td></tr>
+        </table>
+        ${ +document.querySelector('input[name=phq9_q9]:checked').value>0
+          ? `<p class="note">${dict[lang].suicideRemark}</p>` : ''}
+      </div>`;
+  };
+  function updatePHQ9Questions(){
+    document.querySelectorAll('#phq9Page .question-block.phq9 p')
+      .forEach((p,i)=>{
+        p.textContent = `${i+1}. ${lang==='ms'?msQ9[i]:enQ9[i]}`;
+      });
+  }
+
+  function updateSuicideRemark(){
+    const sr = document.querySelector(
+      '#phq9Form .question-block.phq9:last-child .suicide-remark'
+    );
+    const sel = document.querySelector('input[name=phq9_q9]:checked');
+    sr.textContent = (sel && +sel.value>0)
+      ? dict[lang].suicideRemark
+      : '';
+  }
+
+ 
+  document.getElementById('resetPHQ9').onclick = ()=>{
+    document.querySelectorAll('#phq9Form input[type=radio]')
+      .forEach(i=>i.checked=false);
+    document.querySelectorAll('.suicide-remark')
+      .forEach(el=>el.textContent='');
+    document.getElementById('phq9Result').innerHTML='';
+  };
+
+  // GAD-2 logic
+  const gad2RemarkEl = document.getElementById('gad2Remark'),
+        proceedGAD7  = document.getElementById('proceedGAD7');
+  document.querySelectorAll('#gad2Page input').forEach(r=>
+    r.addEventListener('change', updateGAD2Remark)
+  );
+  function updateGAD2Remark(){
+    const v1 = document.querySelector('input[name=g2q1]:checked'),
+          v2 = document.querySelector('input[name=g2q2]:checked');
+    if(v1&&v2){
+      const sum = +v1.value + +v2.value;
+      if(sum>=3){
+        gad2RemarkEl.textContent = dict[lang].g2RiskRemark;
+        gad2RemarkEl.className = 'remark-risk';
+        proceedGAD7.style.display = 'block';
+      } else {
+        gad2RemarkEl.textContent = dict[lang].g2SafeRemark;
+        gad2RemarkEl.className = 'remark-safe';
+        proceedGAD7.style.display = 'none';
+      }
+    }
+  }
+  proceedGAD7.onclick = ()=>{
+    gad2Page.classList.remove('active');
+    gad7Page.classList.add('active');
+  };
+
+  // GAD-7 build & logic
+  const msQ7 = [
+    'Berasa resah, gelisah atau tegang.',
+    'Tidak dapat menghentikan atau mengawal kebimbangan.',
+    'Terlalu bimbangkan pelbagai perkara yang berlainan.',
+    'Mempunyai masalah untuk bertenang.',
+    'Terlalu resah sehingga susah untuk berdiam diri.',
+    'Mudah menjadi rimas dan menjengkelkan.',
+    'Berasa takut bahawa sesuatu yang buruk akan terjadi.'
+  ];
+  const enQ7 = [
+    'Feeling nervous, anxious, or on edge.',
+    'Not being able to stop or control worrying.',
+    'Worrying too much about different things.',
+    'Having trouble relaxing.',
+    'Being so restless that it is hard to sit still.',
+    'Becoming easily annoyed or irritable.',
+    'Feeling afraid as if something awful might happen.'
+  ];
+  const gad7Form = document.getElementById('gad7Form');
+  msQ7.forEach((_,i)=>{
+    const idx = i+1;
+    const block = document.createElement('div');
+    block.className = 'question-block phq9';
+    const p = document.createElement('p');
+    p.textContent = `${idx}. ${msQ7[i]}`;
+    block.append(p);
+
+    const rg = document.createElement('div');
+    rg.className = 'radio-group';
+    for(let v=0;v<4;v++){
+      const lbl = document.createElement('label');
+      lbl.className = 'radio-label';
+      const inp = document.createElement('input');
+      inp.type = 'radio'; inp.name = `g7q${idx}`; inp.value = v;
+      const sp = document.createElement('span');
+      sp.textContent = v;
+      lbl.append(inp,sp);
+      rg.append(lbl);
+    }
+    block.append(rg);
+    gad7Form.append(block);
+  });
+document.getElementById('submitGAD7').onclick = ()=> {
+  for(let i=1;i<=7;i++){
+    if(!document.querySelector(`input[name=g7q${i}]:checked`)){
+      showError('Sila jawab kesemua 7 soalan GAD-7.');
+      return;
+     }
+    }
+    let total=0;
+    for(let i=1;i<=7;i++){
+      total += +document.querySelector(`input[name=g7q${i}]:checked`).value;
+    }
+    let scale, action;
+    if(total<=4){
+      scale='NORMAL (0–4)'; action=dict[lang].gad7Remark0;
+    } else if(total<=9){
+      scale='RINGAN (5–9)'; action=dict[lang].gad7Remark1;
+    } else if(total<=14){
+      scale='SEDERHANA (10–14)'; action=dict[lang].gad7Remark2;
+    } else {
+      scale='TERUK (15–21)'; action=dict[lang].gad7Remark3;
+    }
+   document.getElementById('gad7Result').innerHTML = `
+      <div class="result-card">
+        <h3>Keputusan GAD-7</h3>
+        <table>
+          <tr><td><strong>Jumlah Skor:</strong></td><td>${total}</td></tr>
+          <tr><td><strong>Skala:</strong></td><td>${scale}</td></tr>
+          <tr><td><strong>Tindakan:</strong></td><td>${action}</td></tr>
+        </table>
+      </div>`;
+  };
+  function updateGAD7Questions(){
+    document.querySelectorAll('#gad7Page .question-block.phq9 p')
+      .forEach((p,i)=>{
+        p.textContent = `${i+1}. ${lang==='ms'?msQ7[i]:enQ7[i]}`;
+      });
+  }
+
+  
+  document.getElementById('resetGAD7').onclick = ()=>{
+    document.querySelectorAll('#gad7Form input[type=radio]')
+      .forEach(i=>i.checked=false);
+    document.getElementById('gad7Result').innerHTML='';
+  };
+  // Collapsible for Patient Info
+const btn   = document.getElementById('togglePatientInfo');
+const form  = document.getElementById('pesakitForm');
+const arrow = document.getElementById('collapsibleArrow');
+
+btn.addEventListener('click', () => {
+  // toggle the CSS class:
+  const isOpen = form.classList.toggle('open');
+
+  // rotate the arrow:
+  arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+
+  // update aria-expanded so screen readers know the new state:
+  btn.setAttribute('aria-expanded', isOpen);
+});
+
+</script>
+</body>
+</html>
